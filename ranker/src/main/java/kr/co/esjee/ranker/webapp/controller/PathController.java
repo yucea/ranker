@@ -10,5 +10,4 @@ public class PathController {
 	public String path() {
 		return "redirect:/swagger-ui.html";
 	}
-
 }
