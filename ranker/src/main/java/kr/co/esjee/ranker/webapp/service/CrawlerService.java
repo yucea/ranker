@@ -25,7 +25,7 @@ public class CrawlerService {
 	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public JSONArray webCrawlerService(String crawlerUrl, String listEl, String listDtlEl, String titleEl, String contentsEl) throws IOException {
+	public JSONArray webCrawlerService(String crawlerUrl, String listEl, String listDtlEl, String titleEl, String contentEl) throws IOException {
 		
 		Document listDoc = null;		
         Document dtlDoc = null;
@@ -49,15 +49,15 @@ public class CrawlerService {
             Elements dtlElement = dtlDoc.select("body");
             
             // Title
-            String title2 = dtlElement.select(titleEl).text();
+            String title = dtlElement.select(titleEl).text();
             
             // Contents
-            String contents = dtlElement.select(contentsEl).text();
+            String content = dtlElement.select(contentEl).text();
             
             JSONObject obj = new JSONObject();
             
-            obj.put("title", title2);
-            obj.put("contents", contents);
+            obj.put("content", content);
+            obj.put("title", title);
             
             rtnJsonArray.put(obj);                
         }

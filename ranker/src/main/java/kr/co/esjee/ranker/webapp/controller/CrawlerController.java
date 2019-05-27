@@ -41,30 +41,21 @@ public class CrawlerController {
 		@ApiImplicitParam(name = "listEl", value = "목록 속성", required = false, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "listDtlEl", value = "목록 상세 속성", required = false, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "titleEl", value = "제목 속성", required = false, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "contentsEl", value = "내용 속성", required = false, dataType = "string", paramType = "query")
+		@ApiImplicitParam(name = "contentEl", value = "내용 속성", required = false, dataType = "string", paramType = "query")
 		})
 	@RequestMapping(value = "/webCrawler", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String webCrawler(@RequestParam String crawlerUrl, @RequestParam String listEl, @RequestParam String listDtlEl,
-			@RequestParam String titleEl, @RequestParam String contentsEl) {
-		
-		
+			@RequestParam String titleEl, @RequestParam String contentEl) {
+				
 		JSONObject returnObj = new JSONObject();
 		
-		try {
-			
-			/*
-			if(StringUtil.isNullOrEmpty(crawlerUrl)) {
-				crawlerUrl = "https://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day&sectionId=101&date=20190524"; 
-			}
-			*/
-			
+		try {			
 			JSONArray returnArray = new JSONArray();
-			returnArray = crawlerService.webCrawlerService(crawlerUrl, listEl, listDtlEl, titleEl, contentsEl);
+			returnArray = crawlerService.webCrawlerService(crawlerUrl, listEl, listDtlEl, titleEl, contentEl);
 			
 			returnObj.put("list", returnArray);
 			returnObj.put("success", true);
-			returnObj.put("msg", String.format("[%s] content imported!", returnArray.length()));
-			
+			returnObj.put("msg", String.format("[%s] content imported!", returnArray.length()));			
 		} catch (IOException e) {			
 			e.printStackTrace();			
 			returnObj.put("success", false);
