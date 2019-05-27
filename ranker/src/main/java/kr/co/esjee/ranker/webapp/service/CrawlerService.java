@@ -13,49 +13,55 @@ import org.springframework.stereotype.Service;
 @Service
 public class CrawlerService {
 	
-	public JSONArray webCrawlerService(String crawlerUrl) throws Exception {
+	/**
+	 * Web Crawler Service
+	 * 
+	 * @param crawlerUrl
+	 * @param listEl
+	 * @param listDtlEl
+	 * @param titleEl
+	 * @param contentsEl
+	 * @return JSONArray
+	 * @throws IOException 
+	 * @throws Exception
+	 */
+	public JSONArray webCrawlerService(String crawlerUrl, String listEl, String listDtlEl, String titleEl, String contentsEl) throws IOException {
 		
-		Document doc = null;
-        Document dtlDoc2 = null;
-         
-        try {
-            doc = Jsoup.connect(crawlerUrl).get();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		Document listDoc = null;		
+        Document dtlDoc = null;
         
-        Elements element = doc.select(".ranking_list");
+        JSONArray rtnJsonArray = new JSONArray();         
         
-        JSONArray array = new JSONArray();
+    	listDoc = Jsoup.connect(crawlerUrl).get();
+    	
+    	// 목록 Element 
+    	Elements listElement = listDoc.select(listEl);
          
-        for(Element el : element.select("div.ranking_thumb a")) {     
+        // 목록 Element 에서 상세 정보 추출
+        for(Element dtlEl : listElement.select(listDtlEl)) {     
         	
-            String dtlUrl = "https://news.naver.com" + el.attr("href").toString();
+        	// 상세 정보 링크
+            String dtlUrl = dtlEl.select("a").attr("abs:href").toString();
             
-            try {
-            	dtlDoc2 = Jsoup.connect(dtlUrl).get();
-            } catch (IOException ex) {
-            	ex.printStackTrace();
-            }
+            dtlDoc = Jsoup.connect(dtlUrl).get();
             
-            Elements dtlElement = dtlDoc2.select("div.content");
+            // 상세 정보 Body
+            Elements dtlElement = dtlDoc.select("body");
             
             // Title
-            String title2 = dtlElement.select("div.article_info h3").text();
+            String title2 = dtlElement.select(titleEl).text();
             
             // Contents
-            String contents = dtlElement.select("div#articleBodyContents").text();
+            String contents = dtlElement.select(contentsEl).text();
             
             JSONObject obj = new JSONObject();
             
-            obj.put("Title", title2);
-            obj.put("Contents", contents);
+            obj.put("title", title2);
+            obj.put("contents", contents);
             
-            array.put(obj);
+            rtnJsonArray.put(obj);                
         }
         
-        return array;
-		
+        return rtnJsonArray;		
 	}
 }
