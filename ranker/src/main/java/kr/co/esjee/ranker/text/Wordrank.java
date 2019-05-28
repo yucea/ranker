@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +38,7 @@ public class Wordrank implements AppConstant {
 	private String[] exclude;
 	private boolean match = true; // 제외단어 일치 여부 - true : 일치, false : 포함
 	private boolean verbose = false;
-	private List<String> corpus = new ArrayList<String>();
+	private List<String> corpus = new ArrayList<String>(); // 단어 사전
 
 	public Wordrank(int minCount, int maxLength) {
 		this(minCount, maxLength, false);
@@ -61,12 +63,19 @@ public class Wordrank implements AppConstant {
 		this.vocabulary.clear();
 		this.keymap.clear();
 
+		// 사전 생성
 		this.scanVocabulary(docs);
-
 		if (verbose)
 			this.printVocabulary();
 
-		return this.analyze(docs);
+		// :L:R 형태로 변환
+		this.matrix(docs);
+		// key, 반복회수 형태로 추출
+		Map<String, Integer> source = this.makeSource();
+		// 반복횟수가 같은 단어 병합
+		this.merge(source);
+		// score 표준화
+		return this.normalizing(source);
 	}
 
 	private void printVocabulary() {
@@ -77,16 +86,6 @@ public class Wordrank implements AppConstant {
 
 		log.info("{}", result);
 		log.info("--- Vocabulary End ---");
-	}
-
-	public List<Word> analyze(List<String> docs) {
-		this.matrix(docs);
-
-		Map<String, Integer> source = this.makeSource();
-
-		this.textFilter(source);
-
-		return this.getResult(source);
 	}
 
 	public Map<String, Integer> makeSource() {
@@ -132,44 +131,30 @@ public class Wordrank implements AppConstant {
 	}
 
 	// 단어와 단어를 포함한 단어의 반복 횟수가 같을 경우 포함된 단어를 사용. ex) 캐릭 : 20, 캐릭터 : 20 => 캐릭터
-	private void textFilter(Map<String, Integer> source) {
-		List<String> target = new ArrayList<String>();
+	private void merge(Map<String, Integer> data) {
+		List<String> target = new ArrayList<>();
+		data.forEach((k, v) -> target.add(String.format("#%s=%d", k, v)));
 
-		List<String> keys = new ArrayList<String>();
-		int value = 0;
+		String source = StringUtils.join(target, " ");
+		// log.info("source : {}", source);
 
-		for (String k : source.keySet()) {
-			int v = source.get(k);
+		List<String> remove = new ArrayList<>();
 
-			if (value == 0) {
-				keys.add(k);
-				value = v;
-			} else if (value == v) {
-				boolean flag = true;
-				for (String key : keys) {
-					if (key.startsWith(k)) {
-						target.add(k);
-						flag = false;
-						break;
-					} else if (k.startsWith(key)) {
-						target.add(key);
-						keys.add(k);
-						flag = false;
-						break;
-					}
-				}
+		for (String key : data.keySet()) {
+			int value = data.get(key);
 
-				if (flag) {
-					keys.add(k);
-				}
-			} else {
-				keys.clear();
-				keys.add(k);
-				value = v;
+			String regex = String.format("#%s\\S+=%d", key, value);
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(source);
+
+			if (matcher.find()) {
+				// log.info("{}, {}", regex, matcher.group());
+				remove.add(key);
 			}
 		}
 
-		target.forEach(source::remove);
+		// remove.forEach(log::info);
+		remove.forEach(data::remove);
 	}
 
 	private void matrix(List<String> docs) {
@@ -210,7 +195,7 @@ public class Wordrank implements AppConstant {
 			log.info("links : {}", links);
 	}
 
-	private List<Word> getResult(Map<String, Integer> data) {
+	private List<Word> normalizing(Map<String, Integer> data) {
 		List<Word> list = new ArrayList<Word>();
 		if (data.isEmpty())
 			return list;
