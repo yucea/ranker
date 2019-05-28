@@ -8,14 +8,6 @@ public class TextUtil implements AppConstant {
 
 	private static final String MATCH_PATTERN = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";
 
-	public static String getPureString(String text) {
-		if (StringUtils.isNotEmpty(text)) {
-			return getPlanText(text.replaceAll(MATCH_PATTERN, " "));
-		} else {
-			return "";
-		}
-	}
-
 	public static String getPlanText(String text) {
 		if (StringUtils.isEmpty(text))
 			return "";
@@ -23,7 +15,7 @@ public class TextUtil implements AppConstant {
 			return text.trim().replaceAll("\t+", " ")
 					.replaceAll("\r\n+", " ")
 					.replaceAll("\n+", " ")
-					.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", " ")
+					.replaceAll(MATCH_PATTERN, " ")
 					.replaceAll(" +", " ");
 	}
 
@@ -32,10 +24,7 @@ public class TextUtil implements AppConstant {
 	}
 
 	public static String getExtension(String filename) {
-		if (filename.contains("."))
-			return StringUtils.substringAfterLast(filename, ".").toLowerCase();
-		else
-			return null;
+		return filename.contains(".") ? StringUtils.substringAfterLast(filename, ".").toLowerCase() : null;
 	}
 
 }

@@ -133,7 +133,7 @@ public class Wordrank implements AppConstant {
 	// 단어와 단어를 포함한 단어의 반복 횟수가 같을 경우 포함된 단어를 사용. ex) 캐릭 : 20, 캐릭터 : 20 => 캐릭터
 	private void merge(Map<String, Integer> data) {
 		List<String> target = new ArrayList<>();
-		data.forEach((k, v) -> target.add(String.format("#%s=%d", k, v)));
+		data.forEach((k, v) -> target.add(String.format("#%s", k)));
 
 		String source = StringUtils.join(target, " ");
 		// log.info("source : {}", source);
@@ -141,15 +141,23 @@ public class Wordrank implements AppConstant {
 		List<String> remove = new ArrayList<>();
 
 		for (String key : data.keySet()) {
-			int value = data.get(key);
+			// 숫자 - 4자리 보다 작을 경우
+			if (StringUtils.isNumeric(key) && key.length() < 4) {
+				remove.add(key);
+				continue;
+			}
 
-			String regex = String.format("#%s\\S+=%d", key, value);
+			int value = data.get(key);
+			String regex = String.format("#%s\\S+", key);
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(source);
 
-			if (matcher.find()) {
-				// log.info("{}, {}", regex, matcher.group());
-				remove.add(key);
+			while (matcher.find()) {
+				String k = matcher.group().replace("#", "");
+				int v = data.get(k);
+
+				if (value < v + 3) // 보정값: 3 > 어벤져 : 83, 어벤져스 : 82 ==> 어벤져스 : 82
+					remove.add(key);
 			}
 		}
 
@@ -213,7 +221,7 @@ public class Wordrank implements AppConstant {
 	}
 
 	private String filterString(String text) {
-		return TextUtil.getPureString(text);
+		return TextUtil.getPlanText(text);
 	}
 
 	public void scanVocabulary(String[] docs) {
@@ -283,7 +291,7 @@ public class Wordrank implements AppConstant {
 
 	@Data
 	@AllArgsConstructor
-	class Word {
+	public class Word {
 
 		private String key;
 		private int count;

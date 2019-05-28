@@ -13,6 +13,7 @@ public interface AppConstant {
 	String TERM = "term";
 	String TYPE = "type";
 	String COUNT = "count";
+	String TOTAL_COUNT = "totalCount";
 
 	String NNP = "NNP";
 	String HWP = "hwp";
