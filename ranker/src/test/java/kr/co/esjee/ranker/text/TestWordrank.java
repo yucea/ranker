@@ -1,12 +1,16 @@
 package kr.co.esjee.ranker.text;
 
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse.AnalyzeToken;
 import org.elasticsearch.client.Client;
 import org.junit.After;
 import org.junit.Test;
+
+import com.google.common.collect.Lists;
 
 import kr.co.esjee.ranker.elasticsearch.ElasticAnalyzer;
 import kr.co.esjee.ranker.elasticsearch.TestElasticsearch;
@@ -38,9 +42,46 @@ public class TestWordrank extends TestElasticsearch {
 
 		int minCount = 2;
 		int maxLength = 10;
-		Wordrank wordRank = new Wordrank(minCount, maxLength, true);
+		Wordrank wordrank = new Wordrank(minCount, maxLength, true);
 		// wordRank.setExclude("클라");
-		List<Word> list = wordRank.execute(text);
+		List<Word> list = wordrank.execute(text);
+		for (Word word : list) {
+			log.info("{}", word.toString());
+		}
+	}
+
+	@Test
+	public void corpus() throws Exception {
+		String text = "소확행이란 '소소하지만 확실한 행복'의 축약어로, 일상에서 느낄 수 있는 작지만 확실하게 실현 가능한 행복이나 그러한 행복을 추구하는 삶의 경향을 뜻하는 신조어 및 유행어이다. 소확행은 한자로는 小確幸으로 표기한다";
+
+		int minCount = 1;
+		int maxLength = 10;
+		List<String> corpus = Lists.newArrayList("확실한 행복");
+
+		Wordrank wordrank = new Wordrank(minCount, maxLength, true);
+		wordrank.setCorpus(corpus);
+		List<Word> list = wordrank.execute(text);
+		for (Word word : list) {
+			log.info("{}", word.toString());
+		}
+	}
+
+	@Test
+	public void theme() throws Exception {
+		String text = "소확행이란 '소소하지만 확실한 행복'의 축약어로, 일상에서 느낄 수 있는 작지만 확실하게 실현 가능한 행복이나 그러한 행복을 추구하는 삶의 경향을 뜻하는 신조어 및 유행어이다. 소확행은 한자로는 小確幸으로 표기한다";
+
+		int minCount = 1;
+		int maxLength = 10;
+		List<String> corpus = Lists.newArrayList("추구하는 삶");
+		Map<String, String> themes = new HashMap<>();
+		themes.put("실현 가능한", "실현가능");
+		themes.put("소소하지만 확실한 행복", "소확행");
+
+		Wordrank wordrank = new Wordrank(minCount, maxLength, true);
+		wordrank.setThemes(themes);
+		wordrank.setCorpus(corpus);
+
+		List<Word> list = wordrank.execute(text);
 		for (Word word : list) {
 			log.info("{}", word.toString());
 		}

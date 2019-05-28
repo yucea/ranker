@@ -37,6 +37,7 @@ public class WordrankController implements AppConstant {
 			@ApiImplicitParam(name = "docs", value = "Documents", required = true, dataType = "string", paramType = "query", allowMultiple = true),
 			@ApiImplicitParam(name = "minCount", value = "최소 중복횟수", required = true, dataType = "int", paramType = "query", defaultValue = "5"),
 			@ApiImplicitParam(name = "maxLength", value = "최대 단어길이", required = true, dataType = "int", paramType = "query", defaultValue = "10"),
+			@ApiImplicitParam(name = "corpus", value = "단어사전", required = false, dataType = "string", paramType = "query", allowMultiple = true),
 			@ApiImplicitParam(name = "exclude", value = "제외단어", required = false, dataType = "string", paramType = "query", defaultValue = ""),
 			@ApiImplicitParam(name = "match", value = "제외단어 일치여부<br/>일치 : true<br/>포함 : false", required = false, dataType = "boolean", paramType = "query", defaultValue = "true")
 	})
@@ -45,6 +46,7 @@ public class WordrankController implements AppConstant {
 			@RequestParam String[] docs,
 			@RequestParam(defaultValue = "5") int minCount,
 			@RequestParam(defaultValue = "10") int maxLength,
+			@RequestParam(defaultValue = "") String[] corpus,
 			@RequestParam(defaultValue = "") String exclude,
 			@RequestParam(defaultValue = "true") boolean match) throws JSONException {
 		JSONObject result = new JSONObject();
@@ -52,7 +54,7 @@ public class WordrankController implements AppConstant {
 		try {
 			long start = System.currentTimeMillis();
 
-			List<Word> data = wordrankService.execute(docs, minCount, maxLength, exclude, match);
+			List<Word> data = wordrankService.execute(docs, minCount, maxLength, corpus, exclude, match);
 
 			log.info("IP : {}, doc size : {}, actual time : {}(ms)", request.getRemoteAddr(), StringUtils.length(StringUtils.join(docs)), System.currentTimeMillis() - start);
 

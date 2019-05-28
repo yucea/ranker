@@ -1,7 +1,6 @@
 package kr.co.esjee.ranker.text;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Wordrank implements AppConstant {
 
+	private static final String SEPARATOR = "_";
 	private static final String LEFT = ":L";
 	private static final String RIGHT = ":R";
 
@@ -63,25 +63,53 @@ public class Wordrank implements AppConstant {
 		this.vocabulary.clear();
 		this.keymap.clear();
 
+		// corpus, theme 적용
+		List<String> data = this.preprocessor(docs);
 		// 사전 생성
-		this.scanVocabulary(docs);
+		this.scanVocabulary(data);
 		if (verbose)
 			this.printVocabulary();
 
 		// :L:R 형태로 변환
-		this.matrix(docs);
+		this.matrix(data);
 		// key, 반복회수 형태로 추출
 		Map<String, Integer> source = this.makeSource();
 		// 반복횟수가 같은 단어 병합
 		this.merge(source);
-		// score 표준화
-		return this.normalizing(source);
+		// corpus, theme 처리
+		Map<String, Integer> result = this.postprocessor(source);
+		// score 표준화 & sorting
+		return this.normalizing(result);
+	}
+
+	private List<String> preprocessor(List<String> docs) {
+		for (String key : corpus) {
+			themes.put(key, key);
+		}
+
+		List<String> result = new ArrayList<>();
+		for (String doc : docs) {
+			for (String key : themes.keySet()) {
+				doc = StringUtils.replace(doc, key, StringUtils.replace(themes.get(key), " ", SEPARATOR));
+			}
+
+			result.add(doc);
+		}
+
+		return result;
+	}
+
+	private Map<String, Integer> postprocessor(Map<String, Integer> source) {
+		return source.entrySet().stream()
+				.collect(Collectors.toMap(
+						x -> themes.containsKey(StringUtils.replace(x.getKey(), SEPARATOR, " ")) ? themes.get(StringUtils.replace(x.getKey(), SEPARATOR, " ")) : StringUtils.replace(x.getKey(), SEPARATOR, " "),
+						x -> x.getValue()));
 	}
 
 	private void printVocabulary() {
 		log.info("--- Vocabulary Start ---");
 		Map<String, Integer> result = vocabulary.entrySet().stream()
-				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+				// .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
 
 		log.info("{}", result);
@@ -98,7 +126,6 @@ public class Wordrank implements AppConstant {
 			String lkey = StringUtils.substringBefore(k, LEFT);
 			if (this.vocabulary.containsKey(lkey + LEFT)) {
 				if (this.vocabulary.get(lkey + LEFT) > value) {
-
 					key = lkey;
 					value = this.vocabulary.get(lkey + LEFT);
 				}
@@ -113,7 +140,7 @@ public class Wordrank implements AppConstant {
 						&& this.isNotExclude(x.getKey())
 						&& x.getValue() >= this.minCount
 						&& x.getKey().length() > 1)
-				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+				// .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
 
 		return source;
@@ -156,7 +183,7 @@ public class Wordrank implements AppConstant {
 				String k = matcher.group().replace("#", "");
 				int v = data.get(k);
 
-				if (value < v + 3) // 보정값: 3 > 어벤져 : 83, 어벤져스 : 82 ==> 어벤져스 : 82
+				if (value < v + Math.min(3, minCount)) // 보정값: 3 > 어벤져 : 83, 어벤져스 : 82 ==> 어벤져스 : 82
 					remove.add(key);
 			}
 		}
@@ -213,11 +240,13 @@ public class Wordrank implements AppConstant {
 			list.add(new Word(k, v, Math.round(v * 9.99 / maxValue * 100) / 100d));
 		});
 
-		return list;
+		return list.stream()
+				.sorted(Word::countDiff)
+				.collect(Collectors.toList());
 	}
 
 	private int getLimited(int length) {
-		return Math.min(length, this.maxLength);
+		return Math.min(length, this.maxLength + 1);
 	}
 
 	private String filterString(String text) {
@@ -296,6 +325,10 @@ public class Wordrank implements AppConstant {
 		private String key;
 		private int count;
 		private double score;
+
+		public int countDiff(final Word word) {
+			return word.getCount() - count;
+		}
 
 	}
 

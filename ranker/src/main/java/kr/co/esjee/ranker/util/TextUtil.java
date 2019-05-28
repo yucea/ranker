@@ -6,7 +6,7 @@ import kr.co.esjee.ranker.webapp.AppConstant;
 
 public class TextUtil implements AppConstant {
 
-	private static final String MATCH_PATTERN = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";
+	private static final String MATCH_PATTERN = "[^\uAC00-\uD7A3xfe_0-9a-zA-Z\\s]";
 
 	public static String getPlanText(String text) {
 		if (StringUtils.isEmpty(text))
