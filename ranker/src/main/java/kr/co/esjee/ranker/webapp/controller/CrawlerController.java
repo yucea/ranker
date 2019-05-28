@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.service.CrawlerService;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RestController
 @RequestMapping("/rest")
-public class CrawlerController {	
+@Slf4j
+public class CrawlerController implements AppConstant {
 	
 	@Autowired
 	private CrawlerService crawlerService;
@@ -37,11 +40,11 @@ public class CrawlerController {
 	 */
 	@ApiOperation(value = "WebCrawler")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "crawlerUrl", value = "주소", required = false, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "listEl", value = "목록 속성", required = false, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "listDtlEl", value = "목록 상세 속성", required = false, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "titleEl", value = "제목 속성", required = false, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "contentEl", value = "내용 속성", required = false, dataType = "string", paramType = "query")
+		@ApiImplicitParam(name = "crawlerUrl", value = "주소", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "listEl", value = "목록 속성", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "listDtlEl", value = "목록 상세 속성", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "titleEl", value = "제목 속성", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "contentEl", value = "내용 속성", required = true, dataType = "string", paramType = "query")
 		})
 	@RequestMapping(value = "/webCrawler", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String webCrawler(@RequestParam String crawlerUrl, @RequestParam String listEl, @RequestParam String listDtlEl,
@@ -53,13 +56,16 @@ public class CrawlerController {
 			JSONArray returnArray = new JSONArray();
 			returnArray = crawlerService.webCrawlerService(crawlerUrl, listEl, listDtlEl, titleEl, contentEl);
 			
-			returnObj.put("list", returnArray);
-			returnObj.put("success", true);
-			returnObj.put("msg", String.format("[%s] content imported!", returnArray.length()));			
+			returnObj.put(SUCCESS, true);
+			returnObj.put(TOTAL_COUNT, returnArray.length());
+			returnObj.put(RESULT, returnArray);
+						
 		} catch (IOException e) {			
-			e.printStackTrace();			
-			returnObj.put("success", false);
-			returnObj.put("msg", e.getLocalizedMessage());
+			
+			log.error("error = {}", e.getLocalizedMessage());
+
+			returnObj.put(SUCCESS, false);
+			returnObj.put(ERROR, e.getLocalizedMessage());
 		} 
         
         return returnObj.toString();		
