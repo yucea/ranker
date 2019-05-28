@@ -1,0 +1,194 @@
+package kr.co.esjee.ranker.elasticsearch;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.index.PostingsEnum;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.util.BytesRef;
+import org.elasticsearch.action.search.SearchAction;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.termvectors.TermVectorsAction;
+import org.elasticsearch.action.termvectors.TermVectorsRequest.FilterSettings;
+import org.elasticsearch.action.termvectors.TermVectorsRequestBuilder;
+import org.elasticsearch.action.termvectors.TermVectorsResponse;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+
+import kr.co.esjee.ranker.util.NormalizeUtil;
+import kr.co.esjee.ranker.webapp.AppConstant;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ElasticSearcher implements AppConstant {
+
+	public static SearchHits search(Client client, String indexName, ElasticOption option) throws Exception {
+		long start = System.currentTimeMillis();
+
+		SearchRequestBuilder builder = new SearchRequestBuilder(client, SearchAction.INSTANCE);
+		builder.setIndices(indexName);
+
+		option.fulfill(builder);
+
+		log.info("query : {}", builder.toString());
+		SearchResponse response = builder.execute().get();
+
+		log.info("result count : {}, actual time : {}(ms)", response.getHits().totalHits, (System.currentTimeMillis() - start));
+
+		return response.getHits();
+	}
+
+	public static SearchHits fullSearch(Client client, String indexName, String searchKey, String[] fieldNames, ElasticOption option) throws Exception {
+		if (option.getQueryBuilder() == null) {
+			BoolQueryBuilder query = QueryBuilders.boolQuery();
+			query.should(ElasticQuery.searchQuery(searchKey, fieldNames));
+			query.should(ElasticQuery.matchQuery(searchKey, fieldNames));
+			query.should(ElasticQuery.wildcardQuery(searchKey, fieldNames));
+			option.setQueryBuilder(query);
+		}
+
+		return search(client, indexName, option);
+	}
+
+	public static SearchHit findById(Client client, String indexName, long id) throws Exception {
+		SearchHits hits = search(client, indexName, ElasticOption.newInstance().queryBuilder(ElasticQuery.termQuery(ID, id)).sortSkip());
+		if (hits.totalHits > 0) {
+			return hits.getHits()[0];
+		} else {
+			throw new IllegalArgumentException(String.format("Item not found : %s", id));
+		}
+	}
+
+	public static Map<String, Double> termvectors(Client client, String indexName, String typeName, String id, String... fields) throws IOException {
+		TermVectorsRequestBuilder builder = new TermVectorsRequestBuilder(client, TermVectorsAction.INSTANCE, indexName, typeName, id);
+		builder.setSelectedFields(fields);
+		builder.setOffsets(false);
+		builder.setPositions(false);
+		builder.setTermStatistics(true);
+		builder.setFieldStatistics(true);
+		builder.setFilterSettings(new FilterSettings());
+		builder.setPayloads(false);
+
+		TermVectorsResponse response = builder.get();
+
+		Map<Integer, List<String>> dataMap = new TreeMap<Integer, List<String>>(Collections.reverseOrder());
+
+		for (String field : fields) {
+			Terms terms = response.getFields().terms(field);
+			TermsEnum termsEnum = terms.iterator();
+
+			BytesRef term = null;
+			while ((term = termsEnum.next()) != null) { // terms
+				// int docFreq = termsEnum.docFreq(); // doc_freq
+				// long totalTermFreq = termsEnum.totalTermFreq(); // ttf
+
+				PostingsEnum postings = termsEnum.postings(null, PostingsEnum.ALL);
+				int termFreq = postings.freq(); // term_freq
+
+				// BoostAttribute boostAttribute = termsEnum.attributes().addAttribute(BoostAttribute.class);
+				// float score = boostAttribute.getBoost(); // score
+				String word = term.utf8ToString();
+
+				log.info("{}, {}, {}, {}, {}, {}", field, response.getId(), word, termFreq, terms.getDocCount(), terms.getSumTotalTermFreq());
+
+				if (word.length() < 2)
+					continue;
+
+				List<String> list = dataMap.containsKey(termFreq) ? dataMap.get(termFreq) : new ArrayList<String>();
+				list.add(term.utf8ToString());
+
+				dataMap.put(termFreq, list);
+			}
+		}
+
+		Map<String, Double> data = new LinkedHashMap<String, Double>();
+		dataMap.forEach((k, v) -> {
+			v.forEach(s -> {
+				if (!data.containsKey(s))
+					data.put(s, (double) k);
+			});
+		});
+
+		Map<String, Double> result = NormalizeUtil.normalize(data);
+
+		result.forEach((k, v) -> log.info("{} : {}", k, v));
+
+		return result;
+	}
+
+	public static SuggestResult suggest(Client client, String indexName, String searchKey, String fieldName, ElasticOption option) throws Exception {
+		HighlightBuilder highlightBuilder = option.getHighlightBuilder();
+		String preTag = "";
+		String postTag = "";
+		if (highlightBuilder != null) {
+			preTag = StringUtils.join(highlightBuilder.preTags());
+			postTag = StringUtils.join(highlightBuilder.postTags());
+
+			option.setHighlightBuilder(null);
+		}
+
+		BoolQueryBuilder query = QueryBuilders.boolQuery();
+		query.should(ElasticQuery.matchQuery(searchKey, fieldName).boost(3));
+		query.should(ElasticQuery.wildcardPostQuery(searchKey, fieldName).boost(2));
+		query.should(ElasticQuery.wildcardQuery(searchKey, fieldName).boost(1));
+
+		option.setQueryBuilder(query);
+
+		if (option.getSortBuilders().isEmpty()) {
+			option.sort(SortBuilders.scoreSort());
+			option.sort(SortBuilders.fieldSort(fieldName).order(SortOrder.ASC));
+		}
+
+		SearchHits hits = search(client, indexName, option);
+
+		// List<SuggestResult> result = new ArrayList<>();
+
+		SuggestResult result = new SuggestResult();
+		result.setTotalCount(hits.totalHits);
+
+		for (SearchHit hit : hits) {
+			String keyword = hit.getSourceAsMap().get(fieldName).toString();
+			String highlight = highlightBuilder == null ? null : StringUtils.replace(keyword, searchKey, String.format("%s%s%s", preTag, searchKey, postTag));
+
+			result.add(keyword, hit.getScore(), highlight);
+		}
+
+		return result;
+	}
+
+	public static SearchHits suggest(Client client, String indexName, String typeName, String suggestName, String field, String text) throws Exception {
+		QueryBuilder query = QueryBuilders.matchQuery(field, text);
+
+		SuggestBuilder suggestBuilder = new SuggestBuilder()
+				.addSuggestion(suggestName, SuggestBuilders.completionSuggestion(field).text(text));
+
+		SearchRequestBuilder builder = client.prepareSearch(indexName)
+				.setTypes(typeName)
+				.setQuery(query)
+				.suggest(suggestBuilder);
+
+		log.info("query : {}", builder.toString());
+
+		SearchResponse response = builder.execute().get();
+
+		return response.getHits();
+	}
+
+}
