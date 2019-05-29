@@ -55,6 +55,15 @@ public class ElasticSearcher implements AppConstant {
 		return response.getHits();
 	}
 
+	public static long count(Client client, String indexName) {
+		SearchRequestBuilder builder = new SearchRequestBuilder(client, SearchAction.INSTANCE);
+		builder.setIndices(indexName);
+		builder.setQuery(QueryBuilders.matchAllQuery());
+
+		SearchResponse response = builder.get();
+		return response.getHits().totalHits;
+	}
+
 	public static SearchHits fullSearch(Client client, String indexName, String searchKey, String[] fieldNames, ElasticOption option) throws Exception {
 		if (option.getQueryBuilder() == null) {
 			BoolQueryBuilder query = QueryBuilders.boolQuery();

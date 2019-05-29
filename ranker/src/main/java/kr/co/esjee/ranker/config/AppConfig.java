@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,10 @@ public class AppConfig {
 			byte[] data = FileCopyUtils.copyToByteArray(resource.getInputStream());
 			String source = new String(data, StandardCharsets.UTF_8);
 
-			stopwords = Arrays.asList(source.split("\r\n"));
+			stopwords = Arrays.asList(source.split("\r\n"))
+					.stream()
+					.filter(x -> !x.isEmpty())
+					.collect(Collectors.toList());
 		}
 
 		return stopwords;
