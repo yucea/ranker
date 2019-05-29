@@ -9,7 +9,7 @@ import kr.co.esjee.ranker.webapp.AppConstant;
 import lombok.Data;
 
 @Data
-@Document(indexName = AppConstant.SEQUCNCE, type = AppConstant.DOC, replicas = 2)
+@Document(indexName = AppConstant.SEQUENCE, type = AppConstant.DOC, replicas = 2)
 public class Sequence {
 
 	@Id

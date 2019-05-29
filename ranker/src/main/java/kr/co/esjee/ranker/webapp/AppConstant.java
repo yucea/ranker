@@ -27,7 +27,7 @@ public interface AppConstant {
 	String USER_DICTIONARY_PATH = "index.analysis.tokenizer.nori_user_dict.user_dictionary";
 	String SYNONYM_PATH = "index.analysis.filter.synonym.synonyms_path";
 
-	String SEQUCNCE = "sequcnce";
+	String SEQUENCE = "sequence";
 	String ARTICLE = "article";
 	String DOC = "doc";
 
