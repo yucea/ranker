@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/crawler")
 @Slf4j
 public class CrawlerController implements AppConstant {
 	
@@ -38,23 +38,23 @@ public class CrawlerController implements AppConstant {
 	 * @param contentsEl
 	 * @return json
 	 */
-	@ApiOperation(value = "WebCrawler")
+	@ApiOperation(value = "Crawler")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "crawlerUrl", value = "주소", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "listEl", value = "목록 속성", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "listDtlEl", value = "목록 상세 속성", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "titleEl", value = "제목 속성", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "contentEl", value = "내용 속성", required = true, dataType = "string", paramType = "query")
+		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query", example = "1234fgg"),
+		@ApiImplicitParam(name = "listAtrb", value = "목록 속성", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "listEachAtrb", value = "목록 각각의 속성", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "titleAtrb", value = "제목 속성", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "contentAtrb", value = "내용 속성", required = true, dataType = "string", paramType = "query")
 		})
-	@RequestMapping(value = "/webCrawler", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public String webCrawler(@RequestParam String crawlerUrl, @RequestParam String listEl, @RequestParam String listDtlEl,
-			@RequestParam String titleEl, @RequestParam String contentEl) {
+	@RequestMapping(value = "/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String execute(@RequestParam String url, @RequestParam String listAtrb, @RequestParam String listEachAtrb,
+			@RequestParam String titleAtrb, @RequestParam String contentAtrb) {
 				
 		JSONObject returnObj = new JSONObject();
 		
 		try {			
 			JSONArray returnArray = new JSONArray();
-			returnArray = crawlerService.webCrawlerService(crawlerUrl, listEl, listDtlEl, titleEl, contentEl);
+			returnArray = crawlerService.execute(url, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
 			
 			returnObj.put(SUCCESS, true);
 			returnObj.put(TOTAL_COUNT, returnArray.length());

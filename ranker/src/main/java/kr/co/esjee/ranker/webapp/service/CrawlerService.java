@@ -14,31 +14,32 @@ import org.springframework.stereotype.Service;
 public class CrawlerService {
 	
 	/**
-	 * Web Crawler Service
+	 * Crawler Execute
 	 * 
-	 * @param crawlerUrl
-	 * @param listEl
-	 * @param listDtlEl
-	 * @param titleEl
-	 * @param contentsEl
-	 * @return JSONArray
-	 * @throws IOException 
-	 * @throws Exception
+	 * @param url
+	 * @param listAtrb
+	 * @param listEachAtrb
+	 * @param titleAtrb
+	 * @param contentAtrb
+	 * @return
+	 * @throws IOException
 	 */
-	public JSONArray webCrawlerService(String crawlerUrl, String listEl, String listDtlEl, String titleEl, String contentEl) throws IOException {
+	public JSONArray execute(String url, String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
 		
 		Document listDoc = null;		
-        Document dtlDoc = null;
+        
         
         JSONArray rtnJsonArray = new JSONArray();         
         
-    	listDoc = Jsoup.connect(crawlerUrl).get();
+    	listDoc = Jsoup.connect(url).get();
     	
     	// 목록 Element 
-    	Elements listElement = listDoc.select(listEl);
+    	Elements listElement = listDoc.select(listAtrb);
          
         // 목록 Element 에서 상세 정보 추출
-        for(Element dtlEl : listElement.select(listDtlEl)) {     
+        for(Element dtlEl : listElement.select(listEachAtrb)) {
+        	
+        	Document dtlDoc = null;
         	
         	// 상세 정보 링크
             String dtlUrl = dtlEl.select("a").attr("abs:href").toString();
@@ -49,10 +50,10 @@ public class CrawlerService {
             Elements dtlElement = dtlDoc.select("body");
             
             // Title
-            String title = dtlElement.select(titleEl).text();
+            String title = dtlElement.select(titleAtrb).text();
             
             // Contents
-            String content = dtlElement.select(contentEl).text();
+            String content = dtlElement.select(contentAtrb).text();
             
             JSONObject obj = new JSONObject();
             
