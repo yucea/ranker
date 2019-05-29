@@ -17,6 +17,8 @@ public interface AppConstant {
 	String TOTAL_COUNT = "totalCount";
 	String TOTAL_PAGES = "totalPages";
 
+	String INDEX_NAME = "indexName";
+
 	String ID = "id";
 
 	long ES_START_ID = 10001;

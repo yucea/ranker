@@ -1,13 +1,23 @@
 package kr.co.esjee.ranker.webapp.controller;
 
+import org.elasticsearch.client.Client;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
 import kr.co.esjee.ranker.webapp.AppConstant;
 
 public abstract class AppController implements AppConstant {
+
+	@Autowired
+	private ElasticsearchTemplate template;
+
+	public Client getClient() {
+		return template.getClient();
+	}
 
 	public int getPage(int pageNo, int size) {
 		return pageNo * size - size;
