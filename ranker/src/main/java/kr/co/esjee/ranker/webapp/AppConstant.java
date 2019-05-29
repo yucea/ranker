@@ -9,17 +9,18 @@ public interface AppConstant {
 	String RESULT = "result";
 	String ERROR = "error";
 	String SCORE = "score";
+	String DATA = "data";
 	String KEY = "key";
 	String TERM = "term";
 	String TYPE = "type";
 	String COUNT = "count";
 	String TOTAL_COUNT = "totalCount";
+	String TOTAL_PAGES = "totalPages";
 
-	String NNP = "NNP";
-	String HWP = "hwp";
-	String DATA = "data";
+	String INDEX_NAME = "indexName";
 
 	String ID = "id";
+
 	long ES_START_ID = 10001;
 
 	int ES_FROM = 0;
@@ -28,42 +29,12 @@ public interface AppConstant {
 	String USER_DICTIONARY_PATH = "index.analysis.tokenizer.nori_user_dict.user_dictionary";
 	String SYNONYM_PATH = "index.analysis.filter.synonym.synonyms_path";
 
-	enum SENTIMENT_TYPE {
-		positive, neutral, negative;
+	String SEQUENCE = "sequence";
+	String ARTICLE = "article";
+	String DOC = "doc";
 
-		public String getName() {
-			return this.name();
-		}
-
-		public int getBagOfWordsScore() {
-			if (this == positive)
-				return 1;
-			else if (this == negative)
-				return 0;
-			else
-				return -1;
-		}
-
-		public int getAnalyzeScore() {
-			if (this == positive)
-				return 1;
-			else if (this == negative)
-				return -1;
-			else
-				return 0;
-		}
-	}
-
-	enum PARSER_TYPE {
-		elasticsearch, twitter;
-
-		public boolean isElasticsearch() {
-			return this == elasticsearch;
-		}
-
-		public boolean isTwitter() {
-			return this == twitter;
-		}
+	enum INDICES {
+		article
 	}
 
 }

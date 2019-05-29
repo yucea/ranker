@@ -19,7 +19,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import kr.co.esjee.ranker.text.Wordrank.Word;
-import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.service.WordrankService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/rest/wordrank")
 @Api(value = "Wordrank")
 @Slf4j
-public class WordrankController implements AppConstant {
+public class WordrankController extends AppController {
 
 	@Autowired
 	private WordrankService wordrankService;
@@ -39,7 +38,7 @@ public class WordrankController implements AppConstant {
 			@ApiImplicitParam(name = "maxLength", value = "최대 단어길이", required = true, dataType = "int", paramType = "query", defaultValue = "10"),
 			@ApiImplicitParam(name = "corpus", value = "단어사전", required = false, dataType = "string", paramType = "query", allowMultiple = true),
 			@ApiImplicitParam(name = "exclude", value = "제외단어", required = false, dataType = "string", paramType = "query", defaultValue = ""),
-			@ApiImplicitParam(name = "match", value = "제외단어 일치여부<br/>일치 : true<br/>포함 : false", required = false, dataType = "boolean", paramType = "query", defaultValue = "true")
+			@ApiImplicitParam(name = "match", value = "제외단어 일치여부 - 일치: true, 포함: false", required = false, dataType = "boolean", paramType = "query", defaultValue = "true")
 	})
 	@RequestMapping(value = "/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String list(HttpServletRequest request,
