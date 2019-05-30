@@ -9,8 +9,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.google.common.collect.Lists;
+
+import kr.co.esjee.ranker.webapp.model.Article;
 
 public class Crawler {
 	
@@ -25,9 +26,17 @@ public class Crawler {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<CrawlerVO> execute(String url, String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
+	public List<Article> execute(String url, String[] urlParams, String listAtrb,String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
 		
-		List<CrawlerVO> resultList = new ArrayList<CrawlerVO>();
+		List<Article> articleList = new ArrayList<Article>();
+		
+		List<String> paramList = Lists.newArrayList(urlParams);
+		
+		if(!paramList.isEmpty()) {
+			for(String param : paramList) {
+				url += "?" + param;
+			}
+		}
 		
         Document listDoc = Jsoup.connect(url).get();
     	
@@ -44,18 +53,14 @@ public class Crawler {
             String title = dtlElement.select(titleAtrb).text();            
             String content = dtlElement.select(contentAtrb).text();
             
-            CrawlerVO crawlerVO = new CrawlerVO(title, content);
+            Article article = new Article();
             
-            resultList.add(crawlerVO);                
+            article.setTitle(title);
+            article.setContent(content);
+            
+            articleList.add(article);                
         }
         
-        return resultList;		
-	}
-	
-	@Data
-	@AllArgsConstructor
-	public class CrawlerVO {
-		private String title;
-		private String content;
+        return articleList;		
 	}
 }

@@ -3,16 +3,30 @@ package kr.co.esjee.ranker.webapp.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.esjee.ranker.crawler.Crawler;
-import kr.co.esjee.ranker.crawler.Crawler.CrawlerVO;
+import kr.co.esjee.ranker.webapp.model.Article;
 
 @Service
 public class CrawlerService {
+	
+	@Autowired
+	private ArticleService articleService;
 
-	public List<CrawlerVO> execute(String url, String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
+	public List<Article> execute(String url, String[] urlParams, String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
+		
 		Crawler crawler = new Crawler();
-		return crawler.execute(url, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
+		
+		List<Article> articleList = crawler.execute(url, urlParams, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
+		
+		if(articleList.size() > 0) {
+			for(Article article : articleList) {
+				articleService.save(article);
+			}
+		}
+		
+		return articleList;
 	}
 }

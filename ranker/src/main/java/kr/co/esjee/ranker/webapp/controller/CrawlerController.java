@@ -3,6 +3,8 @@ package kr.co.esjee.ranker.webapp.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import kr.co.esjee.ranker.crawler.Crawler.CrawlerVO;
 import kr.co.esjee.ranker.webapp.AppConstant;
+import kr.co.esjee.ranker.webapp.model.Article;
 import kr.co.esjee.ranker.webapp.service.CrawlerService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,24 +43,30 @@ public class CrawlerController implements AppConstant {
 	 */
 	@ApiOperation(value = "Crawler")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query", example = "1234fgg"),
+		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "urlParams", value = "파라미터", required = false, dataType = "string", paramType = "query", allowMultiple = true),
 		@ApiImplicitParam(name = "listAtrb", value = "목록 속성", required = true, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "listEachAtrb", value = "목록 각각의 속성", required = true, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "titleAtrb", value = "제목 속성", required = true, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "contentAtrb", value = "내용 속성", required = true, dataType = "string", paramType = "query")
 		})
 	@RequestMapping(value = "/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public String execute(@RequestParam String url, @RequestParam String listAtrb, @RequestParam String listEachAtrb,
-			@RequestParam String titleAtrb, @RequestParam String contentAtrb) {
+	public String execute(HttpServletRequest request,
+			@RequestParam String url, 
+			@RequestParam(defaultValue = "") String[] urlParams,
+			@RequestParam String listAtrb, 
+			@RequestParam String listEachAtrb,
+			@RequestParam String titleAtrb, 
+			@RequestParam String contentAtrb) {
 				
 		JSONObject returnObj = new JSONObject();
 		
 		try {
-			List<CrawlerVO> resultList = crawlerService.execute(url, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
+			List<Article> articleList = crawlerService.execute(url, urlParams, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
 			
 			returnObj.put(SUCCESS, true);
-			returnObj.put(TOTAL_COUNT, resultList.size());
-			returnObj.put(RESULT, resultList);
+			returnObj.put(TOTAL_COUNT, articleList.size());
+			returnObj.put(RESULT, articleList);
 						
 		} catch (IOException e) {						
 			log.error("error = {}", e.getLocalizedMessage());
