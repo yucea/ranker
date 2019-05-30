@@ -1,8 +1,8 @@
 package kr.co.esjee.ranker.webapp.controller;
 
 import java.io.IOException;
+import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import kr.co.esjee.ranker.crawler.Crawler.CrawlerVO;
 import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.service.CrawlerService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,16 +53,14 @@ public class CrawlerController implements AppConstant {
 				
 		JSONObject returnObj = new JSONObject();
 		
-		try {			
-			JSONArray returnArray = new JSONArray();
-			returnArray = crawlerService.execute(url, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
+		try {
+			List<CrawlerVO> resultList = crawlerService.execute(url, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
 			
 			returnObj.put(SUCCESS, true);
-			returnObj.put(TOTAL_COUNT, returnArray.length());
-			returnObj.put(RESULT, returnArray);
+			returnObj.put(TOTAL_COUNT, resultList.size());
+			returnObj.put(RESULT, resultList);
 						
-		} catch (IOException e) {			
-			
+		} catch (IOException e) {						
 			log.error("error = {}", e.getLocalizedMessage());
 
 			returnObj.put(SUCCESS, false);
