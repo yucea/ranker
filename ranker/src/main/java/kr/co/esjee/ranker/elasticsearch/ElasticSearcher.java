@@ -279,7 +279,7 @@ public class ElasticSearcher implements AppConstant {
 		return response.getHits();
 	}
 
-	public static void create(Client client, String indexName, String typeName, String id, String jsonString) throws Exception {
+	public static IndexResponse create(Client client, String indexName, String typeName, String id, String jsonString) throws Exception {
 		IndexRequestBuilder builder = new IndexRequestBuilder(client, IndexAction.INSTANCE, indexName);
 		builder.setType(typeName);
 		builder.setId(id);
@@ -288,6 +288,8 @@ public class ElasticSearcher implements AppConstant {
 		IndexResponse response = builder.execute().get();
 
 		log.info("{}", response.getResult());
+
+		return response;
 	}
 
 	public static void update(Client client, String indexName, String typeName, String id, String jsonString) throws Exception {

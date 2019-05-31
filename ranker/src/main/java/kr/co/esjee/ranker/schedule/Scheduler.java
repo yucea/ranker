@@ -5,8 +5,6 @@ import java.util.Calendar;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
-import org.json.JSONObject;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -16,12 +14,10 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
-import kr.co.esjee.ranker.config.RabbitMQConfig;
 import kr.co.esjee.ranker.elasticsearch.ElasticOption;
 import kr.co.esjee.ranker.elasticsearch.ElasticQuery;
 import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
 import kr.co.esjee.ranker.util.CalendarUtil;
-import kr.co.esjee.ranker.util.JobUtil;
 import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.model.Schedule;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +30,11 @@ public class Scheduler implements AppConstant {
 	@Autowired
 	private ElasticsearchTemplate template;
 
-	@Autowired
-	private RabbitTemplate rabbitTemplate;
+	// @Autowired
+	// private RabbitTemplate rabbitTemplate;
 
 	@Value("${spring.custom.schedule.usable}")
 	private boolean usable;
-
-	@Value("${spring.custom.schedule.process.minute}")
-	private int processMinute;
 
 	@Scheduled(cron = "${spring.custom.schedule.cron}")
 	public void cronTask() throws Exception {
@@ -70,23 +63,25 @@ public class Scheduler implements AppConstant {
 			hits.forEach(h -> {
 				Schedule schedule = new Gson().fromJson(h.getSourceAsMap().toString(), Schedule.class);
 
-				if (rabbitTemplate == null) {
-					this.callCrawler(schedule);
-				} else {
-					this.sendMessage(schedule.toString());
-				}
+				this.callCrawler(schedule);
+
+				// if (rabbitTemplate == null) {
+				// this.callCrawler(schedule);
+				// } else {
+				// this.sendMessage(schedule.toString());
+				// }
 			});
 
 			// XXX test
-			if (rabbitTemplate != null) {
-				JSONObject json = new JSONObject();
-				json.put(NAME, RabbitMQConfig.QUEUE_NAME);
-				json.put(TIME, CalendarUtil.getCurrentDateTime());
-				json.put(DATA, "test ranker scheduler");
-
-				// processor.output().send(MessageBuilder.withPayload(json.toString()).build());
-				this.sendMessage(json.toString());
-			}
+			// if (rabbitTemplate != null) {
+			// JSONObject json = new JSONObject();
+			// json.put(NAME, RabbitMQConfig.QUEUE_NAME);
+			// json.put(TIME, CalendarUtil.getCurrentDateTime());
+			// json.put(DATA, "test ranker scheduler");
+			//
+			// // processor.output().send(MessageBuilder.withPayload(json.toString()).build());
+			// this.sendMessage(json.toString());
+			// }
 		}
 	}
 
@@ -95,8 +90,8 @@ public class Scheduler implements AppConstant {
 		log.info("call crawler : {}", schedule);
 	}
 
-	private void sendMessage(String message) {
-		this.rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, JobUtil.getRoutingKey(RabbitMQConfig.QUEUE_NAME), message);
-	}
+	// private void sendMessage(String message) {
+	// this.rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, JobUtil.getRoutingKey(RabbitMQConfig.QUEUE_NAME), message);
+	// }
 
 }

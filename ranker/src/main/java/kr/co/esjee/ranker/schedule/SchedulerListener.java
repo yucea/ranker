@@ -1,11 +1,10 @@
 package kr.co.esjee.ranker.schedule;
 
-import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
 import lombok.extern.slf4j.Slf4j;
 
-@EnableBinding(Processor.class)
+// @EnableBinding(Processor.class)
 @Slf4j
 public class SchedulerListener {
 
