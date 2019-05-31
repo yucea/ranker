@@ -1,18 +1,16 @@
 package kr.co.esjee.ranker.schedule;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
-import kr.co.esjee.ranker.webapp.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 
 @EnableBinding(Processor.class)
 @Slf4j
 public class SchedulerListener {
 
-	@Autowired
-	private ScheduleService service;
+	// @Autowired
+	// private ScheduleService service;
 
 	@StreamListener(Processor.SCHEDULE)
 	public void scheduleHandle(String source) {

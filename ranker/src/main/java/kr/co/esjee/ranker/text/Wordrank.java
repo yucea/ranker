@@ -1,6 +1,7 @@
 package kr.co.esjee.ranker.text;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -235,14 +236,13 @@ public class Wordrank implements AppConstant {
 		if (data.isEmpty())
 			return list;
 
-		double maxValue = data.get(data.keySet().stream().findFirst().get());
+		double maxValue = data.entrySet().stream().max(Comparator.comparing(Map.Entry::getValue)).get().getValue();
+
 		data.forEach((k, v) -> {
 			list.add(new Word(k, v, Math.round(v * 9.99 / maxValue * 100) / 100d));
 		});
 
-		return list.stream()
-				.sorted(Word::countDiff)
-				.collect(Collectors.toList());
+		return list.stream().sorted(Word::countDiff).collect(Collectors.toList());
 	}
 
 	private int getLimited(int length) {

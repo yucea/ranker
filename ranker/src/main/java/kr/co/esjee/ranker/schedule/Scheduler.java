@@ -1,8 +1,6 @@
 package kr.co.esjee.ranker.schedule;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -26,7 +24,6 @@ import kr.co.esjee.ranker.util.CalendarUtil;
 import kr.co.esjee.ranker.util.JobUtil;
 import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.model.Schedule;
-import kr.co.esjee.ranker.webapp.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -39,9 +36,6 @@ public class Scheduler implements AppConstant {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
-
-	@Autowired
-	private ScheduleService service;
 
 	@Value("${spring.custom.schedule.usable}")
 	private boolean usable;
@@ -64,7 +58,6 @@ public class Scheduler implements AppConstant {
 			query.must(ElasticQuery.termsQuery(DAY, 0, calendar.get(Calendar.DATE)));
 			query.must(ElasticQuery.termsQuery(MINUTE, 24, calendar.get(Calendar.MINUTE)));
 			query.must(ElasticQuery.termsQuery(HOUR, 60, calendar.get(Calendar.HOUR)));
-			query.must(ElasticQuery.termsQuery(STATUS, STATUS_TYPE.COMPLETED.name()));
 
 			ElasticOption option = ElasticOption.newInstance()
 					.queryBuilder(query)
@@ -74,49 +67,26 @@ public class Scheduler implements AppConstant {
 
 			log.info("{}", hits.totalHits);
 
-			List<Long> ids = new ArrayList<>();
-
 			hits.forEach(h -> {
 				Schedule schedule = new Gson().fromJson(h.getSourceAsMap().toString(), Schedule.class);
-				schedule.setStatus(STATUS_TYPE.READY.name());
-				schedule.setLastRuntime(CalendarUtil.getCurrentDateTime());
-				ids.add(schedule.getId());
 
 				if (rabbitTemplate == null) {
 					this.callCrawler(schedule);
 				} else {
 					this.sendMessage(schedule.toString());
 				}
-
-				// status: ready, lastRuntime 설정
-				service.save(schedule);
-			});
-
-			// status가 ready 상태가 지정된 시간 이상 지속되면 재 실행
-			List<Schedule> list = service.findByStatusAndLastRuntimeLessThan(STATUS_TYPE.READY.name(), CalendarUtil.getPreviousTime(processMinute));
-			list.forEach(s -> {
-				if (ids.contains(s.getId())) {
-					return;
-				} else {
-					if (rabbitTemplate == null) {
-						this.callCrawler(s);
-					} else {
-						this.sendMessage(s.toString());
-
-						s.setLastRuntime(CalendarUtil.getCurrentDateTime());
-						service.save(s);
-					}
-				}
 			});
 
 			// XXX test
-			JSONObject json = new JSONObject();
-			json.put(NAME, RabbitMQConfig.QUEUE_NAME);
-			json.put(TIME, CalendarUtil.getCurrentDateTime());
-			json.put(DATA, "test ranker scheduler");
+			if (rabbitTemplate != null) {
+				JSONObject json = new JSONObject();
+				json.put(NAME, RabbitMQConfig.QUEUE_NAME);
+				json.put(TIME, CalendarUtil.getCurrentDateTime());
+				json.put(DATA, "test ranker scheduler");
 
-			// processor.output().send(MessageBuilder.withPayload(json.toString()).build());
-			this.sendMessage(json.toString());
+				// processor.output().send(MessageBuilder.withPayload(json.toString()).build());
+				this.sendMessage(json.toString());
+			}
 		}
 	}
 

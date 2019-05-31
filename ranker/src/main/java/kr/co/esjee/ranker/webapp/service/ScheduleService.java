@@ -1,7 +1,5 @@
 package kr.co.esjee.ranker.webapp.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +16,4 @@ public class ScheduleService {
 		return repository.save(schedule);
 	}
 
-	public List<Schedule> findByStatusAndLastRuntimeLessThan(String status, String time) {
-		return repository.findByStatusAndLastRuntimeLessThan(status, time);
-	}
 }

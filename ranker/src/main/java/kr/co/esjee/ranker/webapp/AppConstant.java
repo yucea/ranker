@@ -51,8 +51,4 @@ public interface AppConstant {
 		article, schedule
 	}
 
-	enum STATUS_TYPE {
-		READY, COMPLETED, ERROR
-	}
-
 }
