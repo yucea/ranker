@@ -19,6 +19,19 @@ public interface AppConstant {
 
 	String INDEX_NAME = "indexName";
 
+	String MONTH = "month";
+	String WEEK = "week";
+	String DAY = "day";
+	String HOUR = "hour";
+	String MINUTE = "minute";
+	String STATUS = "status";
+	String FINISH = "finish";
+	String USABLE = "usable";
+
+	String NAME = "name";
+	String TIME = "time";
+	String OPTION = "option";
+
 	String ID = "id";
 
 	long ES_START_ID = 10001;
@@ -31,10 +44,15 @@ public interface AppConstant {
 
 	String SEQUENCE = "sequence";
 	String ARTICLE = "article";
+	String SCHEDULE = "schedule";
 	String DOC = "doc";
 
 	enum INDICES {
-		article
+		article, schedule
+	}
+
+	enum STATUS_TYPE {
+		READY, COMPLETED, ERROR
 	}
 
 }

@@ -12,8 +12,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
+import kr.co.esjee.ranker.webapp.AppConstant;
+
 @Configuration
-public class AppConfig {
+public class AppConfig implements AppConstant {
 
 	private static List<String> stopwords;
 

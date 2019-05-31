@@ -45,7 +45,7 @@ public class ElasticQuery {
 	/**
 	 * 필드에 정확한 텀을 포함하고 있는지 확인하는 쿼리
 	 */
-	public static TermsQueryBuilder termsQuery(String name, Object value) {
+	public static TermsQueryBuilder termsQuery(String name, Object... value) {
 		return QueryBuilders.termsQuery(name, value);
 	}
 
