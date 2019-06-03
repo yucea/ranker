@@ -15,11 +15,13 @@ public class CrawlerService {
 	@Autowired
 	private ArticleService articleService;
 
-	public List<Article> execute(String url, String[] urlParams, String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
+	public List<Article> execute(String url, String[] urlParams, String idColumn, String dateColumn, String categoryColumn,
+			String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
 		
 		Crawler crawler = new Crawler();
 		
-		List<Article> articleList = crawler.execute(url, urlParams, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
+		List<Article> articleList = crawler.execute(url, urlParams, idColumn, dateColumn,
+				categoryColumn, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
 		
 		if(articleList.size() > 0) {
 			for(Article article : articleList) {

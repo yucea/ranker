@@ -45,6 +45,9 @@ public class CrawlerController implements AppConstant {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "urlParams", value = "파라미터", required = false, dataType = "string", paramType = "query", allowMultiple = true),
+		@ApiImplicitParam(name = "idColumn", value = "아이디 컬럼", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "dateColumn", value = "날짜 컬럼", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "categoryColumn", value = "카테고리 컬럼", required = true, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "listAtrb", value = "목록 속성", required = true, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "listEachAtrb", value = "목록 각각의 속성", required = true, dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "titleAtrb", value = "제목 속성", required = true, dataType = "string", paramType = "query"),
@@ -54,7 +57,10 @@ public class CrawlerController implements AppConstant {
 	public String execute(HttpServletRequest request,
 			@RequestParam String url, 
 			@RequestParam(defaultValue = "") String[] urlParams,
-			@RequestParam String listAtrb, 
+			@RequestParam String idColumn, 
+			@RequestParam String dateColumn,
+			@RequestParam String categoryColumn,
+			@RequestParam String listAtrb,
 			@RequestParam String listEachAtrb,
 			@RequestParam String titleAtrb, 
 			@RequestParam String contentAtrb) {
@@ -62,14 +68,15 @@ public class CrawlerController implements AppConstant {
 		JSONObject returnObj = new JSONObject();
 		
 		try {
-			List<Article> articleList = crawlerService.execute(url, urlParams, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
+			List<Article> articleList = crawlerService.execute(url, urlParams, idColumn, dateColumn, categoryColumn, 
+					listAtrb, listEachAtrb, titleAtrb, contentAtrb);
 			
 			returnObj.put(SUCCESS, true);
 			returnObj.put(TOTAL_COUNT, articleList.size());
 			returnObj.put(RESULT, articleList);
 						
 		} catch (IOException e) {						
-			log.error("error = {}", e.getLocalizedMessage());
+			log.error("Error = {}", e.getLocalizedMessage());
 
 			returnObj.put(SUCCESS, false);
 			returnObj.put(ERROR, e.getLocalizedMessage());

@@ -40,5 +40,8 @@ public class ArticleService extends AppService {
 	public void remove(long id) {
 		repository.deleteById(id);
 	}
-
+	
+	public boolean existsById(long id) {
+		return repository.existsById(id);
+	}
 }

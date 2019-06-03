@@ -24,23 +24,37 @@ public class TestCrawler {
 	@Test
 	public void testCrawler(){
 		
-		String url = "https://media.daum.net/ranking/popular";
-		String[] urlParams = {"regDate=20190530"};
-		String listAtrb = "ul.list_news2";
-		String listEachAtrb = "li";
-		String titleAtrb = "h3.tit_view";
-		String contentAtrb = "div.news_view";
+		
+		String url = "https://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day&sectionId=101&date=20190603";
+		String[] urlParams = {};		
+		String idColumn = "aid";
+		String dateColumn = "date";
+		String categoryColumn = "rankingSectionId";
+		String listAtrb = "div.ranking";
+		String listEachAtrb = "div.ranking_text";
+		String titleAtrb = "h3#articleTitle";
+		String contentAtrb = "div#articleBodyContents";
 		
 		try {
 			Crawler crawler = new Crawler();
 			
-			List<Article> articleList = crawler.execute(url, urlParams, listAtrb, listEachAtrb, titleAtrb, contentAtrb);
+			List<Article> articleList = crawler.execute(url, urlParams, idColumn, dateColumn, categoryColumn, 
+					listAtrb, listEachAtrb, titleAtrb, contentAtrb);
 			
 			for (Article article : articleList) {
-				article.setWriter("Test");
-				article.setCreated("2019-05-30");
+				
+				/*
+				if(articleService.existsById(article.getId())) {
+					System.out.println("Update");
+				} else {
+					System.out.println("Insert");
+				}
+				*/
+				
 				articleService.save(article);
+				log.info("{}", article.toString());
 			}
+			
 		} catch (IOException e) {
 			log.error("Error = {}", e.getLocalizedMessage());
 		}

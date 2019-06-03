@@ -22,6 +22,7 @@ public class Article {
 
 	@Id
 	private long id;
+	private String category;
 	private String title;
 	private String content;
 	private String writer;

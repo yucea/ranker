@@ -17,7 +17,45 @@ import lombok.RequiredArgsConstructor;
 public class Schedule implements AppConstant {
 
 	@Id
-	private long id;
+	private long id;	
+	
+	private String url;
+	
+	private String[] urlParams;
+	
+	private String idColumn;
+	
+	private String dateColumn;
+	
+	private String categoryColumn;
+	
+	private String listAtrb;
+	
+	private String listEachAtrb;
+	
+	private String titleAtrb;
+	
+	private String contentAtrb;
+	
+	/*
+	private String url = "https://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day&sectionId=101&date=20190603";
+	
+	private String[] urlParams = {};	
+	
+	private String idColumn = "aid";
+	
+	private String dateColumn = "date";
+	
+	private String categoryColumn = "rankingSectionId";
+	
+	private String listAtrb = "div.ranking";
+	
+	private String listEachAtrb = "div.ranking_text";
+	
+	private String titleAtrb = "h3#articleTitle";
+	
+	private String contentAtrb = "div#articleBodyContents";
+	*/
 
 	@Field(type = FieldType.Integer)
 	private int[] week; // 일요일 : 1, 토요일 : 7, 매주 : 0
