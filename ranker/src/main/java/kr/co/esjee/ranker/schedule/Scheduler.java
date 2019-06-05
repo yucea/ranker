@@ -1,6 +1,8 @@
 package kr.co.esjee.ranker.schedule;
 
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -14,12 +16,15 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
+import kr.co.esjee.ranker.crawler.Crawler;
 import kr.co.esjee.ranker.elasticsearch.ElasticOption;
 import kr.co.esjee.ranker.elasticsearch.ElasticQuery;
 import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
 import kr.co.esjee.ranker.util.CalendarUtil;
 import kr.co.esjee.ranker.webapp.AppConstant;
+import kr.co.esjee.ranker.webapp.model.Article;
 import kr.co.esjee.ranker.webapp.model.Schedule;
+import kr.co.esjee.ranker.webapp.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -29,6 +34,9 @@ public class Scheduler implements AppConstant {
 
 	@Autowired
 	private ElasticsearchTemplate template;
+	
+	@Autowired
+	private ArticleService articleService;
 
 	// @Autowired
 	// private RabbitTemplate rabbitTemplate;
@@ -39,6 +47,7 @@ public class Scheduler implements AppConstant {
 	@Scheduled(cron = "${spring.custom.schedule.cron}")
 	public void cronTask() throws Exception {
 		if (usable) {
+			
 			log.info("Schedule time: {}", CalendarUtil.getCurrentDateTime());
 
 			Calendar calendar = CalendarUtil.getToday();
@@ -85,9 +94,22 @@ public class Scheduler implements AppConstant {
 		}
 	}
 
-	private void callCrawler(Schedule schedule) {
+	private void callCrawler(Schedule schedule) {		
+		
 		// TODO crawler 직접 호출
-		log.info("call crawler : {}", schedule);
+		Crawler crawler = new Crawler();
+		
+		try {
+			List<Article> articleList = crawler.execute(schedule);
+			
+			for (Article article : articleList) {
+				articleService.save(article);
+			}
+			
+			log.info("call crawler : {}", schedule);
+		} catch (IOException e) {
+			log.error("error crawler : {}", e.getLocalizedMessage());
+		}
 	}
 
 	// private void sendMessage(String message) {

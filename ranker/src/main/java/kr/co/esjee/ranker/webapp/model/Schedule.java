@@ -19,43 +19,61 @@ public class Schedule implements AppConstant {
 	@Id
 	private long id;	
 	
+	/*
+	@Field(type = FieldType.Text)
 	private String url;
 	
+	@Field(type = FieldType.Text)
 	private String[] urlParams;
 	
+	@Field(type = FieldType.Text)
 	private String idColumn;
 	
+	@Field(type = FieldType.Text)
 	private String dateColumn;
 	
+	@Field(type = FieldType.Text)
 	private String categoryColumn;
 	
+	@Field(type = FieldType.Text)
 	private String listAtrb;
 	
+	@Field(type = FieldType.Text)
 	private String listEachAtrb;
 	
+	@Field(type = FieldType.Text)
 	private String titleAtrb;
 	
+	@Field(type = FieldType.Text)
 	private String contentAtrb;
+	*/
+		
+	@Field(type = FieldType.Text)  
+	private String url = "https://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day&sectionId=101&date=20190604";
 	
-	/*
-	private String url = "https://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day&sectionId=101&date=20190603";
-	
+	@Field(type = FieldType.Text)
 	private String[] urlParams = {};	
 	
+	@Field(type = FieldType.Text)
 	private String idColumn = "aid";
 	
+	@Field(type = FieldType.Text)
 	private String dateColumn = "date";
 	
+	@Field(type = FieldType.Text)
 	private String categoryColumn = "rankingSectionId";
 	
+	@Field(type = FieldType.Text)
 	private String listAtrb = "div.ranking";
 	
+	@Field(type = FieldType.Text)
 	private String listEachAtrb = "div.ranking_text";
 	
+	@Field(type = FieldType.Text)
 	private String titleAtrb = "h3#articleTitle";
 	
-	private String contentAtrb = "div#articleBodyContents";
-	*/
+	@Field(type = FieldType.Text)
+	private String contentAtrb = "div#articleBodyContents";	
 
 	@Field(type = FieldType.Integer)
 	private int[] week; // 일요일 : 1, 토요일 : 7, 매주 : 0

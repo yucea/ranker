@@ -56,51 +56,145 @@ public class Crawler {
 			throws IOException {
 
 		List<Article> articleList = new ArrayList<Article>();
+		
+		List<String> returnUrlList = getUrl(url, urlParams);
+		
+		for(String returnUrl : returnUrlList) {
+			
+			// List URL Connect
+			Document listDoc = Jsoup.connect(returnUrl).get();
 
-		// User Parameter Add
-		List<String> paramList = Lists.newArrayList(urlParams);
-		if (!paramList.isEmpty()) {
-			for (String param : paramList) {
-				url += "?" + param;
-			}
-		}
+			Elements listElement = listDoc.select(listAtrb);
 
-		// List URL Connect
-		Document listDoc = Jsoup.connect(url).get();
+			for (Element eachAtrb : listElement.select(listEachAtrb)) {
 
-		Elements listElement = listDoc.select(listAtrb);
+				// Detail URL Connect
+				Document dtlDoc = Jsoup.connect(eachAtrb.select("a").attr("abs:href").toString()).get();
 
-		for (Element eachAtrb : listElement.select(listEachAtrb)) {
+				// Body Element
+				Elements dtlElement = dtlDoc.select("body");
 
-			// Detail URL Connect
-			Document dtlDoc = Jsoup.connect(eachAtrb.select("a").attr("abs:href").toString()).get();
+				Article article = new Article();
+				article.setTitle(dtlElement.select(titleAtrb).text());
+				article.setContent(dtlElement.select(contentAtrb).text());
 
-			// Body Element
-			Elements dtlElement = dtlDoc.select("body");
+				// URL Parameter Parsing
+				URL aURL = new URL(eachAtrb.select("a").attr("abs:href").toString());
+				
+				Map<String, String> map = getQueryMap(aURL.getQuery());
 
-			Article article = new Article();
-			article.setTitle(dtlElement.select(titleAtrb).text());
-			article.setContent(dtlElement.select(contentAtrb).text());
+				if (map != null) {
+					if(map.get(categoryColumn) != null) {
+						article.setCategory(map.get(categoryColumn).toString());
+					}
+					
+					if(map.get(idColumn) != null) {
+						article.setId(Long.parseLong(map.get(idColumn).toString()));
+					}
+					
+					if(map.get(dateColumn) != null) {
+						article.setCreated(map.get(dateColumn).toString());
+					}
+				}
 
-			// URL Parameter Parsing
-			URL aURL = new URL(eachAtrb.select("a").attr("abs:href").toString());
-			Map<String, String> map = getQueryMap(aURL.getQuery());
-
-			if (map != null) {
-				article.setCategory(map.get(categoryColumn).toString());
-				article.setId(Long.parseLong(map.get(idColumn).toString()));
-				article.setCreated(map.get(dateColumn).toString());
-			}
-
-			articleList.add(article);
-		}
+				articleList.add(article);
+			}			
+		}		
 
 		return articleList;
 
 	}
+	
+	/**
+	 * Get URL List
+	 * 
+	 * @param url
+	 * @param urlParams
+	 * @return
+	 */
+	public List<String> getUrl(String url, String[] urlParams) {	
+		
+		List<String> returnList = new ArrayList<String>();
+		
+		if(urlParams.length > 0) {			
+			List<String> paramList = Lists.newArrayList(urlParams);
+			List<String> arrayList = new ArrayList<String>();
+			
+			for(String param : paramList) {
+				if(param.contains("[") && param.contains("]")) {
+					arrayList.add(param.replace("[", "").replace("]", ""));
+				} else {
+					url += url.contains("?") ? "&" + param : "?" + param;
+				}
+			}
+			
+			List<List<String>> combinationList = new ArrayList<List<String>>();
+			
+			if(!arrayList.isEmpty()) {				
+				for(int idx = 0; idx < arrayList.size(); idx++) {					
+					String key = arrayList.get(idx).split("=")[0];
+					String[] values = arrayList.get(idx).split("=")[1].split(",");
+					
+					List<String> list = new ArrayList<String>();
+					
+					for(String value : values) {
+						list.add(key + "=" + value);
+					}
+					
+					combinationList.add(idx, list);
+				}
+				
+				int[] indices = new int[combinationList.size()];
+				
+				int currentIndex = indices.length - 1;
+				
+				outerProcess: while (true) {
+					String combinationUrl = "";
+					
+					for (int i = 0; i < combinationList.size(); i++) {
+						combinationUrl += combinationList.get(i).get(indices[i]) + "&";
+					}
+					
+					if(url.contains("?")) {
+						returnList.add(url + "&" + combinationUrl.substring(0, combinationUrl.length() - 1));
+					} else {
+						returnList.add(url + "?" + combinationUrl.substring(0, combinationUrl.length() - 1));
+					}
+				
+					while (true) {						
+						indices[currentIndex]++;
+				       
+						if (indices[currentIndex] >= combinationList.get(currentIndex).size()) {		    	   
+							for (int j = currentIndex; j < indices.length; j++) {
+								indices[j] = 0;
+							}
+							
+							currentIndex--;		           
+						} else {
+							while (currentIndex < indices.length - 1) {
+								currentIndex++;
+							}	
+							
+							break;
+						}
+						
+						if (currentIndex == -1) {
+							break outerProcess;
+						}
+					}
+				}			
+			} else {
+				returnList.add(url);
+			}
+		} else {
+			returnList.add(url);
+		}
+		
+		return returnList;
+	}
 
 	/**
-	 * URL Parameter Parsing
+	 * Get Query Map
 	 * 
 	 * @param query
 	 * @return

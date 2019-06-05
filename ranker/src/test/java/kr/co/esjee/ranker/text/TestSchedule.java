@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.google.gson.Gson;
+
 import kr.co.esjee.ranker.elasticsearch.ElasticOption;
 import kr.co.esjee.ranker.elasticsearch.ElasticQuery;
 import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
@@ -46,7 +48,7 @@ public class TestSchedule extends TestElasticsearch {
 	@Test
 	public void testRunner() throws Exception {
 		int[] week = { 1, 2 };
-
+ 
 		Schedule schedule = new Schedule();
 		schedule.setWeek(week);
 		schedule.setMonth(new int[] { 1, 2, 3 });
@@ -64,6 +66,11 @@ public class TestSchedule extends TestElasticsearch {
 				.page(1, 10000);
 
 		SearchHits hits = ElasticSearcher.search(client, indexName, option);
-		hits.forEach(h -> log.info("{}", h.toString()));
+		hits.forEach(h -> {
+			log.info("{}", h.toString());
+			Schedule schedule = new Gson().fromJson(h.toString(), Schedule.class);
+			
+			System.out.println(schedule);
+		});
 	}
 }
