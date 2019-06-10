@@ -1,6 +1,7 @@
 package kr.co.esjee.ranker.webapp.service;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class CrawlerService {
 	private ArticleService articleService;
 
 	public List<Article> execute(String url, String[] urlParams, String idColumn, String dateColumn, String categoryColumn,
-			String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException {
+			String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb) throws IOException, ParseException {
 		
 		Crawler crawler = new Crawler();
 		

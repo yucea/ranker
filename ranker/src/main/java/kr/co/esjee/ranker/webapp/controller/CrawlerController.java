@@ -1,6 +1,7 @@
 package kr.co.esjee.ranker.webapp.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,6 +77,11 @@ public class CrawlerController implements AppConstant {
 			returnObj.put(RESULT, articleList);
 						
 		} catch (IOException e) {						
+			log.error("Error = {}", e.getLocalizedMessage());
+
+			returnObj.put(SUCCESS, false);
+			returnObj.put(ERROR, e.getLocalizedMessage());
+		} catch (ParseException e) {
 			log.error("Error = {}", e.getLocalizedMessage());
 
 			returnObj.put(SUCCESS, false);
