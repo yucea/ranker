@@ -26,16 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Crawler {
 	
-	private static final String COMMA = ",";
-	
-	private static final String SEPARATOR = "=";
-	
-	private static final String LEFT_ARRAY_SEPARATOR = "[";	
-	
-	private static final String RIGHT_ARRAY_SEPARATOR = "]";	
-	
-	private static final String QUESTION_SEPARATOR = "?";	
-	    
+	private static final String COMMA = ",";	
+	private static final String SEPARATOR = "=";	
+	private static final String LEFT_ARRAY_SEPARATOR = "[";		
+	private static final String RIGHT_ARRAY_SEPARATOR = "]";		
+	private static final String QUESTION_SEPARATOR = "?";		    
 	private static final String PARAM_SEPARATOR = "&";
 
 	/**
@@ -82,9 +77,9 @@ public class Crawler {
 
 		List<Article> articleList = new ArrayList<Article>();
 		
-		List<String> returnUrlList = getUrl(url, urlParams, dateColumn);
+		List<String> returnUrlList = getUrl(url, urlParams);
 		
-		log.info("###### Crawler site count = {} ######", returnUrlList.size());
+		log.info("Crawler site count = {}", returnUrlList.size());
 		
 		int siteCnt = 1;
 		
@@ -132,11 +127,11 @@ public class Crawler {
 			}
 			
 			try {
-				log.info("###### Crawler site loading count = {} ######", siteCnt);
+				log.info("Crawlering site load count = {}", siteCnt);
 				Thread.sleep(5000);
 				siteCnt++;
 			} catch (InterruptedException e) {
-				log.error("sleep error = {}", e.getLocalizedMessage());
+				log.error("Sleep error = {}", e.getLocalizedMessage());
 			}
 		}		
 
@@ -231,6 +226,15 @@ public class Crawler {
 		return returnList;
 	}
 	
+	/**
+	 * 크롤링 날짜 범위 지정하여  Site URL 리턴
+	 * 
+	 * @param url
+	 * @param urlParams
+	 * @param dateColumn
+	 * @return
+	 * @throws ParseException
+	 */
 	public List<String> getUrl(String url, String[] urlParams, String dateColumn) throws ParseException {
 		
 		List<String> returnList = new ArrayList<String>();
