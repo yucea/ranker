@@ -26,11 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Crawler {
 	
-	private static final String COMMA = ",";	
-	private static final String SEPARATOR = "=";	
-	private static final String LEFT_ARRAY_SEPARATOR = "[";		
-	private static final String RIGHT_ARRAY_SEPARATOR = "]";		
-	private static final String QUESTION_SEPARATOR = "?";		    
+	private static final String COMMA = ",";
+	private static final String SEPARATOR = "=";
+	private static final String LEFT_ARRAY_SEPARATOR = "[";
+	private static final String RIGHT_ARRAY_SEPARATOR = "]";
+	private static final String QUESTION_SEPARATOR = "?";	    
 	private static final String PARAM_SEPARATOR = "&";
 
 	/**
@@ -127,8 +127,8 @@ public class Crawler {
 			}
 			
 			try {
-				log.info("Crawlering site load count = {}", siteCnt);
-				Thread.sleep(5000);
+				log.info("Crawlering site count = {} / {}", siteCnt, returnUrlList.size());
+				Thread.sleep(1000);
 				siteCnt++;
 			} catch (InterruptedException e) {
 				log.error("Sleep error = {}", e.getLocalizedMessage());
@@ -165,7 +165,7 @@ public class Crawler {
 			List<List<String>> combinationList = new ArrayList<List<String>>();
 			
 			if(!arrayList.isEmpty()) {
-				for(int idx = 0; idx < arrayList.size(); idx++) {					
+				for(int idx = 0; idx < arrayList.size(); idx++) {
 					String key = StringUtils.split(arrayList.get(idx), SEPARATOR)[0];
 					String[] values = StringUtils.split(StringUtils.split(arrayList.get(idx), SEPARATOR)[1], ",");
 					
@@ -190,19 +190,19 @@ public class Crawler {
 						combinationUrl += combinationList.get(i).get(indices[i]) + PARAM_SEPARATOR;
 					}
 						
-					returnList.add(StringUtils.contains(url, QUESTION_SEPARATOR) ? 
-							url + PARAM_SEPARATOR + StringUtils.substring(combinationUrl, 0, combinationUrl.length() - 1) : 
+					returnList.add(StringUtils.contains(url, QUESTION_SEPARATOR) ?
+							url + PARAM_SEPARATOR + StringUtils.substring(combinationUrl, 0, combinationUrl.length() - 1) :
 								url + QUESTION_SEPARATOR + StringUtils.substring(combinationUrl, 0, combinationUrl.length() - 1));
 				
-					while (true) {						
+					while (true) {
 						indices[currentIndex]++;
 				       
-						if (indices[currentIndex] >= combinationList.get(currentIndex).size()) {		    	   
+						if (indices[currentIndex] >= combinationList.get(currentIndex).size()) {
 							for (int j = currentIndex; j < indices.length; j++) {
 								indices[j] = 0;
 							}
 							
-							currentIndex--;		           
+							currentIndex--;
 						} else {
 							while (currentIndex < indices.length - 1) {
 								currentIndex++;
@@ -215,7 +215,7 @@ public class Crawler {
 							break outerProcess;
 						}
 					}
-				}			
+				}
 			} else {
 				returnList.add(url);
 			}
@@ -227,7 +227,7 @@ public class Crawler {
 	}
 	
 	/**
-	 * 크롤링 날짜 범위 지정하여  Site URL 리턴
+	 * 크롤링 날짜 범위 지정하여  Site URL List 리턴
 	 * 
 	 * @param url
 	 * @param urlParams
@@ -252,13 +252,10 @@ public class Crawler {
 					
 					if(StringUtils.equals(key, dateColumn) && values.length > 1){
 						
-						String inputStartDate = values[0];
-						String inputEndDate = values[1];
-						
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 						
-						Date startDate = sdf.parse(inputStartDate);
-						Date endDate = sdf.parse(inputEndDate);
+						Date startDate = sdf.parse(values[0]);
+						Date endDate = sdf.parse(values[1]);
 						
 						ArrayList<String> dates = new ArrayList<String>();
 						Date currentDate = startDate;
@@ -318,19 +315,19 @@ public class Crawler {
 							url + PARAM_SEPARATOR + StringUtils.substring(combinationUrl, 0, combinationUrl.length() - 1) : 
 								url + QUESTION_SEPARATOR + StringUtils.substring(combinationUrl, 0, combinationUrl.length() - 1));
 				
-					while (true) {						
+					while (true) {
 						indices[currentIndex]++;
 				       
-						if (indices[currentIndex] >= combinationList.get(currentIndex).size()) {		    	   
+						if (indices[currentIndex] >= combinationList.get(currentIndex).size()) {
 							for (int j = currentIndex; j < indices.length; j++) {
 								indices[j] = 0;
 							}
 							
-							currentIndex--;		           
+							currentIndex--;
 						} else {
 							while (currentIndex < indices.length - 1) {
 								currentIndex++;
-							}	
+							}
 							
 							break;
 						}
@@ -339,7 +336,7 @@ public class Crawler {
 							break outerProcess;
 						}
 					}
-				}			
+				}
 			} else {
 				returnList.add(url);
 			}
