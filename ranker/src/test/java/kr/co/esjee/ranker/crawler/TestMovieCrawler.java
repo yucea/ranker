@@ -34,7 +34,7 @@ public class TestMovieCrawler {
 			
 			MovieVO movieVO = new MovieVO();
 			
-			log.info("Movie Crawering Start");
+			log.info("=========== Movie Crawering Start ===========");
 			
 			// 영화 정보
 			Movie movie = movieCrawler.executeMovieInfo(movieVO);
@@ -53,7 +53,7 @@ public class TestMovieCrawler {
 				}
 			}
 			
-			log.info("Movie Crawering Finish");
+			log.info("=========== Movie Crawering Finish ===========");
 		} catch (Exception e) {
 			log.error("Error = {}", e.getLocalizedMessage());
 		}

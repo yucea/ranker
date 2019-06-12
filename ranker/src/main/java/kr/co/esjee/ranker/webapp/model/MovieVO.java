@@ -15,7 +15,7 @@ public class MovieVO implements AppConstant {
 	@Id
 	private long id;
 	
-	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=161967";
+	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=164125";
 	
 	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";
 	
@@ -33,6 +33,8 @@ public class MovieVO implements AppConstant {
 	
 	// 평점
 	private String scoreAtrb = "a.ntz_score div.star_score em";
+	
+	private String runTimeAtrb = "dl.info_spec span";
 	
 	// 장르
 	private String[] genreAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?genre="};

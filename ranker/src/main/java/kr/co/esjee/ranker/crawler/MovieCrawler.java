@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.model.Movie;
@@ -125,8 +126,18 @@ public class MovieCrawler implements AppConstant {
 		
 		// 장르		
 		movie.setGenre((movieVO.getGenreAtrb().length > 1) ?
-				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGenreAtrb()[0], movieVO.getGenreAtrb()[1]).text() :
-					basicInfoDoc.select(movieVO.getGenreAtrb()[0]).text());		
+				StringUtils.replace(basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGenreAtrb()[0], movieVO.getGenreAtrb()[1]).text(), " ", ",") :
+					StringUtils.replace(basicInfoDoc.select(movieVO.getGenreAtrb()[0]).text(), " ", ","));		
+		
+		// 상영시간
+		Elements runTimeElements = basicInfoDoc.select(movieVO.getRunTimeAtrb());
+		String runTime = "";
+		for (int r = 0; r < runTimeElements.size(); r++) {
+			if (runTimeElements.eq(r).text().trim().matches("^[0-9]+[분]")) {
+				runTime = runTimeElements.eq(r).text().trim();
+			}
+		}
+		movie.setRunTime(runTime);
 		
 		// 제작 국가		
 		movie.setNation((movieVO.getNationAtrb().length > 1) ? 
@@ -155,7 +166,11 @@ public class MovieCrawler implements AppConstant {
 		movie.setRole(StringUtils.substring(role, 0, role.length() - 1));
 		
 		// 감독
-		movie.setDirector(crewInfoDoc.select(movieVO.getDirectorAtrb()).text());		
+		String director = "";
+		for(Element directors : crewInfoDoc.select(movieVO.getDirectorAtrb())) {
+			director += directors.text() + ",";
+		}
+		movie.setDirector(StringUtils.substring(director, 0, director.length() - 1));		
 		
 		// 시놉시스
 		movie.setSynopsis(basicInfoDoc.select(movieVO.getSynopsisAtrb()).text());
@@ -231,14 +246,18 @@ public class MovieCrawler implements AppConstant {
 				
 				// 출연작 감독
 				Document directorDoc = jsoupConnect(movieVO.getCrewUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ filmo.getMovieId()));
-				filmo.setMovieDirector(directorDoc.select(movieVO.getDirectorAtrb()).text());
 				
-				filmoList.add(filmo);
+				// 감독
+				String director = "";
+				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
+					director += directors.text() + ",";
+				}
+				filmo.setMovieDirector(StringUtils.substring(director, 0, director.length() - 1));
 				
+				filmoList.add(filmo);				
 			}
 			
-			person.setFilmo(filmoList);
-			
+			person.setFilmo(filmoList);			
 			personList.add(person);
 		}
 		
