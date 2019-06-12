@@ -1,0 +1,42 @@
+{
+	"doc": {
+		"properties": {
+			"id": {
+				"type": "long"
+			},
+			"pId": {
+				"type": "keyword"
+			},
+			"name": {
+				"type": "text",
+				"analyzer": "keyword"
+			},
+			"birthday": {
+				"type": "text",
+				"analyzer": "korean"
+			},
+			"profile": {
+				"type": "text",
+				"analyzer": "korean"
+			},
+			"filmo" : {
+				"movieId" : {
+					"type": "text",
+					"analyzer": "korean"
+				},
+				"movieTitle" : {
+					"type": "text",
+					"analyzer": "korean"
+				},
+				"movieYear" : {
+					"type": "text",
+					"analyzer": "korean"
+				},
+				"movieDirector" : {
+					"type": "text",
+					"analyzer": "korean"
+				}
+			}
+		}
+	}
+}

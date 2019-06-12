@@ -1,33 +1,59 @@
 package kr.co.esjee.ranker.crawler;
 
-import org.junit.Test;
+import java.util.List;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import kr.co.esjee.ranker.webapp.model.Movie;
+import kr.co.esjee.ranker.webapp.model.MovieVO;
+import kr.co.esjee.ranker.webapp.model.Person;
+import kr.co.esjee.ranker.webapp.service.MovieService;
+import kr.co.esjee.ranker.webapp.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 	
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @Slf4j
 public class TestMovieCrawler {
+	
+	@Autowired
+	private MovieService movieService;
+	
+	@Autowired
+	private PersonService personService;
 
 	@Test
 	public void testCrawler(){ 
 		
-		String connectUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=164125";
-		String removeAtrb = "div.wide_info_area";
-		String titleAtrb = "h3.h_movie a";
-		String orgTitleAtrb = "strong.h_movie2";
-		String scoreAtrb = "a.ntz_score div.star_score em";
-		
-		String[] genreAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?genre="};
-		String[] nationAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?nation="};
-		String[] gradeAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?grade="};
-		String[] openDayAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?open="};
-		
 		try {
 			MovieCrawler movieCrawler = new MovieCrawler();
 			
-			movieCrawler.execute(connectUrl, removeAtrb, titleAtrb, orgTitleAtrb, scoreAtrb, genreAtrb, nationAtrb, gradeAtrb, openDayAtrb);
+			MovieVO movieVO = new MovieVO();
 			
+			log.info("Movie Crawering Start");
+			
+			// 영화 정보
+			Movie movie = movieCrawler.executeMovieInfo(movieVO);
+			
+			if(movieService.findByTid(movie.getTid()) == null) {
+				movieService.save(movie);
+			}
+			
+			// 인물 정보
+			List<Person> personList = movieCrawler.executePersonInfo(movieVO);
+			
+			for (Person person : personList) {
+				
+				if(personService.findByPid(person.getPid()) == null) {
+					personService.save(person);
+				}
+			}
+			
+			log.info("Movie Crawering Finish");
 		} catch (Exception e) {
 			log.error("Error = {}", e.getLocalizedMessage());
 		}

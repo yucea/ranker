@@ -1,0 +1,68 @@
+{
+	"doc": {
+		"properties": {
+			"id": {
+				"type": "long"
+			},
+			"movieId": {
+				"type": "keyword"
+			},
+			"tid": {
+				"type": "text",
+				"analyzer": "keyword"
+			},
+			"title": {
+				"type": "text",
+				"analyzer": "korean"
+			},
+			"orgTitle": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"score": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"genre": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"nation": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"grade": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"runTime": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"openDay": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},			
+			"actor": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"role": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"director": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"synopsis": {
+				"type": "keyword",
+				"analyzer": "korean"
+			},
+			"makingNote": {
+				"type": "keyword",
+				"analyzer": "korean"
+			}
+		}
+	}
+}

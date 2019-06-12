@@ -1,0 +1,65 @@
+{
+	"number_of_shards": 5,
+	"number_of_replicas": 2,
+	"index": {
+		"analysis": {
+			"analyzer": {
+				"korean": {
+					"filter": [
+						"npos_filter",
+						"nori_readingform",
+						"lowercase",
+						"synonym_filter"
+					],
+					"tokenizer": "nori_user_dict"
+				}
+			},
+			"tokenizer": {
+				"nori_user_dict": {
+					"type": "nori_tokenizer",
+					"decompound_mode": "mixed",
+					"user_dictionary": "userdict_ko.txt"
+				}
+			},
+			"filter": {
+				"synonym_filter": {
+					"type": "synonym",
+					"synonyms_path": "synonym.txt"
+				},
+				"npos_filter": {
+					"type": "nori_part_of_speech",
+					"stoptags": [
+						"E",
+						"IC",
+						"J",
+						"MAG",
+						"MM",
+						"NA",
+						"NR",
+						"SC",
+						"SE",
+						"SF",
+						"SH",
+						"SN",
+						"SP",
+						"SSC",
+						"SSO",
+						"SY",
+						"UNA",
+						"VA",
+						"VCN",
+						"VCP",
+						"VSV",
+						"VV",
+						"VX",
+						"XPN",
+						"XR",
+						"XSA",
+						"XSN",
+						"XSV"
+					]
+				}
+			}
+		}
+	}
+}
