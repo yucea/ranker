@@ -42,7 +42,7 @@ public class MovieService extends AppService {
 	}
 	
 	public boolean existsById(long id) {
-		return repository.existsById(id);
+		return repository.existsById(id); 
 	}
 	
 	public Movie findByTid(String tid) {

@@ -14,6 +14,7 @@ import org.jsoup.select.Elements;
 
 import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.model.Movie;
+import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
 import kr.co.esjee.ranker.webapp.model.PersonFilmo;
@@ -22,9 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieCrawler implements AppConstant {
 	
-	private final static String CONTENT_TYPE = "application/json;charset=UTF-8";
-	private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0";
-	
+	private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
+	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0";
 	private static final String SEPARATOR = "=";
 	private static final String QUESTION_SEPARATOR = "?";	    
 	private static final String PARAM_SEPARATOR = "&";
@@ -33,7 +33,7 @@ public class MovieCrawler implements AppConstant {
 	 * Jsoup Connect
 	 * 
 	 * @param connectUrl
-	 * @return
+	 * @return Document
 	 */
 	public Document jsoupConnect(String connectUrl) {
 		
@@ -53,6 +53,7 @@ public class MovieCrawler implements AppConstant {
 					Thread.sleep(10000);
 					document = Jsoup.connect(connectUrl)
 							.header("Content-Type", CONTENT_TYPE)
+							.header("Host", "movie.naver.com")
 							.userAgent(USER_AGENT)
 							.maxBodySize(Integer.MAX_VALUE)
 							.ignoreContentType(true)
@@ -69,35 +70,47 @@ public class MovieCrawler implements AppConstant {
 		return document;
 	}
 	
-	
-	public Movie executeMovieInfo(MovieVO movieVO) {
+	/**
+	 * Crawler Execute
+	 * 
+	 * @param movieVO
+	 * @return MovieInfo
+	 */
+	public MovieInfo execute(MovieVO movieVO) { 
 		
-		// Movie Key
-		String movieKey = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
-				getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) : "";
+		MovieInfo movieInfo = new MovieInfo();
 		
-		// 영화 기본 정보
-		Document basicInfoDoc = jsoupConnect(movieVO.getBasicUrl());
-		
-		// 영화 인물 정보
-		Document crewInfoDoc = jsoupConnect(movieVO.getCrewUrl() + (movieKey.isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ movieKey));
-		
-		return movieInfo(basicInfoDoc, crewInfoDoc, movieVO);
-		
-	}
-	
-	public List<Person> executePersonInfo(MovieVO movieVO) {
-		
-		// Movie Key
-		String movieKey = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
+		try {
+			// Movie Key
+			String movieKey = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
 					getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) : "";
-	
-		// 영화 인물 정보
-		Document crewInfoDoc = jsoupConnect(movieVO.getCrewUrl() + (movieKey.isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ movieKey));
+			
+			// 영화 정보 연결
+			Document basicInfoDoc = jsoupConnect(movieVO.getBasicUrl());
+			
+			// 인물 정보 연결
+			Document crewInfoDoc = jsoupConnect(movieVO.getCrewUrl() + (movieKey.isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ movieKey));
+			
+			// 영화 정보
+			movieInfo.setMovieInfo(movieInfo(basicInfoDoc, crewInfoDoc, movieVO));
+				
+			// 인물 정보
+			movieInfo.setPersonInfo(personInfo(crewInfoDoc, movieVO));
+		} catch (Exception e) {
+			log.error("Execute Error = {}", e.getLocalizedMessage());
+		}	
 		
-		return personInfo(crewInfoDoc, movieVO);
+		return movieInfo;
 	}
 	
+	/**
+	 * Movie Info Crawler
+	 * 
+	 * @param basicInfoDoc
+	 * @param crewInfoDoc
+	 * @param movieVO
+	 * @return
+	 */
 	public Movie movieInfo(Document basicInfoDoc, Document crewInfoDoc, MovieVO movieVO) {
 		
 		Movie movie = new Movie();
@@ -107,29 +120,29 @@ public class MovieCrawler implements AppConstant {
 			basicInfoDoc.select(movieVO.getRemoveAtrb()).remove();
 		}
 		
-		// 영화 ID
+		// Movie ID
 		String movieId = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
 				getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) : "";
 		movie.setMovieId(movieId);		
 		
-		// T_ID
+		// tID
 		movie.setTid("N_" + movieId);
 		
-		// 제목
+		// Title
 		movie.setTitle(basicInfoDoc.select(movieVO.getTitleAtrb()).first().text());
 		
-		// 원제목
+		// Original Title
 		movie.setOrgTitle(basicInfoDoc.select(movieVO.getOrgTitleAtrb()).text());
 		
-		// 평점
+		// Score
 		movie.setScore(StringUtils.replace(basicInfoDoc.select(movieVO.getScoreAtrb()).text(), " ", ""));
 		
-		// 장르		
+		// Genre	
 		movie.setGenre((movieVO.getGenreAtrb().length > 1) ?
 				StringUtils.replace(basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGenreAtrb()[0], movieVO.getGenreAtrb()[1]).text(), " ", ",") :
 					StringUtils.replace(basicInfoDoc.select(movieVO.getGenreAtrb()[0]).text(), " ", ","));		
 		
-		// 상영시간
+		// Runtime
 		Elements runTimeElements = basicInfoDoc.select(movieVO.getRunTimeAtrb());
 		String runTime = "";
 		for (int r = 0; r < runTimeElements.size(); r++) {
@@ -137,50 +150,60 @@ public class MovieCrawler implements AppConstant {
 				runTime = runTimeElements.eq(r).text().trim();
 			}
 		}
+		
 		movie.setRunTime(runTime);
 		
-		// 제작 국가		
+		// Nation		
 		movie.setNation((movieVO.getNationAtrb().length > 1) ? 
 				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getNationAtrb()[0], movieVO.getNationAtrb()[1]).text() : 
 					basicInfoDoc.select(movieVO.getNationAtrb()[0]).text());
 		
-		// 등급			
+		// Grade	
 		movie.setGrade((movieVO.getGradeAtrb().length > 1) ?
 				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGradeAtrb()[0], movieVO.getGradeAtrb()[1]).text() :
 					basicInfoDoc.select(movieVO.getGradeAtrb()[0]).text());
 				
-		// 개봉일자
+		// OpenDay
 		String openDay = (movieVO.getOpenDayAtrb().length > 1) ?
 				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).text() :
 					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).text();				
 		movie.setOpenDay(StringUtils.replace(StringUtils.replace(openDay, " ", ""), ".", ""));
 		
-		// 배우
+		// Actors
 		movie.setActor(StringUtils.replace(crewInfoDoc.select(movieVO.getActorAtrb()).text(), " ", ","));
 		
-		// 배역
+		// Roles
 		String role = "";
 		for(Element roles : crewInfoDoc.select(movieVO.getRoleAtrb())) {
 			role += roles.text() + ",";
 		}		
+		
 		movie.setRole(StringUtils.substring(role, 0, role.length() - 1));
 		
-		// 감독
+		// Director
 		String director = "";
 		for(Element directors : crewInfoDoc.select(movieVO.getDirectorAtrb())) {
 			director += directors.text() + ",";
 		}
+		
 		movie.setDirector(StringUtils.substring(director, 0, director.length() - 1));		
 		
-		// 시놉시스
+		// Synopsis
 		movie.setSynopsis(basicInfoDoc.select(movieVO.getSynopsisAtrb()).text());
 		
-		// 제작노트
+		// MakingNote
 		movie.setMakingNote(basicInfoDoc.select(movieVO.getMakingNoteAtrb()).text());
 		
 		return movie;		
 	}
 	
+	/**
+	 * Person Info Crawler
+	 * 
+	 * @param crewInfoDoc
+	 * @param movieVO
+	 * @return List<Person> 
+	 */
 	public List<Person> personInfo(Document crewInfoDoc, MovieVO movieVO) {
 		
 		List<Person> personList = new ArrayList<Person>();
@@ -193,38 +216,30 @@ public class MovieCrawler implements AppConstant {
 			
 			Document crewDoc = jsoupConnect(crewUrl);					
 			
-			// 제거할 요소가 있으면 제거한다.
+			// Remove Attribute
 			if(StringUtils.isNotEmpty(movieVO.getRemoveAtrb())) {
 				crewDoc.select(movieVO.getRemoveAtrb()).remove();
 			}
 			
-			// 배우 ID
+			// Person ID
 			String pId = (getQueryMap(crewUrl) != null && getQueryMap(crewUrl).get(movieVO.getKeyParam()) != null) ? 
 					getQueryMap(crewUrl).get(movieVO.getKeyParam()) : "";
 					
 			person.setPid(pId);
 			
-			// 배우 이름
+			// Person Name
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
 			
-			// 배우 생년월일
+			// Person Birthday
 			person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
 			
-			// 배우 프로필
+			// Person Profile
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
 			
-			String filmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?peopleCode=" + pId + "&year=0&totalCount=1000&page=1000";			
+			// Filmography Url
+			String filmoUrl = movieVO.getFilmoUrl() + pId;	
 			
 			Document filmoDoc = jsoupConnect(filmoUrl);
-			
-			if(filmoDoc == null) {			
-				try {
-					Thread.sleep(10000);
-					filmoDoc = jsoupConnect(filmoUrl);				
-				} catch (InterruptedException ie) {
-					log.error("doc is null = {}", ie.getLocalizedMessage());
-				}
-			}
 			
 			List<PersonFilmo> filmoList = new ArrayList<PersonFilmo>();
 			
@@ -232,26 +247,26 @@ public class MovieCrawler implements AppConstant {
 				
 				PersonFilmo filmo = new PersonFilmo();
 				
-				String movieUrl = filmoElement.select(movieVO.getFilmoTitleAtrb()).attr("href");
+				String movieUrl = filmoElement.select(movieVO.getFilmoTitleAtrb()).attr("abs:href");
 				
-				// 출연작 ID
+				// Filmo ID
 				filmo.setMovieId((getQueryMap(movieUrl) != null && getQueryMap(movieUrl).get(movieVO.getKeyParam()) != null) ? 
 						getQueryMap(movieUrl).get(movieVO.getKeyParam()) : "");
 				
-				// 출연작
+				// Movie Title
 				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
 				
-				// 출연 연도
+				// Movie Year
 				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
-				
-				// 출연작 감독
+
 				Document directorDoc = jsoupConnect(movieVO.getCrewUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ filmo.getMovieId()));
 				
-				// 감독
+				// Director
 				String director = "";
 				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
 					director += directors.text() + ",";
 				}
+				
 				filmo.setMovieDirector(StringUtils.substring(director, 0, director.length() - 1));
 				
 				filmoList.add(filmo);				
@@ -264,6 +279,65 @@ public class MovieCrawler implements AppConstant {
 		return personList;
 	}
 	
+	/**
+	 * URL List
+	 * 
+	 * @param movieVO
+	 * @return List<String>
+	 * @throws Exception
+	 */
+	public List<String> getUrlList(MovieVO movieVO) {
+		
+		List<String> urlList = new ArrayList<String>();
+		
+		if(movieVO.getPagingParam().isEmpty()) {
+			
+			Document doc = jsoupConnect(movieVO.getListUrl());
+			
+			Elements elements = doc.select("ul.directory_list li a");
+			
+			for(Element element : elements) {
+				if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
+					urlList.add(element.attr("abs:href"));
+				}
+			}
+			
+		} else {
+			
+			int pageCount = 1;
+			
+			while(true) {
+				
+				Document doc = jsoupConnect(movieVO.getListUrl() + "&" + movieVO.getPagingParam() + "=" + pageCount);
+				
+				Elements elements = doc.select("ul.directory_list li a");
+				
+				int urlCount = 1;
+				for(Element element : elements) {
+					if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
+						urlList.add(element.attr("abs:href"));
+						urlCount ++;
+					}
+				}
+				
+				if(urlCount < movieVO.getMaxCount()) {
+					break;
+				}
+				
+				pageCount++;
+			}
+		}
+		
+		return urlList;
+	}
+	
+	
+	/**
+	 * Query Map
+	 * 
+	 * @param query
+	 * @return Map
+	 */
 	private static Map<String, String> getQueryMap(String query) {
 
 		if (query == null) return null;

@@ -1,5 +1,7 @@
 package kr.co.esjee.ranker.webapp.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonFilmo {
+public class MovieInfo {
 	
-	private String movieId;
-	private String movieTitle;
-	private String movieYear;
-	private String movieDirector;
+	Movie movieInfo;
+	List<Person> personInfo;
 	
 }

@@ -15,9 +15,15 @@ public class MovieVO implements AppConstant {
 	@Id
 	private long id;
 	
-	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=164125";
+	// List URL
+	private String listUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie.nhn?open=2019";	
+	private String pagingParam = "page";
+	private Integer maxCount = 20;
 	
-	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";
+	// Movie URLS
+	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=18875";	
+	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
+	private String FilmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?year=0&totalCount=1000&page=1000&peopleCode=";
 	
 	// Key Parameter
 	private String keyParam = "code";
@@ -34,6 +40,7 @@ public class MovieVO implements AppConstant {
 	// 평점
 	private String scoreAtrb = "a.ntz_score div.star_score em";
 	
+	// 상영시간
 	private String runTimeAtrb = "dl.info_spec span";
 	
 	// 장르
