@@ -91,7 +91,7 @@ public class Wordrank implements AppConstant {
 		List<String> result = new ArrayList<>();
 		for (String doc : docs) {
 			for (String key : themes.keySet()) {
-				doc = StringUtils.replace(doc, key, StringUtils.replace(themes.get(key), " ", SEPARATOR));
+				doc = StringUtils.replace(doc, String.format(" %s ", key), String.format(" %s ", StringUtils.replace(themes.get(key), " ", SEPARATOR)));
 			}
 
 			result.add(doc);
@@ -184,7 +184,7 @@ public class Wordrank implements AppConstant {
 				String k = matcher.group().replace("#", "");
 				int v = data.get(k);
 
-				if (value < v + Math.min(3, minCount)) // 보정값: 3 > 어벤져 : 83, 어벤져스 : 82 ==> 어벤져스 : 82
+				if (value < v + Math.min(10, minCount)) // 보정값: 3 > 어벤져 : 83, 어벤져스 : 82 ==> 어벤져스 : 82
 					remove.add(key);
 			}
 		}

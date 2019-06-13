@@ -410,9 +410,9 @@ public abstract class AbstractSerializableParameter<T extends AbstractSerializab
         }
         try {
             if (BaseIntegerProperty.TYPE.equals(type)) {
-                return StringUtils.isEmpty(example) ? 0 : Long.valueOf(example);
+                return StringUtils.isEmpty(example) ? 0 : Long.valueOf(example); // yucea
             } else if (DecimalProperty.TYPE.equals(type)) {
-                return StringUtils.isEmpty(example) ? 0 : Double.valueOf(example);
+                return StringUtils.isEmpty(example) ? 0 : Double.valueOf(example); // yucea
             } else if (BooleanProperty.TYPE.equals(type)) {
                 if ("true".equalsIgnoreCase(example) || "false".equalsIgnoreCase(defaultValue)) {
                     return Boolean.valueOf(example);

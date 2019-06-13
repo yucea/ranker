@@ -54,8 +54,8 @@ public class Scheduler implements AppConstant {
 			query.must(ElasticQuery.termsQuery(WEEK, 0, calendar.get(Calendar.DAY_OF_WEEK)));
 			query.must(ElasticQuery.termsQuery(MONTH, 0, calendar.get(Calendar.MONTH) + 1));
 			query.must(ElasticQuery.termsQuery(DAY, 0, calendar.get(Calendar.DATE)));
-			query.must(ElasticQuery.termsQuery(MINUTE, 24, calendar.get(Calendar.MINUTE)));
-			query.must(ElasticQuery.termsQuery(HOUR, 60, calendar.get(Calendar.HOUR)));
+			query.must(ElasticQuery.termsQuery(HOUR, 24, calendar.get(Calendar.HOUR)));
+			query.must(ElasticQuery.termsQuery(MINUTE, 60, calendar.get(Calendar.MINUTE)));
 
 			ElasticOption option = ElasticOption.newInstance()
 					.queryBuilder(query)

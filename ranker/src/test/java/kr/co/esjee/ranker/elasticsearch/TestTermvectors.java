@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -14,6 +15,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import kr.co.esjee.ranker.config.AppConfig;
 import kr.co.esjee.ranker.text.Wordrank;
 import kr.co.esjee.ranker.text.Wordrank.Word;
 import kr.co.esjee.ranker.webapp.model.Article;
@@ -53,9 +55,10 @@ public class TestTermvectors extends TestElasticsearch {
 
 	@Test
 	public void multiTermvectors() throws Exception {
+		QueryBuilder query = QueryBuilders.termQuery("created", "20190609");
 		ElasticOption option = ElasticOption.newInstance()
-				.queryBuilder(QueryBuilders.matchAllQuery())
-				.page(0, 1000); 
+				.queryBuilder(query)
+				.page(0, 1000);
 
 		SearchHits hits = ElasticSearcher.search(client, indexName, option);
 
@@ -70,6 +73,8 @@ public class TestTermvectors extends TestElasticsearch {
 		article.setId(Long.parseLong(id));
 		article.setTitle("_");
 		article.setContent(StringUtils.join(source, " "));
+		
+		log.info("length : {}", article.getContent().length());
 
 		ElasticSearcher.create(client, indexName, typeName, id, article.toString());
 
@@ -77,6 +82,16 @@ public class TestTermvectors extends TestElasticsearch {
 		data.forEach((k, v) -> {
 			log.info("{} : {}", k, v);
 		});
+		
+		int minCount = 10;
+		int maxLength = 10;
+
+		Wordrank wordrank = new Wordrank(minCount, maxLength, false);
+		wordrank.setStopwords(AppConfig.getStopwords());
+		List<Word> list = wordrank.execute(article.getContent());
+		for (Word word : list) {
+			log.info("{}", word.toString());
+		}
 
 		ElasticSearcher.delete(client, indexName, typeName, id);
 	}
