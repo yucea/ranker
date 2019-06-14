@@ -1,0 +1,139 @@
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-schedule"
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="false"
+				data-widget-sortable="false">
+
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Schedule List</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget content -->
+					<div id="dt_schedule_widget" class="widget-body no-padding">
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+</section>
+<!-- end widget grid -->
+
+<script type="text/javascript">
+
+	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
+	 *
+	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+	 *
+	 * // activate tooltips
+	 * $("[rel=tooltip]").tooltip();
+	 *
+	 * // activate popovers
+	 * $("[rel=popover]").popover();
+	 *
+	 * // activate popovers with hover states
+	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
+	 *
+	 * // activate inline charts
+	 * runAllCharts();
+	 *
+	 * // setup widgets
+	 * setup_widgets_desktop();
+	 *
+	 * // run form elements
+	 * runAllForms();
+	 *
+	 ********************************
+	 *
+	 * pageSetUp() is needed whenever you load a page.
+	 * It initializes and checks for all basic elements of the page
+	 * and makes rendering easier.
+	 *
+	 */
+
+	pageSetUp();
+	
+	/*
+	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+	 * eg alert("my home function");
+	 * 
+	 * var pagefunction = function() {
+	 *   ...
+	 * }
+	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
+	 * 
+	 */
+	
+	// PAGE RELATED SCRIPTS
+	
+	// pagefunction	
+	var pagefunction = function() {
+		
+		var url = '/rest/schedule/list';
+		var widgetId = 'dt_schedule_widget';
+		var tableId = 'dt_schedule_basic';
+		var clazz = 'table table-bordered table-hover'; // table table-bordered table-hover table-striped
+		var columns = [
+			{ 'id' : '' },
+			{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #323d4f;' },
+			{ 'phone' : '' },
+			{ 'company' : '' },
+			{ 'zip' : '' },
+			{ 'city' : '' },
+			{ 'date' : '' }
+		];
+		
+		// $.datatable.searching = false;
+		// $.datatable.lengthChange = false;
+		$.datatable.displayHead(widgetId, tableId, columns, clazz);
+		$.datatable.displayBody(url, tableId, columns);
+		
+		goDetailPage = function(id, name) {
+			console.info('detailpage', id, name);
+		};
+
+	};
+
+	// load related plugins
+	loadScript("js/common.js", function(){
+		loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+					loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+						loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
+					});
+				});
+			});
+		});
+	});
+
+</script>

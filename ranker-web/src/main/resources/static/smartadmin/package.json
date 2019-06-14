@@ -1,0 +1,22 @@
+{
+  "name": "smartadmin-webapp",
+  "version": "1.8.0",
+  "private": true,
+  "description": "smartadmin",
+  "author": "sunny",
+  "license": "http://support.wrapbootstrap.com/knowledge_base/topics/usage-licenses",
+  "bugs": {
+    "url": "https://wrapbootstrap.com/user/MyOrange"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-csscomb": "^3.0.8",
+    "gulp-cssnano": "^2.1.1",
+    "gulp-less": "^3.3.2",
+    "gulp-rename": "^1.2.2"
+  },
+  "scripts": {
+    "gulp": "gulp",
+    "start": "npm run gulp"
+  }
+}
