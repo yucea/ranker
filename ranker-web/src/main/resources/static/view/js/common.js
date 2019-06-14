@@ -5,18 +5,38 @@
 	var table_etag = '</table>';
 	var thead_stag = '<thead>';
 	var thead_etag = '</thead>';
-	var th_stag = '<th>';
+	var th_stag = '<th${HEAD_STYLE}>';
 	var th_etag = '</th>';
 	var default_table_class = 'table table-bordered table-hover';
 	
 	$.common = {
-		'capitalize' : function(str1){
-			return str1.charAt(0).toUpperCase() + str1.slice(1);
+		'capitalize' : function(str){
+			return str.charAt(0).toUpperCase() + str.slice(1);
+		},
+		'upperCase' : function(str) {
+			return str.toUpperCase();
 		}
 	}
 
 	$.datatable = {
+		/* // COLUMN attributes
+		  key : data id
+		  value : javascript function
+		  hstyle : th style
+		  style : td style
+		  func : td value convert javascript function
+		 */
 		
+		'display' : function(option) {
+			var url = option.url;
+			var widgetId = option.id;
+			var tableId = option.id + '_table';
+			var columns = option.columns;
+			var clazz = option.clazz;
+			
+			this.displayHead(widgetId, tableId, columns, clazz);
+			this.displayBody(url, tableId, columns);
+		},		
 		'displayHead' : function(widgetId, tableId, columns, clazz) {
 			var html = this.header(tableId, columns, clazz);
 			$('#' + widgetId).html(html);
@@ -29,10 +49,11 @@
 			html += thead_stag;
 			
 			for(var i in columns) {
-				var key = Object.getOwnPropertyNames(columns[i])[0];
-				var value = columns[i][key];
-				
-				html += th_stag + $.common.capitalize(key) + th_etag;
+				var column = columns[i];
+				var key = Object.getOwnPropertyNames(column)[0];
+				var value = column[key];
+				var style = column.hstyle == null ? '' : ' style="' + column.hstyle + '"';
+				html += (th_stag.replace('${HEAD_STYLE}', style)) + $.common.capitalize(key) + th_etag;
 			}
 			
 			html += thead_etag;
@@ -92,29 +113,35 @@
 				},
 				"rowCallback" : function(row, data, index) {
 					for(var i in columns) {
-						var keys = Object.getOwnPropertyNames(columns[i]);
+						var column = columns[i];
+						var keys = Object.getOwnPropertyNames(column);
 						var key = keys[0];
+						var script = column[key];
 						
-						var script = columns[i][key];
-						if(script != '') {
+						if(script) {
 							$('td:eq(' + i + ')', row).css('cursor', 'pointer');
 							$('td:eq(' + i + ')', row).attr('onclick', self.findValue(key, data, script));
 						}
 						
-						if(keys[1] != null) { // style
-							var styles = columns[i][keys[1]].split(';');
+						if(column.style) {
+							var styles = column.style.split(';');
 							for(var j in styles) {
 								var opt = styles[j].split(':');
 								if(opt != '')
 									$('td:eq(' + i + ')', row).css(opt[0].trim(), opt[1].trim());
 							}
 						}
+						
+						if(column.func) {
+							$('td:eq(' + i + ')', row).html(column.func(eval('data.' + key)));
+						}
 					}
 				}
 			});
 		},
 		'findValue' : function(key, data, script) {
-			if(script.indexOf('_') == -1) return;
+			if(script.indexOf('_') == -1)
+				return;
 			
 			var keys = Object.getOwnPropertyNames(data);
 			for(var i in keys) {

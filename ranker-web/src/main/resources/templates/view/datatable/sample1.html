@@ -1,0 +1,189 @@
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-person"
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="false"
+				data-widget-sortable="false">
+
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Tabledata - Sample#1 (Default)</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget content -->
+					<div class="widget-body no-padding">
+
+						<table id="dt_person" class="table table-bordered table-hover" style="width: 100%;">
+							<thead>			                
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th>Phone</th>
+									<th>Company</th>
+									<th>Zip</th>
+									<th>City</th>
+									<th>Date</th>
+								</tr>
+							</thead>
+						</table>
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+</section>
+<!-- end widget grid -->
+
+<script type="text/javascript">
+
+	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
+	 *
+	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+	 *
+	 * // activate tooltips
+	 * $("[rel=tooltip]").tooltip();
+	 *
+	 * // activate popovers
+	 * $("[rel=popover]").popover();
+	 *
+	 * // activate popovers with hover states
+	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
+	 *
+	 * // activate inline charts
+	 * runAllCharts();
+	 *
+	 * // setup widgets
+	 * setup_widgets_desktop();
+	 *
+	 * // run form elements
+	 * runAllForms();
+	 *
+	 ********************************
+	 *
+	 * pageSetUp() is needed whenever you load a page.
+	 * It initializes and checks for all basic elements of the page
+	 * and makes rendering easier.
+	 *
+	 */
+
+	pageSetUp();
+	
+	/*
+	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+	 * eg alert("my home function");
+	 * 
+	 * var pagefunction = function() {
+	 *   ...
+	 * }
+	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
+	 * 
+	 */
+	
+	// PAGE RELATED SCRIPTS
+	
+	// pagefunction	
+	var pagefunction = function() {
+		
+		/* // DOM Position key index //
+		
+			l - Length changing (dropdown)
+			f - Filtering input (search)
+			t - The Table! (datatable)
+			i - Information (records)
+			p - Pagination (paging)
+			r - pRocessing 
+			< and > - div elements
+			<"#id" and > - div with an id
+			<"class" and > - div with a class
+			<"#id.class" and > - div with an id and class
+			
+			Also see: http://legacy.datatables.net/usage/features
+		*/	
+
+		$('#dt_person').dataTable({
+	        // "processing": true,
+	        "searching": true,     // Search Box will Be Disabled
+	        "ordering": false,     // Ordering (Sorting on Each Column)will Be Disabled
+	        "info": true,          // Will show "1 to n of n entries" Text at bottom
+	        "bLengthChange": true, // Will Disabled Record number per page
+	        "serverSide": true,
+	        "bPaginate": true,
+	        lengthMenu : [ [ 10, 20, 50, 100 ], [ 10, 20, 50, 100 ] ],
+			ajax : {
+				'url' : '/rest/datatable/sample',
+				'type' : 'POST'
+			},
+	        "columns": [
+	            { "data": "id" },
+	            { "data": "name" },
+	            { "data": "phone" },
+	            { "data": "company" },
+	            { "data": "zip" },
+	            { "data": "city" },
+	            { "data": "date" }
+	        ],
+			"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
+			"t"+
+			"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+			"oLanguage": {
+				// "sLengthMenu": "리스트 개수 : _MENU_",
+				// "sInfo": 'Total count : _TOTAL_건',
+				"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+			},
+			"rowCallback" : function(row, data, index) {
+				$("td:eq(1)", row).css("cursor", "pointer");
+				$("td:eq(1)", row).css("font-weight", "bold");
+				$("td:eq(1)", row).css("color", "#323d4f");
+				$("td:eq(1)", row).attr("onclick", "javascript:goDetailPage('" + data.id + "', '" + data.name + "')");
+			}
+		});
+		
+		goDetailPage = function(id, name) {
+			console.info('detailpage', id, name);
+		};
+		
+	};
+
+	// load related plugins
+	
+	loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+		loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+					loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
+				});
+			});
+		});
+	});
+
+
+</script>

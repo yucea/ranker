@@ -8,7 +8,7 @@
 		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
 			<!-- Widget ID (each widget will need unique ID)-->
-			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-schedule"
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-movie"
 				data-widget-colorbutton="false"
 				data-widget-editbutton="false"
 				data-widget-togglebutton="false"
@@ -20,7 +20,7 @@
 
 				<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-					<h2>Schedule List</h2>
+					<h2>Tabledata - Sample#2</h2>
 
 				</header>
 
@@ -28,7 +28,7 @@
 				<div>
 
 					<!-- widget content -->
-					<div id="dt_schedule_widget" class="widget-body no-padding">
+					<div id="dt_movie_widget" class="widget-body no-padding">
 					</div>
 					<!-- end widget content -->
 
@@ -98,23 +98,25 @@
 	// pagefunction	
 	var pagefunction = function() {
 		
-		$.datatable.display({
-			url : '/rest/schedule/list',
-			id : 'dt_schedule_widget',
-			// clazz : 'table table-bordered table-hover table-striped',
-			columns : [
-				{ 'id' : '', 'hstyle' : 'text-align: center;', 'style' : 'text-align: center;'},
-				{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #15428c; text-align: center;', 'hstyle' : 'text-align: center;', 'func' : $.common.upperCase },
-				{ 'phone' : 'javascript:goCallPhone(_ID_, _PHONE_)', 'style' : 'font-weight: bold; text-align: right;', 'hstyle' : 'text-align: right;' },
-				{ 'company' : '', 'func' : $.common.upperCase },
-				{ 'zip' : '', 'func' : $.common.capitalize },
-				{ 'city' : '' },
-				{ 'date' : '' }
-			]
-		});
+		var url = '/rest/datatable/sample';
+		var widgetId = 'dt_movie_widget';
+		var tableId = 'dt_movie_basic';
+		var clazz = 'table table-bordered table-hover'; // table table-bordered table-hover table-striped
+		var columns = [
+			{ 'id' : '', 'hstyle' : 'text-align: center;', 'style' : 'text-align: center;'},
+			{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #15428c; text-align: center;', 'hstyle' : 'text-align: center;', 'func' : $.common.upperCase },
+			{ 'phone' : 'javascript:goCallPhone(_ID_, _PHONE_)', 'style' : 'font-weight: bold; text-align: right;', 'hstyle' : 'text-align: right;' },
+			{ 'company' : '', 'func' : $.common.upperCase },
+			{ 'zip' : '', 'func' : $.common.capitalize },
+			{ 'city' : '' },
+			{ 'date' : '' }
+		];
+		
+		$.datatable.displayHead(widgetId, tableId, columns, clazz);
+		$.datatable.displayBody(url, tableId, columns);
 		
 		goDetailPage = function(id, name) {
-			console.info('detailpage', id, name);
+			console.info('goDetailPage', id, name);
 		};
 		
 		goCallPhone = function(id, phone) {

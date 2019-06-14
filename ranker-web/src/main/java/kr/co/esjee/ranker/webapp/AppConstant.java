@@ -10,6 +10,10 @@ public interface AppConstant {
 	String ERROR = "error";
 	String SCORE = "score";
 	String DATA = "data";
+	String DRAW = "draw";
+	String RECORDS_TOTAL = "recordsTotal";
+	String RECORDS_FILTERED = "recordsFiltered";
+	
 	String KEY = "key";
 	String TERM = "term";
 	String TYPE = "type";

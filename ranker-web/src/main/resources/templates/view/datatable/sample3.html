@@ -20,7 +20,7 @@
 
 				<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-					<h2>Schedule List</h2>
+					<h2>Tabledata - Sample#3</h2>
 
 				</header>
 
@@ -99,7 +99,7 @@
 	var pagefunction = function() {
 		
 		$.datatable.display({
-			url : '/rest/schedule/list',
+			url : '/rest/datatable/sample',
 			id : 'dt_schedule_widget',
 			// clazz : 'table table-bordered table-hover table-striped',
 			columns : [
@@ -114,7 +114,7 @@
 		});
 		
 		goDetailPage = function(id, name) {
-			console.info('detailpage', id, name);
+			console.info('goDetailPage', id, name);
 		};
 		
 		goCallPhone = function(id, phone) {
