@@ -15,6 +15,9 @@
 		},
 		'upperCase' : function(str) {
 			return str.toUpperCase();
+		},
+		'lowerCase' : function(str) {
+			return str.toLowerCase();
 		}
 	}
 
@@ -49,10 +52,9 @@
 			html += thead_stag;
 			
 			for(var i in columns) {
-				var column = columns[i];
-				var key = Object.getOwnPropertyNames(column)[0];
-				var value = column[key];
-				var style = column.hstyle == null ? '' : ' style="' + column.hstyle + '"';
+				var key = columns[i].name;
+				var hstyle = columns[i].hstyle;
+				var style = hstyle == null ? '' : ' style="' + hstyle + '"';
 				html += (th_stag.replace('${HEAD_STYLE}', style)) + $.common.capitalize(key) + th_etag;
 			}
 			
@@ -65,7 +67,7 @@
 			var data = [];
 			for(var i in columns) {
 				var col = new Object();
-				col.data = Object.getOwnPropertyNames(columns[i])[0];
+				col.data = columns[i].name;
 				
 				data.push(col);
 			}
@@ -114,13 +116,16 @@
 				"rowCallback" : function(row, data, index) {
 					for(var i in columns) {
 						var column = columns[i];
-						var keys = Object.getOwnPropertyNames(column);
-						var key = keys[0];
-						var script = column[key];
+						var key = column.name;
 						
-						if(script) {
-							$('td:eq(' + i + ')', row).css('cursor', 'pointer');
-							$('td:eq(' + i + ')', row).attr('onclick', self.findValue(key, data, script));
+						if(column.action) {
+							$('td:eq(' + i + ')', row).attr(column.action.name, self.findValue(key, data, column.action.value));
+						}
+						
+						if(column.actions) {
+							for(var j in column.actions) {
+								$('td:eq(' + i + ')', row).attr(column.actions[j].name, self.findValue(key, data, column.actions[j].value));
+							}
 						}
 						
 						if(column.style) {
@@ -140,9 +145,6 @@
 			});
 		},
 		'findValue' : function(key, data, script) {
-			if(script.indexOf('_') == -1)
-				return;
-			
 			var keys = Object.getOwnPropertyNames(data);
 			for(var i in keys) {
 				var skey = '_' + keys[i].toUpperCase() + '_';

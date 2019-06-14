@@ -102,15 +102,38 @@
 			url : '/rest/datatable/sample',
 			id : 'dt_schedule_widget',
 			// clazz : 'table table-bordered table-hover table-striped',
-			columns : [
-				{ 'id' : '', 'hstyle' : 'text-align: center;', 'style' : 'text-align: center;'},
-				{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #15428c; text-align: center;', 'hstyle' : 'text-align: center;', 'func' : $.common.upperCase },
-				{ 'phone' : 'javascript:goCallPhone(_ID_, _PHONE_)', 'style' : 'font-weight: bold; text-align: right;', 'hstyle' : 'text-align: right;', 'func' : $.common.capitalize },
-				{ 'company' : '', 'func' : $.common.upperCase },
-				{ 'zip' : '', 'func' : $.common.capitalize },
-				{ 'city' : '' },
-				{ 'date' : '' }
-			]
+			columns : [{
+				'name' : 'id',
+				'hstyle' : 'text-align: center;',
+				'style' : 'text-align: center;'
+			}, {
+				'name' : 'name',
+				'actions' : [
+					{ 'name' : 'onMouseOver', 'value' : 'this.style.backgroundColor="#d9e5f9"' },
+					{ 'name' : 'onMouseOut', 'value' : 'this.style.backgroundColor=""' },
+					{ 'name' : 'onClick', 'value' : 'javascript:goDetailPage(_ID_, _NAME_)' } ],
+				'style' : 'text-align: center; font-weight: bold; color: #15428c; cursor: pointer;',
+				'hstyle' : 'text-align: center;',
+				'func' : $.common.upperCase
+			}, {
+				'name' : 'phone',
+				'action' : { 'name' : 'onClick', 'value' : 'javascript:goCallPhone(_ID_, _PHONE_)' },
+				'style' : 'text-align: right; font-weight: bold; cursor: pointer;',
+				'hstyle' : 'text-align: right;',
+				'func' : $.common.capitalize
+			}, {
+				'name' : 'company',
+				'action' : { 'name' : 'onClick', 'value' : 'alert(1)' },
+				'func' : $.common.upperCase
+			}, {
+				'name' : 'zip',
+				'func' : $.common.capitalize
+			}, {
+				'name' : 'city',
+				'func' : $.common.toLowerCase
+			}, {
+				'name' : 'date',
+			}]
 		});
 		
 		goDetailPage = function(id, name) {
