@@ -1,4 +1,4 @@
-package kr.co.esjee.ranker.webapp.controller.sample;
+package kr.co.esjee.ranker.webapp.controller.datatable;
 
 import java.util.Map;
 
