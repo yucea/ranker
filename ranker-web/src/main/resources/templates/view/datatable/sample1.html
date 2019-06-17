@@ -33,13 +33,13 @@
 						<table id="dt_person" class="table table-bordered table-hover" style="width: 100%;">
 							<thead>			                
 								<tr>
-									<th>ID</th>
-									<th>Name</th>
-									<th>Phone</th>
-									<th>Company</th>
-									<th>Zip</th>
-									<th>City</th>
-									<th>Date</th>
+									<th style="text-align: center;">id</th>
+									<th>name</th>
+									<th>phone</th>
+									<th>company</th>
+									<th>zip</th>
+									<th>city</th>
+									<th>date</th>
 								</tr>
 							</thead>
 						</table>
@@ -142,7 +142,7 @@
 				'url' : '/rest/datatable/sample',
 				'type' : 'POST'
 			},
-	        "columns": [
+	        "columns" : [
 	            { "data": "id" },
 	            { "data": "name" },
 	            { "data": "phone" },
@@ -160,10 +160,8 @@
 				"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
 			},
 			"rowCallback" : function(row, data, index) {
-				$("td:eq(1)", row).css("cursor", "pointer");
-				$("td:eq(1)", row).css("font-weight", "bold");
-				$("td:eq(1)", row).css("color", "#323d4f");
-				$("td:eq(1)", row).attr("onclick", "javascript:goDetailPage('" + data.id + "', '" + data.name + "')");
+				$("td:eq(0)", row).css('text-align', 'center');
+				$("td:eq(1)", row).html('<span style="cursor: pointer; font-weight: bold; color: #323d4f;" onclick="javascript:goDetailPage(\'' + data.id + '\', \'' + data.name + '\');">' + data.name + '</span>');
 			}
 		});
 		

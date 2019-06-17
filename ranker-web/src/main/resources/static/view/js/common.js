@@ -5,7 +5,7 @@
 	var table_etag = '</table>';
 	var thead_stag = '<thead>';
 	var thead_etag = '</thead>';
-	var th_stag = '<th${HEAD_STYLE}>';
+	var th_stag = '<th${HEAD_STYLE}${HEAD_EVENT}>';
 	var th_etag = '</th>';
 	var default_table_class = 'table table-bordered table-hover';
 	
@@ -18,27 +18,45 @@
 		},
 		'lowerCase' : function(str) {
 			return str.toLowerCase();
+		},
+		'toString' : function(n) {
+			return n.toString();
+		},
+		'currency' : function(num, digits) {
+			if($.isNumeric(num))
+				return Number(num).toFixed(digits).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+			else {
+				console.warn('Non-numeric type : ', num);
+				return num;
+			}
 		}
 	}
 
 	$.datatable = {
-		/* // COLUMN attributes
+		/* - COLUMN attributes
 		  key : data id
 		  value : javascript function
 		  hstyle : th style
 		  style : td style
 		  func : td value convert javascript function
 		 */
-		
+			
+		'lengthMenu' : [ 
+			[ 10, 20, 50, 100 ], // value
+			[ 10, 20, 50, 100 ] // name
+		],
 		'display' : function(option) {
 			var url = option.url;
 			var widgetId = option.id;
 			var tableId = option.id + '_table';
 			var columns = option.columns;
 			var clazz = option.clazz;
+			var listNum = option.listNum;
+			
+			if(option.lengthMenu) this.lengthMenu = option.lengthMenu;
 			
 			this.displayHead(widgetId, tableId, columns, clazz);
-			this.displayBody(url, tableId, columns);
+			this.displayBody(url, tableId, columns, listNum);
 		},		
 		'displayHead' : function(widgetId, tableId, columns, clazz) {
 			var html = this.header(tableId, columns, clazz);
@@ -52,16 +70,44 @@
 			html += thead_stag;
 			
 			for(var i in columns) {
-				var key = columns[i].name;
-				var hstyle = columns[i].hstyle;
-				var style = hstyle == null ? '' : ' style="' + hstyle + '"';
-				html += (th_stag.replace('${HEAD_STYLE}', style)) + $.common.capitalize(key) + th_etag;
+				var column = columns[i];
+				var style = this.hasStyleHeader(column) ? ' style="' + column.head.style + '"' : '';
+				var event = this.getEventHeader(column);
+				
+				html += (th_stag.replace('${HEAD_STYLE}', style).replace('${HEAD_EVENT}', event)) + this.getHeaderValue(column) + th_etag;
 			}
 			
 			html += thead_etag;
 			html += table_etag;
 			
 			return html;
+		},
+		'hasStyleHeader' : function(column) {
+			return column.head && column.head.style;
+		},
+		'hasEventHeader' : function(column) {
+			return column.head && (column.head.event || column.head.events);
+		},
+		'hasFuncHeader' : function(column) {
+			return column.head && column.head.func != null && $.isFunction(column.head.func);
+		},
+		'getEventHeader' : function(column) {
+			if(this.hasEventHeader(column)) {
+				if(column.head.event) {
+					return ' ' + column.head.event.name + '=' + column.head.event.value;
+				} else if(column.head.events) {
+					var value = '';
+					for(var j in column.head.events) {
+						value += ' ' + column.head.events[j].name + '=' + column.head.events[j].value;
+					}
+					return value;
+				}
+			} else {
+				return '';
+			}
+		},
+		'getHeaderValue' : function(column) {
+			return this.hasFuncHeader(column) ? column.head.func(column.name) : column.name;
 		},
 		'columns' : function(columns) {
 			var data = [];
@@ -74,7 +120,7 @@
 
 			return data;
 		},
-		'displayBody' : function(url, tableId, columns) {
+		'displayBody' : function(url, tableId, columns, listNum) {
 			/* // DOM Position key index //
 			
 				l - Length changing (dropdown)
@@ -99,7 +145,8 @@
 		        "lengthChange" : this,	// Will Disabled Record number per page
 		        "serverSide" : true,
 		        "paginate" : true,
-		        "lengthMenu" : [ [ 10, 20, 50, 100 ], [ 10, 20, 50, 100 ] ],
+		        "pageLength" : listNum == null ? 10 : listNum,
+		        "lengthMenu" : this.lengthMenu,
 				"ajax" : {
 					'url' : url,
 					'type' : 'POST'
@@ -110,36 +157,50 @@
 					"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
 				"language" : {
 					// "lengthMenu": "리스트 개수 : _MENU_",
-					// "info": 'Total count : _TOTAL_건',
+					// "info": '전체 : _TOTAL_건',
 					"search" : '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
 				},
 				"rowCallback" : function(row, data, index) {
 					for(var i in columns) {
 						var column = columns[i];
-						var key = column.name;
 						
-						if(column.action) {
-							$('td:eq(' + i + ')', row).attr(column.action.name, self.findValue(key, data, column.action.value));
-						}
-						
-						if(column.actions) {
-							for(var j in column.actions) {
-								$('td:eq(' + i + ')', row).attr(column.actions[j].name, self.findValue(key, data, column.actions[j].value));
+						if(column.body) {
+							if(column.body.event)
+								$('td:eq(' + i + ')', row).attr(column.body.event.name, self.findValue(column.name, data, column.body.event.value));
+							if(column.body.events) {
+								for(var j in column.body.events)
+									$('td:eq(' + i + ')', row).attr(column.body.events[j].name, self.findValue(column.name, data, column.body.events[j].value));
+							}
+							if(column.body.style && column.body.style) {
+								var styles = column.body.style.split(';');
+								for(var j in styles) {
+									var opt = styles[j].split(':');
+									if(opt != '')
+										$('td:eq(' + i + ')', row).css(opt[0].trim(), opt[1].trim());
+								}
 							}
 						}
 						
-						if(column.style) {
-							var styles = column.style.split(';');
-							for(var j in styles) {
-								var opt = styles[j].split(':');
-								if(opt != '')
-									$('td:eq(' + i + ')', row).css(opt[0].trim(), opt[1].trim());
+						var html = '';
+						if(column.data) {
+							var style = '';
+							var event = '';
+							if(column.data.event)
+								event = ' ' + column.data.event.name + '="' + self.findValue(column.name, data, column.data.event.value.replace(/"/g, "'")) + '"';
+							if(column.data.events) {
+								for(var j in column.data.events)
+									event += ' ' + column.data.events[j].name + '="' + self.findValue(column.name, data, column.data.events[j].value.replace(/"/g, "'")) + '"'; 
 							}
+							if(column.data.style)
+								style = ' style=\'' + column.data.style + '\'';
+							
+							var value = column.data.func ? column.data.func(eval('data.' + column.name)) : eval('data.' + column.name);
+							
+							html = '<span ' + event + style + '>' + value + ' </span>'
 						}
 						
-						if(column.func) {
-							$('td:eq(' + i + ')', row).html(column.func(eval('data.' + key)));
-						}
+						if(html != '')
+							$('td:eq(' + i + ')', row).html(html);
 					}
 				}
 			});
