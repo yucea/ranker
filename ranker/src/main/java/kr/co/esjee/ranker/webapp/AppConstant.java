@@ -45,7 +45,7 @@ public interface AppConstant {
 	String SEQUENCE = "sequence";
 	String ARTICLE = "article";
 	String SCHEDULE = "schedule";
-	String MOVIE = "mv_basic_info";
+	String MOVIE = "mv_info";
 	String PERSON = "mv_person_info";
 			
 	String DOC = "doc";

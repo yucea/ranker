@@ -163,14 +163,14 @@
 				"rowCallback" : function(row, data, index) {
 					for(var i in columns) {
 						var column = columns[i];
+						var value = eval('data.' + column.name);
 						
 						if(column.body) {
 							if(column.body.event)
 								$('td:eq(' + i + ')', row).attr(column.body.event.name, self.findValue(column.name, data, column.body.event.value));
-							if(column.body.events) {
+							if(column.body.events)
 								for(var j in column.body.events)
 									$('td:eq(' + i + ')', row).attr(column.body.events[j].name, self.findValue(column.name, data, column.body.events[j].value));
-							}
 							if(column.body.style && column.body.style) {
 								var styles = column.body.style.split(';');
 								for(var j in styles) {
@@ -179,6 +179,8 @@
 										$('td:eq(' + i + ')', row).css(opt[0].trim(), opt[1].trim());
 								}
 							}
+							if(column.body.func)
+								value = column.body.func(value);
 						}
 						
 						var html = '';
@@ -187,20 +189,18 @@
 							var event = '';
 							if(column.data.event)
 								event = ' ' + column.data.event.name + '="' + self.findValue(column.name, data, column.data.event.value.replace(/"/g, "'")) + '"';
-							if(column.data.events) {
+							if(column.data.events)
 								for(var j in column.data.events)
 									event += ' ' + column.data.events[j].name + '="' + self.findValue(column.name, data, column.data.events[j].value.replace(/"/g, "'")) + '"'; 
-							}
 							if(column.data.style)
 								style = ' style=\'' + column.data.style + '\'';
-							
-							var value = column.data.func ? column.data.func(eval('data.' + column.name)) : eval('data.' + column.name);
+							if(column.data.func)
+								value = column.data.func(value);
 							
 							html = '<span ' + event + style + '>' + value + ' </span>'
 						}
 						
-						if(html != '')
-							$('td:eq(' + i + ')', row).html(html);
+						$('td:eq(' + i + ')', row).html(html == '' ? value : html);
 					}
 				}
 			});

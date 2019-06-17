@@ -8,59 +8,48 @@
 				"type": "keyword"
 			},
 			"tid": {
-				"type": "text",
-				"analyzer": "keyword"
+				"type": "keyword"
 			},
 			"title": {
 				"type": "text",
 				"analyzer": "korean"
 			},
 			"orgTitle": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "text"
 			},
 			"score": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"genre": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"nation": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"grade": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"runTime": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"openDay": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},			
 			"actor": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"role": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"director": {
-				"type": "keyword",
-				"analyzer": "korean"
+				"type": "keyword"
 			},
 			"synopsis": {
-				"type": "keyword",
+				"type": "text",
 				"analyzer": "korean"
 			},
 			"makingNote": {
-				"type": "keyword",
+				"type": "text",
 				"analyzer": "korean"
 			}
 		}
