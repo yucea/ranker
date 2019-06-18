@@ -189,7 +189,9 @@ public class MovieCrawler implements AppConstant {
 		movie.setDirector(StringUtils.substring(director, 0, director.length() - 1));		
 		
 		// Synopsis
-		movie.setSynopsis(basicInfoDoc.select(movieVO.getSynopsisAtrb()).text());
+		String synopsis =basicInfoDoc.select(movieVO.getSynopsisAtrb()).text();
+		synopsis = StringUtils.replace(StringUtils.replace(synopsis, "줄거리 ", ""), " 제작노트 보기", "");
+		movie.setSynopsis(synopsis);
 		
 		// MakingNote
 		movie.setMakingNote(basicInfoDoc.select(movieVO.getMakingNoteAtrb()).text());
