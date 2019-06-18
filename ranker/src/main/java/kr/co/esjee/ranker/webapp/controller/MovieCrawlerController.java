@@ -39,7 +39,7 @@ public class MovieCrawlerController implements AppConstant {
 	 */
 	@ApiOperation(value = "mvCrawler")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query", defaultValue = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn"),
 		@ApiImplicitParam(name = "startYear", value = "시작연도", required = true, dataType = "int", paramType = "query"),
 		@ApiImplicitParam(name = "endYear", value = "종료연도", required = true, dataType = "int", paramType = "query")
 		})

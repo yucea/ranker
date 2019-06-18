@@ -73,4 +73,25 @@ public class TestSchedule extends TestElasticsearch {
 			System.out.println(schedule);
 		});
 	}
+	
+	@Test
+	public void testInsSchedule() throws Exception {
+		
+		int[] week = {0};		// 일요일 : 1, 토요일 : 7, 매주 : 0
+		int[] month = {0}; 		// 1-12, 매월 : 0		
+		int[] day = {0}; 		// 1-31, 매일 : 0		
+		int[] hour = {24}; 		// 0-23, 매시간 : 24		
+		int[] minute = {60}; 	// 0-59, 매분 : 60
+ 
+		Schedule schedule = new Schedule();
+		
+		schedule.setWeek(week);
+		schedule.setMonth(month);
+		schedule.setDay(day);
+		schedule.setHour(hour);
+		schedule.setMinute(minute);
+		schedule.setUsable(true);
+
+		service.save(schedule);
+	}
 }

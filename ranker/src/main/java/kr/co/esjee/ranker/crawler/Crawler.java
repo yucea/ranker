@@ -41,6 +41,7 @@ public class Crawler {
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
+	/*
 	public List<Article> execute(Schedule schedule) throws IOException, ParseException {
 		return execute(
 				schedule.getUrl(), 
@@ -54,6 +55,7 @@ public class Crawler {
 				schedule.getContentAtrb()
 				);
 	}
+	*/
 
 	/**
 	 * Crawler Execute
