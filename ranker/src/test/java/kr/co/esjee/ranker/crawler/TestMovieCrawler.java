@@ -31,11 +31,13 @@ public class TestMovieCrawler {
 	
 	@Autowired
 	private PersonService personService;
+	
+	@Autowired
+	private MovieCrawler movieCrawler;
 
 	@Test
 	public void testCrawler(){
 		
-		MovieCrawler movieCrawler = new MovieCrawler();		
 		MovieVO movieVO = new MovieVO(); 
 		
 		MovieInfo movieInfo = movieCrawler.execute(movieVO);
@@ -63,8 +65,6 @@ public class TestMovieCrawler {
 		MovieVO movieVO = new MovieVO();
 		
 		log.info("=========== Movie Crawer Start ===========");
-		
-		MovieCrawler movieCrawler = new MovieCrawler();
 		
 		List<String> urlList = movieCrawler.getMovieUrlList(movieVO);
 		
@@ -126,7 +126,6 @@ public class TestMovieCrawler {
 		int endYear = 2010;
 		
 		MovieVO movieVO = new MovieVO();
-		MovieCrawler movieCrawler = new MovieCrawler();
 		
 		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, startYear, endYear);
 		

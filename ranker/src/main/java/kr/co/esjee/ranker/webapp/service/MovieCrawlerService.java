@@ -19,6 +19,9 @@ public class MovieCrawlerService {
 	private static final int DELAY_TIME = 5000;
 	
 	@Autowired
+	private MovieCrawler movieCrawler;
+	
+	@Autowired
 	private MovieService movieService;
 	
 	@Autowired
@@ -27,7 +30,6 @@ public class MovieCrawlerService {
 	public void execute(String baseUrl, int startYear, int endYear) {
 		
 		MovieVO movieVO = new MovieVO();
-		MovieCrawler movieCrawler = new MovieCrawler();
 		
 		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, startYear, endYear);
 		
@@ -91,6 +93,8 @@ public class MovieCrawlerService {
 							log.error("Sleep Erroe = {}", e.getLocalizedMessage());
 						}
 					}
+				}else {
+					log.info("URL is Empty");
 				}
 				
 				yearCount++;
@@ -103,6 +107,8 @@ public class MovieCrawlerService {
 					log.error("Sleep Erroe = {}", e.getLocalizedMessage());
 				}
 			}
+		} else {
+			log.info("URL is Empty");
 		}
 	}
 }

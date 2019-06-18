@@ -75,16 +75,6 @@ public class MovieCrawler implements AppConstant {
 			}
 			
 		} catch (IOException ioe) {
-			
-			String time = format.format(Calendar.getInstance().getTime());
-			
-			ErrorLog errorLog = new ErrorLog();
-			errorLog.setMovieId(null);
-			errorLog.setMessage(ioe.getLocalizedMessage());
-			errorLog.setTime(time);
-			
-			// errorLogService.save(errorLog);
-			
 			log.error("Jsoup Connect Error = {}", ioe.getLocalizedMessage());
 		}
 		
@@ -126,7 +116,7 @@ public class MovieCrawler implements AppConstant {
 			errorLog.setMessage(e.getMessage());
 			errorLog.setTime(time);
 			
-			// errorLogService.save(errorLog);
+			errorLogService.save(errorLog);
 			
 			log.error("Execute Error, MovieId = {}, Error = {}, Time = {}", movieKey, e.getLocalizedMessage(), time);
 		}	
@@ -326,17 +316,19 @@ public class MovieCrawler implements AppConstant {
 		
 		Document doc = mc.jsoupConnect(url);
 		
-		for(Element element : doc.select("table.directory_item_other tbody tr td a")) {
-			
-			Map<String, Object> urlMap = new HashMap<String, Object>();
-			
-			String strYear = element.text();
-			int year = Integer.parseInt(strYear.replaceAll("[^0-9]", ""));
-			
-			if(year >= startYear && year <= endYear) {
-				urlMap.put("year", year);
-				urlMap.put("url", element.absUrl("href"));
-				urlList.add(urlMap);
+		if(doc != null) {
+			for(Element element : doc.select("table.directory_item_other tbody tr td a")) {
+				
+				Map<String, Object> urlMap = new HashMap<String, Object>();
+				
+				String strYear = element.text();
+				int year = Integer.parseInt(strYear.replaceAll("[^0-9]", ""));
+				
+				if(year >= startYear && year <= endYear) {
+					urlMap.put("year", year);
+					urlMap.put("url", element.absUrl("href"));
+					urlList.add(urlMap);
+				}
 			}
 		}
 		
@@ -358,11 +350,13 @@ public class MovieCrawler implements AppConstant {
 			
 			Document doc = jsoupConnect(movieVO.getListUrl());
 			
-			Elements elements = doc.select("ul.directory_list li a");
-			
-			for(Element element : elements) {
-				if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
-					urlList.add(element.attr("abs:href"));
+			if(doc != null) {
+				Elements elements = doc.select("ul.directory_list li a");
+				
+				for(Element element : elements) {
+					if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
+						urlList.add(element.attr("abs:href"));
+					}
 				}
 			}
 			
@@ -374,21 +368,23 @@ public class MovieCrawler implements AppConstant {
 				
 				Document doc = jsoupConnect(movieVO.getListUrl() + "&" + movieVO.getPagingParam() + "=" + pageCount);
 				
-				Elements elements = doc.select("ul.directory_list li a");
-				
-				int urlCount = 1;
-				for(Element element : elements) {
-					if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
-						urlList.add(element.attr("abs:href"));
-						urlCount ++;
+				if(doc != null) {
+					Elements elements = doc.select("ul.directory_list li a");
+					
+					int urlCount = 1;
+					for(Element element : elements) {
+						if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
+							urlList.add(element.attr("abs:href"));
+							urlCount ++;
+						}
 					}
+					
+					if(urlCount < movieVO.getMaxCount()) {
+						break;
+					}
+					
+					pageCount++;
 				}
-				
-				if(urlCount < movieVO.getMaxCount()) {
-					break;
-				}
-				
-				pageCount++;
 			}
 		}
 		
