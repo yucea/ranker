@@ -47,11 +47,12 @@ public interface AppConstant {
 	String SCHEDULE = "schedule";
 	String MOVIE = "mv_basic_info";
 	String PERSON = "mv_person_info";
+	String ERROR_LOG = "mv_error_log";
 
 	String DOC = "doc";
 
 	enum INDICES {
-		article, schedule, mv_basic_info, mv_person_info
+		article, schedule, mv_basic_info, mv_person_info, mv_error_log
 	}
 
 }

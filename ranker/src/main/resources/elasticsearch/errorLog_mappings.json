@@ -1,0 +1,19 @@
+{
+	"doc": {
+		"properties": {
+			"id": {
+				"type": "long"
+			},
+			"movieId": {
+				"type": "keyword"
+			},
+			"message": {
+				"type": "text",
+				"analyzer": "korean"
+			},
+			"time": {
+				"type": "text"
+			}
+		}
+	}
+}

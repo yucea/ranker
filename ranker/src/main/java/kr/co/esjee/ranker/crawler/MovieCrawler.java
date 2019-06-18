@@ -1,7 +1,9 @@
 package kr.co.esjee.ranker.crawler;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,15 +13,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import kr.co.esjee.ranker.webapp.AppConstant;
+import kr.co.esjee.ranker.webapp.model.ErrorLog;
 import kr.co.esjee.ranker.webapp.model.Movie;
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
 import kr.co.esjee.ranker.webapp.model.PersonFilmo;
+import kr.co.esjee.ranker.webapp.service.ErrorLogService;
 import lombok.extern.slf4j.Slf4j;
 
+@Component
 @Slf4j
 public class MovieCrawler implements AppConstant {
 	
@@ -28,6 +35,10 @@ public class MovieCrawler implements AppConstant {
 	private static final String SEPARATOR = "=";
 	private static final String QUESTION_SEPARATOR = "?";	    
 	private static final String PARAM_SEPARATOR = "&";
+	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+	
+	@Autowired
+	private ErrorLogService errorLogService;
 	
 	/**
 	 * Jsoup Connect
@@ -64,6 +75,16 @@ public class MovieCrawler implements AppConstant {
 			}
 			
 		} catch (IOException ioe) {
+			
+			String time = format.format(Calendar.getInstance().getTime());
+			
+			ErrorLog errorLog = new ErrorLog();
+			errorLog.setMovieId(null);
+			errorLog.setMessage(ioe.getLocalizedMessage());
+			errorLog.setTime(time);
+			
+			// errorLogService.save(errorLog);
+			
 			log.error("Jsoup Connect Error = {}", ioe.getLocalizedMessage());
 		}
 		
@@ -80,10 +101,11 @@ public class MovieCrawler implements AppConstant {
 		
 		MovieInfo movieInfo = new MovieInfo();
 		
+		// Movie Key
+		String movieKey = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
+				getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) : "";
+				
 		try {
-			// Movie Key
-			String movieKey = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
-					getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) : "";
 			
 			// 영화 정보 연결
 			Document basicInfoDoc = jsoupConnect(movieVO.getBasicUrl());
@@ -97,7 +119,16 @@ public class MovieCrawler implements AppConstant {
 			// 인물 정보
 			movieInfo.setPersonInfo(personInfo(crewInfoDoc, movieVO));
 		} catch (Exception e) {
-			log.error("Execute Error = {}", e.getLocalizedMessage());
+			String time = format.format(Calendar.getInstance().getTime());
+			
+			ErrorLog errorLog = new ErrorLog();
+			errorLog.setMovieId(movieKey);
+			errorLog.setMessage(e.getMessage());
+			errorLog.setTime(time);
+			
+			// errorLogService.save(errorLog);
+			
+			log.error("Execute Error, MovieId = {}, Error = {}, Time = {}", movieKey, e.getLocalizedMessage(), time);
 		}	
 		
 		return movieInfo;

@@ -1,10 +1,16 @@
 package kr.co.esjee.ranker.crawler;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
@@ -13,8 +19,8 @@ import kr.co.esjee.ranker.webapp.service.MovieService;
 import kr.co.esjee.ranker.webapp.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 	
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @Slf4j
 public class TestMovieCrawler {
 	
@@ -198,4 +204,12 @@ public class TestMovieCrawler {
 			}
 		}
 	}
+	
+	 @Test
+	 public void tesxts () {		 
+		 Date date = Calendar.getInstance().getTime();
+		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+		 String result = format.format(date);
+		 System.out.println(result);
+	 }
 }
