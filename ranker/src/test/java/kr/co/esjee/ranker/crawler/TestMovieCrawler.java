@@ -122,7 +122,7 @@ public class TestMovieCrawler {
 		MovieVO movieVO = new MovieVO();
 		MovieCrawler movieCrawler = new MovieCrawler();
 		
-List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, startYear, endYear);
+		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, startYear, endYear);
 		
 		if(!baseUrlList.isEmpty()) {
 			

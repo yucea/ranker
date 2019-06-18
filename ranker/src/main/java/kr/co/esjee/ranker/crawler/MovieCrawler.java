@@ -231,7 +231,7 @@ public class MovieCrawler implements AppConstant {
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
 			
 			// Person Birthday
-			person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
 			
 			// Person Profile
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());

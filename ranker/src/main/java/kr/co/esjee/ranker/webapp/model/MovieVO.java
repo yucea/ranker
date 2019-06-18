@@ -19,7 +19,7 @@ public class MovieVO implements AppConstant {
 	private String listUrl = "";
 	
 	// Movie URL
-	private String basicUrl = "";
+	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=34160";
 	
 	// Person URL
 	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
@@ -44,7 +44,7 @@ public class MovieVO implements AppConstant {
 	private String orgTitleAtrb = "strong.h_movie2";
 	
 	// 평점
-	private String scoreAtrb = "a.ntz_score div.star_score em";
+	private String scoreAtrb = "a#pointNetizenPersentBasic em";
 	
 	// 상영시간
 	private String runTimeAtrb = "dl.info_spec span";
