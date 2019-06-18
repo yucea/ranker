@@ -155,7 +155,7 @@ public class MovieCrawler implements AppConstant {
 		
 		// Nation		
 		movie.setNation((movieVO.getNationAtrb().length > 1) ? 
-				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getNationAtrb()[0], movieVO.getNationAtrb()[1]).text() : 
+				StringUtils.replace(basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getNationAtrb()[0], movieVO.getNationAtrb()[1]).text(), " ", ",") :
 					basicInfoDoc.select(movieVO.getNationAtrb()[0]).text());
 		
 		// Grade	
@@ -165,8 +165,8 @@ public class MovieCrawler implements AppConstant {
 				
 		// OpenDay
 		String openDay = (movieVO.getOpenDayAtrb().length > 1) ?
-				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).text() :
-					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).text();				
+				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).first().text() :
+					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).first().text();				
 		movie.setOpenDay(StringUtils.replace(StringUtils.replace(openDay, " ", ""), ".", ""));
 		
 		// Actors
@@ -283,10 +283,41 @@ public class MovieCrawler implements AppConstant {
 	 * URL List
 	 * 
 	 * @param movieVO
+	 * @return
+	 */
+	public List<Map<String, Object>> getUrlList(String url, int startYear, int endYear) {
+		
+		List<Map<String, Object>> urlList = new ArrayList<Map<String, Object>>();
+		
+		MovieCrawler mc = new MovieCrawler();
+		
+		Document doc = mc.jsoupConnect(url);
+		
+		for(Element element : doc.select("table.directory_item_other tbody tr td a")) {
+			
+			Map<String, Object> urlMap = new HashMap<String, Object>();
+			
+			String strYear = element.text();
+			int year = Integer.parseInt(strYear.replaceAll("[^0-9]", ""));
+			
+			if(year >= startYear && year <= endYear) {
+				urlMap.put("year", year);
+				urlMap.put("url", element.absUrl("href"));
+				urlList.add(urlMap);
+			}
+		}
+		
+		return urlList;
+	}
+	
+	/**
+	 * Movie URL List
+	 * 
+	 * @param movieVO
 	 * @return List<String>
 	 * @throws Exception
 	 */
-	public List<String> getUrlList(MovieVO movieVO) {
+	public List<String> getMovieUrlList(MovieVO movieVO) {
 		
 		List<String> urlList = new ArrayList<String>();
 		

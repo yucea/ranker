@@ -16,17 +16,23 @@ public class MovieVO implements AppConstant {
 	private long id;
 	
 	// List URL
-	private String listUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie.nhn?open=2019";	
-	private String pagingParam = "page";
-	private Integer maxCount = 20;
+	private String listUrl = "";
 	
-	// Movie URLS
-	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=18875";	
+	// Movie URL
+	private String basicUrl = "";
+	
+	// Person URL
 	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
+	
+	// Filmo URL
 	private String FilmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?year=0&totalCount=1000&page=1000&peopleCode=";
 	
 	// Key Parameter
 	private String keyParam = "code";
+	
+	private String pagingParam = "page";
+	
+	private Integer maxCount = 20;
 	
 	// 필요 없는 요소
 	private String removeAtrb = "div.wide_info_area";
