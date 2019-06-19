@@ -102,15 +102,30 @@
 		var widgetId = 'dt_movie_widget';
 		var tableId = 'dt_movie_basic';
 		var clazz = 'table table-bordered table-hover'; // table table-bordered table-hover table-striped
-		var columns = [
-			{ 'id' : '' },
-			{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #323d4f;' },
-			{ 'phone' : '' },
-			{ 'company' : '' },
-			{ 'zip' : '' },
-			{ 'city' : '' },
-			{ 'date' : '' }
-		];
+		var columns = [{
+			'name' : 'id',
+			'head' : { 'style' : 'text-align: center;' },
+			'body' : { 'style' : 'text-align: center;' }
+		}, {
+			'name' : 'name',
+			'body' : { 'style' : 'cursor: pointer;' },
+			'data' : {
+				'style' : 'font-weight: bold;',
+				'event' :  { 'name' : 'onClick', 'value' : 'javascript:goDetailPage(_ID_, _NAME_)' }
+			}
+		}, {
+			'name' : 'phone'
+		}, {
+			'name' : 'company'
+		}, {
+			'name' : 'zip'
+		}, {
+			'name' : 'city'
+		}, {
+			'name' : 'date',
+			'head' : { 'style' : 'max-width: 100px; text-align: center;' },
+			'body' : { 'style' : 'text-align: center;' }
+		}];
 		
 		$.datatable.displayHead(widgetId, tableId, columns, clazz);
 		$.datatable.displayBody(url, tableId, columns);

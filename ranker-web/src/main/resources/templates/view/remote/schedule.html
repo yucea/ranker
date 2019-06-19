@@ -102,15 +102,30 @@
 			url : '/rest/schedule/list',
 			id : 'dt_schedule_widget',
 			// clazz : 'table table-bordered table-hover table-striped',
-			columns : [
-				{ 'id' : '', 'hstyle' : 'text-align: center;', 'style' : 'text-align: center;'},
-				{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #15428c; text-align: center;', 'hstyle' : 'text-align: center;', 'func' : $.common.upperCase },
-				{ 'phone' : 'javascript:goCallPhone(_ID_, _PHONE_)', 'style' : 'font-weight: bold; text-align: right;', 'hstyle' : 'text-align: right;' },
-				{ 'company' : '', 'func' : $.common.upperCase },
-				{ 'zip' : '', 'func' : $.common.capitalize },
-				{ 'city' : '' },
-				{ 'date' : '' }
-			]
+			columns : [{
+				'name' : 'id',
+				'head' : { 'style' : 'text-align: center;' },
+				'body' : { 'style' : 'text-align: center;' }
+			}, {
+				'name' : 'name',
+				'body' : { 'style' : 'cursor: pointer;' },
+				'data' : {
+					'style' : 'font-weight: bold;',
+					'event' :  { 'name' : 'onClick', 'value' : 'javascript:goDetailPage(_ID_, _NAME_)' }
+				}
+			}, {
+				'name' : 'phone'
+			}, {
+				'name' : 'company'
+			}, {
+				'name' : 'zip'
+			}, {
+				'name' : 'city'
+			}, {
+				'name' : 'date',
+				'head' : { 'style' : 'max-width: 100px; text-align: center;' },
+				'body' : { 'style' : 'text-align: center;' }
+			}]
 		});
 		
 		goDetailPage = function(id, name) {
