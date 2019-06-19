@@ -48,4 +48,8 @@ public class MovieService extends AppService {
 	public Movie findByTid(String tid) {
 		return repository.findByTid(tid);
 	}
+	
+	public void deleteByTid(String tid) {
+		repository.deleteByTid(tid);
+	}
 }

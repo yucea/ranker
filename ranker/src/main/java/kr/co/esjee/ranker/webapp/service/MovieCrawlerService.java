@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.esjee.ranker.crawler.MovieCrawler;
+import kr.co.esjee.ranker.webapp.model.Movie;
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
@@ -76,11 +77,19 @@ public class MovieCrawlerService {
 								// Movie Info
 								if(movieService.findByTid(movieInfo.getMovieInfo().getTid()) == null) {
 									movieService.save(movieInfo.getMovieInfo());
+								} else {
+									Movie movie = movieService.findByTid(movieInfo.getMovieInfo().getTid());
+									movieInfo.getMovieInfo().setId(movie.getId());
+									movieService.save(movieInfo.getMovieInfo());
 								}
 								
 								// Person Info
 								for (Person person : movieInfo.getPersonInfo()) {				
 									if(personService.findByPid(person.getPid()) == null) {
+										personService.save(person);
+									} else {
+										Person psn = personService.findByPid(person.getPid());
+										person.setId(psn.getId());
 										personService.save(person);
 									}
 								}

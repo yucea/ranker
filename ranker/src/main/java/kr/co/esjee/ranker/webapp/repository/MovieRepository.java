@@ -7,5 +7,7 @@ import kr.co.esjee.ranker.webapp.model.Movie;
 public interface MovieRepository extends ElasticsearchRepository<Movie, Long> {
 	
 	Movie findByTid(String tid);
+	
+	void deleteByTid(String tid);
 
 }
