@@ -17,15 +17,28 @@ import lombok.RequiredArgsConstructor;
 public class Schedule implements AppConstant {
 
 	@Id
-	private long id;	
+	private long id;
+	
+	// Base URL
+	@Field(type = FieldType.Text)
+	private String baseUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn";
+	
+	@Field(type = FieldType.Text)
+	private String attribute = "table.directory_item_other tbody tr td a";
+	
+	@Field(type = FieldType.Text)
+	private int startYear = 2019;
+	
+	@Field(type = FieldType.Text)
+	private int endYear = 2019;
 	
 	// List URL
 	@Field(type = FieldType.Text)
-	private String listUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn";
+	private String listUrl = "";
 	
 	// Movie URL
 	@Field(type = FieldType.Text)
-	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=162876";
+	private String basicUrl = "";
 	
 	// Person URL
 	@Field(type = FieldType.Text)
@@ -175,5 +188,4 @@ public class Schedule implements AppConstant {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
-
 }

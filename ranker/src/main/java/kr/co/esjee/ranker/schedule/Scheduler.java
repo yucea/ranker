@@ -20,7 +20,7 @@ import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
 import kr.co.esjee.ranker.util.CalendarUtil;
 import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
-import kr.co.esjee.ranker.webapp.service.ArticleService;
+import kr.co.esjee.ranker.webapp.service.MovieCrawlerService;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -32,8 +32,8 @@ public class Scheduler implements AppConstant {
 	private ElasticsearchTemplate template;
 	
 	@Autowired
-	private ArticleService articleService;
-
+	private MovieCrawlerService movieCrawlerService;
+	
 	// @Autowired
 	// private RabbitTemplate rabbitTemplate;
 
@@ -65,11 +65,10 @@ public class Scheduler implements AppConstant {
 
 			log.info("{}", hits.totalHits);
 
-			hits.forEach(h -> { 
+			hits.forEach(h -> {
 				MovieVO movieVO = new Gson().fromJson(h.toString(), MovieVO.class);
-
-				// this.callCrawler(movieVO);
-
+				this.callCrawler(movieVO);
+				
 				// if (rabbitTemplate == null) {
 				// this.callCrawler(schedule);
 				// } else {
@@ -91,9 +90,10 @@ public class Scheduler implements AppConstant {
 	}
 
 	private void callCrawler(MovieVO movieVO) {
-		
-		// TODO crawler 직접 호출
 		log.info("call crawler : {}", movieVO);
+		
+		// execute with movieVO
+		movieCrawlerService.execute(movieVO);
 	}
 
 	// private void sendMessage(String message) {

@@ -80,8 +80,8 @@ public class TestSchedule extends TestElasticsearch {
 		int[] week = {0};		// 일요일 : 1, 토요일 : 7, 매주 : 0
 		int[] month = {0}; 		// 1-12, 매월 : 0		
 		int[] day = {0}; 		// 1-31, 매일 : 0		
-		int[] hour = {24}; 		// 0-23, 매시간 : 24		
-		int[] minute = {60}; 	// 0-59, 매분 : 60
+		int[] hour = {0}; 		// 0-23, 매시간 : 24		
+		int[] minute = {10}; 	// 0-59, 매분 : 60
  
 		Schedule schedule = new Schedule();
 		
