@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import kr.co.esjee.ranker.webapp.model.Movie;
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
@@ -45,23 +44,11 @@ public class TestMovieCrawler {
 		
 		if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
 			// Movie Info
-			if(movieService.findByTid(movieInfo.getMovieInfo().getTid()) == null) {
-				movieService.save(movieInfo.getMovieInfo());
-			} else {
-				Movie movie = movieService.findByTid(movieInfo.getMovieInfo().getTid());
-				movieInfo.getMovieInfo().setId(movie.getId());
-				movieService.save(movieInfo.getMovieInfo());
-			}
+			movieService.merge(movieInfo.getMovieInfo());
 			
 			// Person Info
-			for (Person person : movieInfo.getPersonInfo()) {				
-				if(personService.findByPid(person.getPid()) == null) {
-					personService.save(person);
-				} else {
-					Person psn = personService.findByPid(person.getPid());
-					person.setId(psn.getId());
-					personService.save(person);
-				}
+			for (Person person : movieInfo.getPersonInfo()) {
+				personService.merge(person);
 			}
 		}
 	}
@@ -93,23 +80,11 @@ public class TestMovieCrawler {
 					
 					try {
 						// Movie Info
-						if(movieService.findByTid(movieInfo.getMovieInfo().getTid()) == null) {
-							movieService.save(movieInfo.getMovieInfo());
-						} else {
-							Movie movie = movieService.findByTid(movieInfo.getMovieInfo().getTid());
-							movieInfo.getMovieInfo().setId(movie.getId());
-							movieService.save(movieInfo.getMovieInfo());
-						}
+						movieService.merge(movieInfo.getMovieInfo());
 						
 						// Person Info
-						for (Person person : movieInfo.getPersonInfo()) {				
-							if(personService.findByPid(person.getPid()) == null) {
-								personService.save(person);
-							} else {
-								Person psn = personService.findByPid(person.getPid());
-								person.setId(psn.getId());
-								personService.save(person);
-							}
+						for (Person person : movieInfo.getPersonInfo()) {
+							personService.merge(person);
 						}
 						
 						log.info("=========== Movie Crawering Success = {}/{} ===========", count, urlList.size());						
@@ -176,25 +151,13 @@ public class TestMovieCrawler {
 						
 						if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
 							
-							try {
+							try {								
 								// Movie Info
-								if(movieService.findByTid(movieInfo.getMovieInfo().getTid()) == null) {
-									movieService.save(movieInfo.getMovieInfo());
-								} else {
-									Movie movie = movieService.findByTid(movieInfo.getMovieInfo().getTid());
-									movieInfo.getMovieInfo().setId(movie.getId());
-									movieService.save(movieInfo.getMovieInfo());
-								}
+								movieService.merge(movieInfo.getMovieInfo());
 								
 								// Person Info
-								for (Person person : movieInfo.getPersonInfo()) {				
-									if(personService.findByPid(person.getPid()) == null) {
-										personService.save(person);
-									} else {
-										Person psn = personService.findByPid(person.getPid());
-										person.setId(psn.getId());
-										personService.save(person);
-									}
+								for (Person person : movieInfo.getPersonInfo()) {
+									personService.merge(person);
 								}
 								
 								log.info("=========== {} Year Movie Crawering Success = {}/{} ===========", bUrl.get("year"), count, urlList.size());						

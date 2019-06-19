@@ -49,4 +49,19 @@ public class PersonService extends AppService {
 		return repository.findByPid(pid);
 	}
 	
+	public Person merge(Person person) {
+		
+		Person personInfo = repository.findByPid(person.getPid());
+		
+		if(personInfo != null) {
+			person.setId(personInfo.getId());
+		} else {
+			if (person.getId() == 0) {
+				person.setId(super.getNextId(INDICES.mv_person_info));
+			}
+		}
+		
+		return repository.save(person);
+	}
+	
 }
