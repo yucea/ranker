@@ -195,8 +195,8 @@ public class MovieCrawler implements AppConstant {
 				
 		// OpenDay
 		String openDay = (movieVO.getOpenDayAtrb().length > 1) ?
-				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).first().text() :
-					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).first().text();				
+				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).text() :
+					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).text();				
 		movie.setOpenDay(StringUtils.replace(StringUtils.replace(openDay, " ", ""), ".", ""));
 		
 		// Actors

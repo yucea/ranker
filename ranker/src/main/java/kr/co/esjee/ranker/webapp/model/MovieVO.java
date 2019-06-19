@@ -28,7 +28,7 @@ public class MovieVO implements AppConstant {
 	private String listUrl = "";
 	
 	// Movie URL
-	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=184946";
+	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=65610";
 	
 	// Person URL
 	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
