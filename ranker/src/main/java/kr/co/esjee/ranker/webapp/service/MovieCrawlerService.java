@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieCrawlerService {
 	
-	private static final int DELAY_TIME = 5000;
+	private static final int DELAY_TIME = 10000;
 	
 	@Autowired
 	private MovieCrawler movieCrawler;
@@ -27,11 +27,11 @@ public class MovieCrawlerService {
 	@Autowired
 	private PersonService personService;
 	
-	public void execute(String baseUrl, int startYear, int endYear) {
+	public void execute(String baseUrl, String attribute, int startYear, int endYear) {
 		
 		MovieVO movieVO = new MovieVO();
 		
-		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, startYear, endYear);
+		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, attribute, startYear, endYear);
 		
 		if(!baseUrlList.isEmpty()) {
 			
@@ -90,7 +90,7 @@ public class MovieCrawlerService {
 						try {
 							Thread.sleep(DELAY_TIME);
 						} catch (InterruptedException e) {
-							log.error("Sleep Erroe = {}", e.getLocalizedMessage());
+							log.error("Sleep Error = {}", e.getLocalizedMessage());
 						}
 					}
 				}else {
@@ -104,7 +104,7 @@ public class MovieCrawlerService {
 				try {
 					Thread.sleep(DELAY_TIME);
 				} catch (InterruptedException e) {
-					log.error("Sleep Erroe = {}", e.getLocalizedMessage());
+					log.error("Sleep Error = {}", e.getLocalizedMessage());
 				}
 			}
 		} else {

@@ -40,12 +40,14 @@ public class MovieCrawlerController implements AppConstant {
 	@ApiOperation(value = "mvCrawler")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query", defaultValue = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn"),
+		@ApiImplicitParam(name = "attribute", value = "속성", required = true, dataType = "string", paramType = "query", defaultValue = "table.directory_item_other tbody tr td a"),
 		@ApiImplicitParam(name = "startYear", value = "시작연도", required = true, dataType = "int", paramType = "query"),
 		@ApiImplicitParam(name = "endYear", value = "종료연도", required = true, dataType = "int", paramType = "query")
 		})
 	@RequestMapping(value = "/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String mvExecute(HttpServletRequest request,
 			@RequestParam String url,
+			@RequestParam String attribute,
 			@RequestParam int startYear, 
 			@RequestParam int endYear) {
 				
@@ -53,7 +55,7 @@ public class MovieCrawlerController implements AppConstant {
 		
 		try {
 			
-			movieCrawlerService.execute(url, startYear, endYear);
+			movieCrawlerService.execute(url, attribute, startYear, endYear);
 			returnObj.put(SUCCESS, true);
 						
 		} catch (Exception e) {
@@ -64,6 +66,5 @@ public class MovieCrawlerController implements AppConstant {
 		}
 		
         return returnObj.toString();		
-	}
-	
+	}	
 }

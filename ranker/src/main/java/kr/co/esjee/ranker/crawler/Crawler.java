@@ -20,7 +20,6 @@ import org.jsoup.select.Elements;
 import com.google.common.collect.Lists;
 
 import kr.co.esjee.ranker.webapp.model.Article;
-import kr.co.esjee.ranker.webapp.model.Schedule;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

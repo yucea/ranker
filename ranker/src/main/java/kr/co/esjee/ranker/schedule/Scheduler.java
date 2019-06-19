@@ -65,7 +65,7 @@ public class Scheduler implements AppConstant {
 
 			log.info("{}", hits.totalHits);
 
-			hits.forEach(h -> {
+			hits.forEach(h -> { 
 				MovieVO movieVO = new Gson().fromJson(h.toString(), MovieVO.class);
 
 				// this.callCrawler(movieVO);

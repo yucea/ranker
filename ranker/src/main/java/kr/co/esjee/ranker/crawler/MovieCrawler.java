@@ -30,11 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieCrawler implements AppConstant {
 	
-	private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
-	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0";
-	private static final String SEPARATOR = "=";
-	private static final String QUESTION_SEPARATOR = "?";	    
-	private static final String PARAM_SEPARATOR = "&";
+	private static final int DELAY_TIME = 10000;	
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	
 	@Autowired
@@ -52,25 +48,26 @@ public class MovieCrawler implements AppConstant {
 		
 		try {
 			document = Jsoup.connect(connectUrl)
-					.header("Content-Type", CONTENT_TYPE)
+					.header("Content-Type", "application/json;charset=UTF-8")
 					.header("Host", "movie.naver.com")
-					.userAgent(USER_AGENT)
+					.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0")
 					.maxBodySize(Integer.MAX_VALUE)
 					.ignoreContentType(true)
 					.get();
 			
 			if(document == null) {
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(DELAY_TIME);
+					
 					document = Jsoup.connect(connectUrl)
-							.header("Content-Type", CONTENT_TYPE)
+							.header("Content-Type", "application/json;charset=UTF-8")
 							.header("Host", "movie.naver.com")
-							.userAgent(USER_AGENT)
+							.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0")
 							.maxBodySize(Integer.MAX_VALUE)
 							.ignoreContentType(true)
 							.get();		
 				} catch (InterruptedException ie) {
-					log.error("Jsoup Connect Error = {}", ie.getLocalizedMessage());
+					log.error("Thread Sleep Error = {}", ie.getLocalizedMessage());
 				}
 			}
 			
@@ -82,10 +79,10 @@ public class MovieCrawler implements AppConstant {
 	}
 	
 	/**
-	 * Crawler Execute
+	 * execute
 	 * 
 	 * @param movieVO
-	 * @return MovieInfo
+	 * @return
 	 */
 	public MovieInfo execute(MovieVO movieVO) { 
 		
@@ -103,23 +100,35 @@ public class MovieCrawler implements AppConstant {
 			// 인물 정보 연결
 			Document crewInfoDoc = jsoupConnect(movieVO.getCrewUrl() + (movieKey.isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ movieKey));
 			
-			// 영화 정보
-			movieInfo.setMovieInfo(movieInfo(basicInfoDoc, crewInfoDoc, movieVO));
+			if(basicInfoDoc != null && crewInfoDoc != null) {
 				
-			// 인물 정보
-			movieInfo.setPersonInfo(personInfo(crewInfoDoc, movieVO));
-		} catch (Exception e) {
-			String time = format.format(Calendar.getInstance().getTime());
+				// 영화 정보
+				movieInfo.setMovieInfo(movieInfo(basicInfoDoc, crewInfoDoc, movieVO));
+					
+				// 인물 정보
+				movieInfo.setPersonInfo(personInfo(crewInfoDoc, movieVO));
+				
+			} else {
+				ErrorLog errorLog = new ErrorLog();
+				errorLog.setMovieId(movieKey);
+				errorLog.setMessage("HTTP error fetching URL");
+				errorLog.setTime(format.format(Calendar.getInstance().getTime()));
+				
+				errorLogService.save(errorLog);
+				
+				log.error("Execute Error, MovieId = {}, Error = HTTP error fetching URL, Time = {}", errorLog.getMovieId(), errorLog.getTime());
+			}
 			
+		} catch (Exception e) {
 			ErrorLog errorLog = new ErrorLog();
 			errorLog.setMovieId(movieKey);
-			errorLog.setMessage(e.getMessage());
-			errorLog.setTime(time);
+			errorLog.setMessage(e.getLocalizedMessage());
+			errorLog.setTime(format.format(Calendar.getInstance().getTime()));
 			
 			errorLogService.save(errorLog);
 			
-			log.error("Execute Error, MovieId = {}, Error = {}, Time = {}", movieKey, e.getLocalizedMessage(), time);
-		}	
+			log.error("Execute Error, MovieId = {}, Error = {}, Time = {}", errorLog.getMovieId(), e.getLocalizedMessage(), errorLog.getTime());
+		}
 		
 		return movieInfo;
 	}
@@ -197,7 +206,7 @@ public class MovieCrawler implements AppConstant {
 		String role = "";
 		for(Element roles : crewInfoDoc.select(movieVO.getRoleAtrb())) {
 			role += roles.text() + ",";
-		}		
+		}
 		
 		movie.setRole(StringUtils.substring(role, 0, role.length() - 1));
 		
@@ -244,22 +253,22 @@ public class MovieCrawler implements AppConstant {
 				crewDoc.select(movieVO.getRemoveAtrb()).remove();
 			}
 			
-			// Person ID
+			// 인물 ID
 			String pId = (getQueryMap(crewUrl) != null && getQueryMap(crewUrl).get(movieVO.getKeyParam()) != null) ? 
 					getQueryMap(crewUrl).get(movieVO.getKeyParam()) : "";
 					
 			person.setPid(pId);
 			
-			// Person Name
+			// 인물 이름
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
 			
-			// Person Birthday
+			// 인물 생년월일
 			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
 			
-			// Person Profile
+			// 인물 프로필
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
 			
-			// Filmography Url
+			// 필모그래피 주소
 			String filmoUrl = movieVO.getFilmoUrl() + pId;	
 			
 			Document filmoDoc = jsoupConnect(filmoUrl);
@@ -272,19 +281,19 @@ public class MovieCrawler implements AppConstant {
 				
 				String movieUrl = filmoElement.select(movieVO.getFilmoTitleAtrb()).attr("abs:href");
 				
-				// Filmo ID
+				// 영화 ID
 				filmo.setMovieId((getQueryMap(movieUrl) != null && getQueryMap(movieUrl).get(movieVO.getKeyParam()) != null) ? 
 						getQueryMap(movieUrl).get(movieVO.getKeyParam()) : "");
 				
-				// Movie Title
+				// 영화제목
 				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
 				
-				// Movie Year
+				// 영화 개봉년도
 				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
 
 				Document directorDoc = jsoupConnect(movieVO.getCrewUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ filmo.getMovieId()));
 				
-				// Director
+				// 감독
 				String director = "";
 				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
 					director += directors.text() + ",";
@@ -308,7 +317,7 @@ public class MovieCrawler implements AppConstant {
 	 * @param movieVO
 	 * @return
 	 */
-	public List<Map<String, Object>> getUrlList(String url, int startYear, int endYear) {
+	public List<Map<String, Object>> getUrlList(String url, String attribute, int startYear, int endYear) {
 		
 		List<Map<String, Object>> urlList = new ArrayList<Map<String, Object>>();
 		
@@ -317,7 +326,7 @@ public class MovieCrawler implements AppConstant {
 		Document doc = mc.jsoupConnect(url);
 		
 		if(doc != null) {
-			for(Element element : doc.select("table.directory_item_other tbody tr td a")) {
+			for(Element element : doc.select(attribute)) {
 				
 				Map<String, Object> urlMap = new HashMap<String, Object>();
 				
@@ -402,19 +411,19 @@ public class MovieCrawler implements AppConstant {
 
 		if (query == null) return null;
 
-		int pos = query.indexOf(QUESTION_SEPARATOR);
+		int pos = query.indexOf("?");
 
 		if (pos >= 0) {
 			query = query.substring(pos + 1);
 		}
 
-		String[] params = StringUtils.split(query, PARAM_SEPARATOR);
+		String[] params = StringUtils.split(query, "&");
 
 		Map<String, String> map = new HashMap<String, String>();
 
 		for (String param : params) {				
-			String name = StringUtils.split(param, SEPARATOR)[0];
-			String value = StringUtils.split(param, SEPARATOR)[1];
+			String name = StringUtils.split(param, "=")[0];
+			String value = StringUtils.split(param, "=")[1];
 			map.put(name, value);
 		}
 

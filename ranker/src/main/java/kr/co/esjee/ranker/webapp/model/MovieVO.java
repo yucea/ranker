@@ -16,10 +16,10 @@ public class MovieVO implements AppConstant {
 	private long id;
 	
 	// List URL
-	private String listUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn";
+	private String listUrl = "";
 	
 	// Movie URL
-	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn";
+	private String basicUrl = "";
 	
 	// Person URL
 	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
@@ -27,11 +27,13 @@ public class MovieVO implements AppConstant {
 	// Filmo URL
 	private String FilmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?year=0&totalCount=1000&page=1000&peopleCode=";
 	
-	// Key Parameter
+	// 영화키 파라미터
 	private String keyParam = "code";
 	
+	// 페이지 파라미터
 	private String pagingParam = "page";
 	
+	// 페이지 목록 갯수
 	private Integer maxCount = 20;
 	
 	// 필요 없는 요소

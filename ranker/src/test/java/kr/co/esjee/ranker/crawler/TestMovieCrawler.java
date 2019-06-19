@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestMovieCrawler {
 	
-	private static final int DELAY_TIME = 5000;
+	private static final int DELAY_TIME = 10000;
 	
 	@Autowired
 	private MovieService movieService;
@@ -54,8 +54,6 @@ public class TestMovieCrawler {
 					personService.save(person);
 				}
 			}
-		}else {
-			log.error("=========== Movie Crawering Error ===========");
 		}
 	}
 	
@@ -122,12 +120,13 @@ public class TestMovieCrawler {
 	public void testTermCrawler() {
 		
 		String baseUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn";
+		String attribute = "table.directory_item_other tbody tr td a";
 		int startYear = 2000;
 		int endYear = 2010;
 		
 		MovieVO movieVO = new MovieVO();
 		
-		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, startYear, endYear);
+		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, attribute, startYear, endYear);
 		
 		if(!baseUrlList.isEmpty()) {
 			
