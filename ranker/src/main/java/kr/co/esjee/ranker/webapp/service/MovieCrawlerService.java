@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieCrawlerService {
 	
-	private static final int DELAY_TIME = 10000;
+	private static final int DELAY_TIME = 60000;
 	
 	@Autowired
 	private MovieCrawler movieCrawler;
