@@ -1,6 +1,7 @@
 package kr.co.esjee.ranker.crawler;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,19 +206,51 @@ public class TestMovieCrawler {
 	 @Test
 	 public void tetet () {
 		 
-		 String crew = "https://movie.naver.com/movie/bi/mi/detail.nhn?code=182578";
-		 
 		 MovieCrawler movieCrawler2 = new MovieCrawler();
 		 
-		 Document crewInfoDoc = movieCrawler2.jsoupConnect(crew);
+		 List<String> urlList = new ArrayList<String>();
 		 
-		 for(Element element : crewInfoDoc.select("div.dir_product a.k_name")) {
-			 
-			 String crewUrl = element.select("a").attr("abs:href").toString();
-			 
-			 System.out.println(crewUrl);
-			 
+		 boolean stop = false;
+		 String prevUrl = "";
+		 
+		 int pageCount = 1;
+		 
+		 while(true) {
+			
+			Document doc = movieCrawler2.jsoupConnect("https://movie.naver.com/movie/sdb/browsing/bmovie.nhn?open=198" + "&" + "page" + "=" + pageCount);
+			
+			if(doc != null) {
+				Elements elements = doc.select("ul.directory_list li a");
+				
+				int urlCount = 1;
+				
+				for(Element element : elements) {
+					if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
+						
+						if(urlCount == 1) {
+							if(prevUrl.equals(element.attr("abs:href"))) {
+								stop = true;
+								break;
+							}else {
+								prevUrl = element.attr("abs:href");
+							}
+						}
+						
+						urlList.add(element.attr("abs:href"));
+						urlCount ++;
+					}
+				}
+				
+				if(stop) {
+					break;
+				}
+				
+				pageCount++;
+			}
 		 }
 		 
+		 for(String a : urlList) {
+			 System.out.println(a);
+		 }
 	 }
 }

@@ -55,9 +55,6 @@ public class Schedule implements AppConstant {
 	@Field(type = FieldType.Text)
 	private String pagingParam = "page";
 	
-	@Field(type = FieldType.Text)
-	private Integer maxCount = 20;
-	
 	// 필요 없는 요소
 	@Field(type = FieldType.Text)
 	private String removeAtrb = "div.wide_info_area";

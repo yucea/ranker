@@ -443,7 +443,10 @@ public class MovieCrawler implements AppConstant {
 			
 		} else {
 			
-			int pageCount = 1;
+			boolean stop = false;
+			
+			String prevUrl = "";
+			int pageCount = 1;	
 			
 			while(true) {
 				
@@ -453,14 +456,25 @@ public class MovieCrawler implements AppConstant {
 					Elements elements = doc.select("ul.directory_list li a");
 					
 					int urlCount = 1;
+					
 					for(Element element : elements) {
 						if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
+							
+							if(urlCount == 1) {
+								if(prevUrl.equals(element.attr("abs:href"))) {
+									stop = true;
+									break;
+								}else {
+									prevUrl = element.attr("abs:href");
+								}
+							}
+							
 							urlList.add(element.attr("abs:href"));
 							urlCount ++;
 						}
 					}
 					
-					if(urlCount < movieVO.getMaxCount()) {
+					if(stop) {
 						break;
 					}
 					

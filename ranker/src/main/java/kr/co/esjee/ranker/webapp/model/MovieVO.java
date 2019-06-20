@@ -42,9 +42,6 @@ public class MovieVO implements AppConstant {
 	// 페이지 파라미터
 	private String pagingParam = "page";
 	
-	// 페이지 목록 갯수
-	private Integer maxCount = 20;
-	
 	// 필요 없는 요소
 	private String removeAtrb = "div.wide_info_area";
 	

@@ -24,7 +24,7 @@ import kr.co.esjee.ranker.webapp.service.MovieCrawlerService;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@EnableScheduling
+//@EnableScheduling
 @Slf4j
 public class Scheduler implements AppConstant {
 
