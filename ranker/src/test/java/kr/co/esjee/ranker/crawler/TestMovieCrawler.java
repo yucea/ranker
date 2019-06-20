@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestMovieCrawler {
 	
-	private static final int DELAY_TIME = 10000;
+	private static final int DELAY_TIME = 5000;
 	
 	@Autowired
 	private MovieService movieService;
@@ -100,7 +102,7 @@ public class TestMovieCrawler {
 				try {
 					Thread.sleep(DELAY_TIME);
 				} catch (InterruptedException e) {
-					log.error("Sleep Erroe = {}", e.getLocalizedMessage());
+					log.error("Sleep Error = {}", e.getLocalizedMessage());
 				}
 			}
 		}
@@ -173,7 +175,7 @@ public class TestMovieCrawler {
 						try {
 							Thread.sleep(DELAY_TIME);
 						} catch (InterruptedException e) {
-							log.error("Sleep Erroe = {}", e.getLocalizedMessage());
+							log.error("Sleep Error = {}", e.getLocalizedMessage());
 						}
 					}
 				}
@@ -185,7 +187,7 @@ public class TestMovieCrawler {
 				try {
 					Thread.sleep(DELAY_TIME);
 				} catch (InterruptedException e) {
-					log.error("Sleep Erroe = {}", e.getLocalizedMessage());
+					log.error("Sleep Error = {}", e.getLocalizedMessage());
 				}
 			}
 		}
@@ -197,5 +199,24 @@ public class TestMovieCrawler {
 		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 		 String result = format.format(date);
 		 System.out.println(result);
+	 }
+	 
+	 @Test
+	 public void tetet () {
+		 
+		 String crew = "https://movie.naver.com/movie/bi/mi/detail.nhn?code=182578";
+		 
+		 MovieCrawler movieCrawler2 = new MovieCrawler();
+		 
+		 Document crewInfoDoc = movieCrawler2.jsoupConnect(crew);
+		 
+		 for(Element element : crewInfoDoc.select("div.dir_product a.k_name")) {
+			 
+			 String crewUrl = element.select("a").attr("abs:href").toString();
+			 
+			 System.out.println(crewUrl);
+			 
+		 }
+		 
 	 }
 }

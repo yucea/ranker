@@ -16,19 +16,19 @@ public class MovieVO implements AppConstant {
 	private long id;
 	
 	// Base URL
-	private String baseUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn";
+	private String baseUrl = "";
 	
 	private String attribute = "table.directory_item_other tbody tr td a";
 	
-	private int startYear = 2019;
+	private int startYear;
 	
-	private int endYear = 2019;
+	private int endYear;
 	
 	// List URL
 	private String listUrl = "";
 	
 	// Movie URL
-	private String basicUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=65610";
+	private String basicUrl = "";
 	
 	// Person URL
 	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	

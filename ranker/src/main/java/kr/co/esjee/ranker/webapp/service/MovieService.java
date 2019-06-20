@@ -53,18 +53,12 @@ public class MovieService extends AppService {
 		repository.deleteByTid(tid);
 	}
 	
-	public Movie merge(Movie movie) {
-		
-		Movie movieInfo = repository.findByTid(movie.getTid());
-		
+	public Movie merge(Movie movie) {		
+		Movie movieInfo = repository.findByTid(movie.getTid());		
 		if(movieInfo != null) {
 			movie.setId(movieInfo.getId());
-		} else {
-			if (movie.getId() == 0) {
-				movie.setId(super.getNextId(INDICES.mv_basic_info));
-			}
-		}
+		}	
 		
-		return repository.save(movie);
+		return this.save(movie);
 	}
 }

@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieCrawler implements AppConstant {
 	
-	private static final int DELAY_TIME = 10000;	
+	private static final int DELAY_TIME = 5000;	
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	
 	@Autowired
@@ -240,6 +240,7 @@ public class MovieCrawler implements AppConstant {
 		
 		List<Person> personList = new ArrayList<Person>();
 		
+		// 배우
 		for(Element element : crewInfoDoc.select(movieVO.getActorAtrb())) {
 			
 			Person person = new Person();
@@ -262,6 +263,7 @@ public class MovieCrawler implements AppConstant {
 			// 인물 이름
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
 			
+			// XXX
 			// 인물 생년월일
 			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
 			
@@ -269,7 +271,7 @@ public class MovieCrawler implements AppConstant {
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
 			
 			// 필모그래피 주소
-			String filmoUrl = movieVO.getFilmoUrl() + pId;	
+			String filmoUrl = movieVO.getFilmoUrl() + pId;
 			
 			Document filmoDoc = jsoupConnect(filmoUrl);
 			
@@ -301,10 +303,80 @@ public class MovieCrawler implements AppConstant {
 				
 				filmo.setMovieDirector(StringUtils.substring(director, 0, director.length() - 1));
 				
-				filmoList.add(filmo);				
+				filmoList.add(filmo);
 			}
 			
-			person.setFilmo(filmoList);			
+			person.setFilmo(filmoList);
+			personList.add(person);
+		}
+		
+		// 감독
+		for(Element element : crewInfoDoc.select(movieVO.getDirectorAtrb())) {
+			
+			Person person = new Person();
+			
+			String crewUrl = element.select("a").attr("abs:href").toString();
+			
+			Document crewDoc = jsoupConnect(crewUrl);					
+			
+			// Remove Attribute
+			if(StringUtils.isNotEmpty(movieVO.getRemoveAtrb())) {
+				crewDoc.select(movieVO.getRemoveAtrb()).remove();
+			}
+			
+			// 인물 ID
+			String pId = (getQueryMap(crewUrl) != null && getQueryMap(crewUrl).get(movieVO.getKeyParam()) != null) ? 
+					getQueryMap(crewUrl).get(movieVO.getKeyParam()) : "";
+					
+			person.setPid(pId);
+			
+			// 인물 이름
+			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
+			
+			// XXX
+			// 인물 생년월일
+			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+			
+			// 인물 프로필
+			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
+			
+			// 필모그래피 주소
+			String filmoUrl = movieVO.getFilmoUrl() + pId;
+			
+			Document filmoDoc = jsoupConnect(filmoUrl);
+			
+			List<PersonFilmo> filmoList = new ArrayList<PersonFilmo>();
+			
+			for(Element filmoElement : filmoDoc.select(movieVO.getFilmoListAtrb())) {
+				
+				PersonFilmo filmo = new PersonFilmo();
+				
+				String movieUrl = filmoElement.select(movieVO.getFilmoTitleAtrb()).attr("abs:href");
+				
+				// 영화 ID
+				filmo.setMovieId((getQueryMap(movieUrl) != null && getQueryMap(movieUrl).get(movieVO.getKeyParam()) != null) ? 
+						getQueryMap(movieUrl).get(movieVO.getKeyParam()) : "");
+				
+				// 영화제목
+				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
+				
+				// 영화 개봉년도
+				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
+
+				Document directorDoc = jsoupConnect(movieVO.getCrewUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ filmo.getMovieId()));
+				
+				// 감독
+				String director = "";
+				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
+					director += directors.text() + ",";
+				}
+				
+				filmo.setMovieDirector(StringUtils.substring(director, 0, director.length() - 1));
+				
+				filmoList.add(filmo);
+			}
+			
+			person.setFilmo(filmoList);
 			personList.add(person);
 		}
 		

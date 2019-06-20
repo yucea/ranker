@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieCrawlerService {
 	
-	private static final int DELAY_TIME = 60000;
+	private static final int DELAY_TIME = 30000;
 	
 	@Autowired
 	private MovieCrawler movieCrawler;
@@ -43,13 +43,13 @@ public class MovieCrawlerService {
 		
 		if(!baseUrlList.isEmpty()) {
 			
-			log.info("=========== Year TotalCount = {} ===========", baseUrlList.size());
+			log.info("[ Find Year Count = {} ]", baseUrlList.size());
 			
 			int yearCount = 1;
 			
 			for(Map<String, Object> bUrl : baseUrlList) {
 					
-				log.info("=========== {} Year Crawering = {}/{} ===========", bUrl.get("year"), yearCount, baseUrlList.size());
+				log.info("[ {} Year ] Crawling Start = {}/{}", bUrl.get("year"), yearCount, baseUrlList.size());
 				
 				// URL Setting
 				movieVO.setListUrl(bUrl.get("url").toString());
@@ -58,7 +58,7 @@ public class MovieCrawlerService {
 				
 				if(!urlList.isEmpty()) {
 					
-					log.info("=========== {} Year Movie TotalCount = {} ===========", bUrl.get("year"), urlList.size());
+					log.info("[ {} Year ] Movie TotalCount = {}", bUrl.get("year"), urlList.size());
 					
 					int count = 1;
 					
@@ -66,7 +66,7 @@ public class MovieCrawlerService {
 						
 						movieVO.setBasicUrl(basicUrl);
 						
-						log.info("=========== {} Year Movie Crawering Start = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+						log.info("[ {} Year ] Movie Crawling Start = {}/{}", bUrl.get("year"), count, urlList.size());
 						
 						MovieInfo movieInfo = movieCrawler.execute(movieVO);
 						
@@ -81,12 +81,15 @@ public class MovieCrawlerService {
 									personService.merge(person);
 								}
 								
-								log.info("=========== {} Year Movie Crawering Success = {}/{} ===========", bUrl.get("year"), count, urlList.size());						
+								log.info("[ {} Year ] Movie Crawling Success = {}/{}", bUrl.get("year"), count, urlList.size());						
 							} catch (Exception e) {
-								log.error("=========== {} Year Movie Crawering Error = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+								
+								System.out.println(e.getLocalizedMessage());
+								
+								log.error("[ {} Year ] Movie Crawling Failed = {}/{}", bUrl.get("year"), count, urlList.size());
 							}
 						} else {
-							log.error("=========== {} Year Movie Crawering Error = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+							log.error("[ {} Year ] Movie Crawling Failed = {}/{}", bUrl.get("year"), count, urlList.size());
 						}
 						
 						count++;
@@ -97,13 +100,13 @@ public class MovieCrawlerService {
 							log.error("Sleep Error = {}", e.getLocalizedMessage());
 						}
 					}
-				}else {
+				} else {
 					log.info("URL is Empty");
 				}
 				
-				yearCount++;
+				log.info("[ {} Year ] Crawling Success = {}/{}", bUrl.get("year"), yearCount, baseUrlList.size());
 				
-				log.info("=========== {} Year Movie Crawering Success ===========", bUrl.get("year"));
+				yearCount++;
 				
 				try {
 					Thread.sleep(DELAY_TIME);
@@ -131,13 +134,13 @@ public class MovieCrawlerService {
 		
 		if(!baseUrlList.isEmpty()) {
 			
-			log.info("=========== Year TotalCount = {} ===========", baseUrlList.size());
+			log.info("[ Find Year Count = {} ]", baseUrlList.size());
 			
 			int yearCount = 1;
 			
 			for(Map<String, Object> bUrl : baseUrlList) {
 					
-				log.info("=========== {} Year Crawering = {}/{} ===========", bUrl.get("year"), yearCount, baseUrlList.size());
+				log.info("[ {} Year ] Crawling Start = {}/{}", bUrl.get("year"), yearCount, baseUrlList.size());
 				
 				// URL Setting
 				movieVO.setListUrl(bUrl.get("url").toString());
@@ -146,7 +149,7 @@ public class MovieCrawlerService {
 				
 				if(!urlList.isEmpty()) {
 					
-					log.info("=========== {} Year Movie TotalCount = {} ===========", bUrl.get("year"), urlList.size());
+					log.info("[ {} Year ] Movie TotalCount = {}", bUrl.get("year"), urlList.size());
 					
 					int count = 1;
 					
@@ -154,7 +157,7 @@ public class MovieCrawlerService {
 						
 						movieVO.setBasicUrl(basicUrl);
 						
-						log.info("=========== {} Year Movie Crawering Start = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+						log.info("[ {} Year ] Movie Crawling Start = {}/{}", bUrl.get("year"), count, urlList.size());
 						
 						MovieInfo movieInfo = movieCrawler.execute(movieVO);
 						
@@ -169,12 +172,12 @@ public class MovieCrawlerService {
 									personService.merge(person);
 								}
 								
-								log.info("=========== {} Year Movie Crawering Success = {}/{} ===========", bUrl.get("year"), count, urlList.size());						
+								log.info("[ {} Year ] Movie Crawling Success = {}/{}", bUrl.get("year"), count, urlList.size());						
 							} catch (Exception e) {
-								log.error("=========== {} Year Movie Crawering Error = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+								log.error("[ {} Year ] Movie Crawling Failed = {}/{}", bUrl.get("year"), count, urlList.size());
 							}
 						} else {
-							log.error("=========== {} Year Movie Crawering Error = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+							log.error("[ {} Year ] Movie Crawling Failed = {}/{}", bUrl.get("year"), count, urlList.size());
 						}
 						
 						count++;
@@ -185,13 +188,13 @@ public class MovieCrawlerService {
 							log.error("Sleep Error = {}", e.getLocalizedMessage());
 						}
 					}
-				}else {
+				} else {
 					log.info("URL is Empty");
 				}
 				
-				yearCount++;
+				log.info("[ {} Year ] Crawling Success = {}/{}", bUrl.get("year"), yearCount, baseUrlList.size());
 				
-				log.info("=========== {} Year Movie Crawering Success ===========", bUrl.get("year"));
+				yearCount++;
 				
 				try {
 					Thread.sleep(DELAY_TIME);
