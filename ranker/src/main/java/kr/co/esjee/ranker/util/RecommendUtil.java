@@ -184,14 +184,14 @@ public class RecommendUtil implements AppConstant {
 	 * @return
 	 */
 	public static double getGenreScore(String genre, String target) {
-		double variable = 0.7;
+		double variable = 0.4;
 
 		if (StringUtils.isEmpty(genre) || genre.equals(target)) {
 			variable = 1;
 		} else if (StringUtils.isEmpty(target)) {
-			variable = 0.7;
+			variable = 0.4;
 		} else if (StringUtils.contains(genre, target) || StringUtils.contains(target, genre)) {
-			variable = 0.9;
+			variable = 0.8;
 		} else {
 			List<String> genres = Arrays.asList(genre.split(","));
 			int size = genres.size();
@@ -207,15 +207,15 @@ public class RecommendUtil implements AppConstant {
 					if (target.split(",").length == size) {
 						variable = 1;
 					} else {
-						variable = 0.9;
+						variable = 0.8;
 					}
 				} else if (count == 0) {
-					variable = 0.7;
+					variable = 0.4;
 				} else {
-					variable = 0.8;
+					variable = 0.6;
 				}
 			} else {
-				variable = 0.7;
+				variable = 0.4;
 			}
 		}
 

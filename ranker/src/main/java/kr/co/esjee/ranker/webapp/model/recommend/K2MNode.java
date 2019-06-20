@@ -14,20 +14,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = AppConstant.RECOMMEND_M2M, type = AppConstant.DOC)
+@Document(indexName = AppConstant.RECOMMEND_K2M, type = AppConstant.DOC)
 @Setting(settingPath = "/elasticsearch/default_settings.json")
-public class M2MNode {
+public class K2MNode {
 
 	@Id
-	private long id;
+	private int id;
 	@Field(type = FieldType.Keyword)
-	private String tid;
-	@Field(type = FieldType.Text)
-	private String title;
-	@Field(type = FieldType.Text)
-	private String genre;
-	@Field(type = FieldType.Text)
-	private int rating; // 연령대
+	private String key;
 	@Field(type = FieldType.Nested)
 	private Score[] scores;
 

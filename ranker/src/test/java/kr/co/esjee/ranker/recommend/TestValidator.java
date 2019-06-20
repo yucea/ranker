@@ -48,7 +48,7 @@ public class TestValidator extends TestElasticsearch {
 
 		log.info("size : {}", items.size());
 
-		SearchHits hits2 = ElasticSearcher.search(client, MV_M2K, option);
+		SearchHits hits2 = ElasticSearcher.search(client, RECOMMEND_M2K, option);
 
 		hits2.forEach(h -> {
 			items.remove(h.getId());

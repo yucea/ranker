@@ -28,15 +28,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class M2KExecutor implements AppConstant {
 
-	public static int execute(RecommendService service, Client client, String indexName, String typeName, List<String> stopwords) throws Exception {
-		List<M2KNode> nodes = execute(client, indexName, typeName, stopwords);
+	public synchronized static int execute(RecommendService service, String indexName, String typeName, List<String> stopwords) throws Exception {
+		List<M2KNode> nodes = execute(service.getClient(), indexName, typeName, stopwords);
 
-		service.saveM2KNode(nodes);
+		service.m2kSaveAll(nodes);
 
 		return nodes.size();
 	}
 
-	public static List<M2KNode> execute(Client client, String indexName, String typeName, List<String> stopwords) throws Exception {
+	public synchronized static List<M2KNode> execute(Client client, String indexName, String typeName, List<String> stopwords) throws Exception {
 		// search
 		SearchHits hits = search(client, indexName);
 		// id, [감독, 배우, 배역, 제목]에 포함된 키워드는 다운그레이드 시킨다.
@@ -46,8 +46,8 @@ public class M2KExecutor implements AppConstant {
 
 		List<M2KNode> nodes = new ArrayList<>();
 		// sorting
-		termvectors.forEach((k, v) -> {
-			Collections.sort(v, new Comparator<TermResult>() {
+		termvectors.forEach((id, terms) -> {
+			Collections.sort(terms, new Comparator<TermResult>() {
 				@Override
 				public int compare(TermResult o1, TermResult o2) {
 					Double s1 = o1.getScore();
@@ -58,32 +58,32 @@ public class M2KExecutor implements AppConstant {
 
 			Map<String, Keyword> map = new LinkedHashMap<>();
 
-			double maxScore = getMaxScore(v, stopwords);
+			double maxScore = getMaxScore(terms, stopwords);
 
-			v.forEach(t -> {
-				t.setScore(Math.round(t.getScore() / maxScore * NORMALIZING_SCORE * 100d) / 100d);
-
-				if (stopwords.contains(t.getWord()))
+			terms.forEach(t -> {
+				String word = t.getWord();
+				if (stopwords.contains(word))
 					return;
 
-				Keyword keyword = map.containsKey(t.getWord()) ? map.get(t.getWord()) : new Keyword(t.getWord(), t.getScore());
+				double score = Math.round(t.getScore() / maxScore * NORMALIZING_SCORE * 100d) / 100d;
+				if (score < 0.1)
+					return;
 
-				Map<String, Double> source = keyword.getSource();
-				source.put(t.getField(), t.getScore());
+				Keyword keyword = map.containsKey(word) ? map.get(word) : new Keyword(word, score);
+				keyword.putSource(t.getField(), score);
 
 				map.put(t.getWord(), keyword);
 			});
 
 			mergeKeyword(map);
 
-			M2KNode node = (M2KNode) sources.get(k);
+			M2KNode node = (M2KNode) sources.get(id);
 			node.setKeywords(map.values().toArray(new Keyword[0]));
 
 			nodes.add(node);
 		});
 
 		return nodes;
-
 	}
 
 	private static double getMaxScore(List<TermResult> list, List<String> stopwords) {
@@ -159,4 +159,5 @@ public class M2KExecutor implements AppConstant {
 
 		return map;
 	}
+
 }

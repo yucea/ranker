@@ -12,8 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class M2MExecutor implements AppConstant {
 
-	public static long execute(RecommendService service, List<M2KNode> nodes, int threadSize, int interval) throws Exception {
+	public synchronized static long execute(RecommendService service, int threadSize, int interval) throws Exception {
 		long start = System.currentTimeMillis();
+
+		List<M2KNode> nodes = service.findAllM2KNode();
+		log.info("M2KNode size : {}", nodes.size());
 
 		M2MRecursiveAction task = new M2MRecursiveAction(service, nodes, interval);
 

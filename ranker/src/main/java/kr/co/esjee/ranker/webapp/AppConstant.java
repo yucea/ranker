@@ -51,9 +51,9 @@ public interface AppConstant {
 
 	String DOC = "doc";
 
-	String MV_M2K = "mv_m2k";
-	String MV_M2M = "mv_m2m";
-	String MV_K2M = "mv_k2m";
+	String RECOMMEND_M2K = "mv_m2k";
+	String RECOMMEND_M2M = "mv_m2m";
+	String RECOMMEND_K2M = "mv_k2m";
 
 	String SYNOPSIS = "synopsis";
 	String MAKING_NOTE = "makingNote";
@@ -69,6 +69,7 @@ public interface AppConstant {
 	String OPENDAY = "openDay";
 
 	double NORMALIZING_SCORE = 9.99;
+	double FIXING_KEYWORD_SCORE = 10;
 
 	enum INDICES {
 		article, schedule, mv_basic_info, mv_person_info, mv_error_log

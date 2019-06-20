@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = AppConstant.MV_M2K, type = AppConstant.DOC)
+@Document(indexName = AppConstant.RECOMMEND_M2K, type = AppConstant.DOC)
 @Setting(settingPath = "/elasticsearch/default_settings.json")
 public class M2KNode implements Node {
 

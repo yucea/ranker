@@ -25,4 +25,8 @@ public class Keyword {
 		this.score = score;
 	}
 
+	public void putSource(String field, double score) {
+		this.source.put(field, score);
+	}
+
 }

@@ -1,5 +1,6 @@
 package kr.co.esjee.ranker.recommend;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 import org.elasticsearch.client.Client;
@@ -22,7 +23,7 @@ public class TestRecommenderServer extends TestElasticsearch {
 	private RecommendService service;
 
 	private Client client = null;
-	private String indexName = "mv_basic_info";
+	private String indexName = MOVIE;
 	private String typeName = DOC;
 
 	@Before
@@ -37,7 +38,7 @@ public class TestRecommenderServer extends TestElasticsearch {
 
 	@Test
 	public void m2kRunner() throws Exception {
-		Recommender.m2kRunner(service, client, indexName, typeName);
+		Recommender.m2kRunner(service, indexName, typeName);
 	}
 
 	@Test
@@ -50,6 +51,11 @@ public class TestRecommenderServer extends TestElasticsearch {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void k2mRunner() throws IOException {
+		Recommender.k2mRunner(service);
 	}
 
 }
