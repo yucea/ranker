@@ -36,7 +36,7 @@ public class TestRecommender extends TestElasticsearch {
 
 		for (int i = 0; i < nodes.size(); i++) {
 			M2KNode n = nodes.get(i);
-			log.info("{} - {}, {}, {}", i, n.getId(), n.getTitle(), n.getKeyowrds());
+			log.info("{} - {}, {}, {}", i, n.getId(), n.getTitle(), n.getKeywords());
 		}
 	}
 

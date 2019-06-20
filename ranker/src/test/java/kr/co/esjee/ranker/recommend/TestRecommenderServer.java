@@ -40,4 +40,16 @@ public class TestRecommenderServer extends TestElasticsearch {
 		Recommender.m2kRunner(service, client, indexName, typeName);
 	}
 
+	@Test
+	public void m2mRunner() {
+		int threadSize = 6;
+		int interval = 1000;
+
+		try {
+			Recommender.m2mRunner(service, threadSize, interval);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

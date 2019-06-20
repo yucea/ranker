@@ -1,5 +1,8 @@
 package kr.co.esjee.ranker.webapp.model.recommend;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.data.annotation.Id;
@@ -8,11 +11,15 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kr.co.esjee.ranker.webapp.AppConstant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = AppConstant.MV_M2K, type = AppConstant.DOC)
 @Setting(settingPath = "/elasticsearch/default_settings.json")
@@ -31,17 +38,32 @@ public class M2KNode implements Node {
 	@Field(type = FieldType.Text)
 	private String role;
 	@Field(type = FieldType.Double)
-	private double score; // starscore
+	private double starScore; // starscore
 	@Field(type = FieldType.Text)
 	private String genre;
-	@Field(type = FieldType.Text)
-	private String grade; // 연령대
+	@Field(type = FieldType.Integer)
+	private int rating; // 연령대
 	@Field(type = FieldType.Text)
 	private String openDay;
 	@Field(type = FieldType.Text)
 	private String[] fields;
 	@Field(type = FieldType.Nested)
-	private Keyword[] keyowrds;
+	private Keyword[] keywords;
+
+	@JsonIgnore
+	private Map<String, Double> scoreMap = null;
+
+	@JsonIgnore
+	public Map<String, Double> getScoreMap() {
+		if (scoreMap == null) {
+			scoreMap = new HashMap<String, Double>();
+			for (Keyword k : keywords) {
+				scoreMap.put(k.getWord(), k.getScore());
+			}
+		}
+
+		return scoreMap;
+	}
 
 	@Override
 	public String toString() {

@@ -17,14 +17,24 @@ import org.elasticsearch.search.SearchHits;
 import kr.co.esjee.ranker.elasticsearch.ElasticOption;
 import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
 import kr.co.esjee.ranker.elasticsearch.TermResult;
+import kr.co.esjee.ranker.util.RecommendUtil;
 import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.model.recommend.Keyword;
 import kr.co.esjee.ranker.webapp.model.recommend.M2KNode;
 import kr.co.esjee.ranker.webapp.model.recommend.Node;
+import kr.co.esjee.ranker.webapp.service.RecommendService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class M2KExecutor implements AppConstant {
+
+	public static int execute(RecommendService service, Client client, String indexName, String typeName, List<String> stopwords) throws Exception {
+		List<M2KNode> nodes = execute(client, indexName, typeName, stopwords);
+
+		service.saveM2KNode(nodes);
+
+		return nodes.size();
+	}
 
 	public static List<M2KNode> execute(Client client, String indexName, String typeName, List<String> stopwords) throws Exception {
 		// search
@@ -67,12 +77,13 @@ public class M2KExecutor implements AppConstant {
 			mergeKeyword(map);
 
 			M2KNode node = (M2KNode) sources.get(k);
-			node.setKeyowrds(map.values().toArray(new Keyword[0]));
+			node.setKeywords(map.values().toArray(new Keyword[0]));
 
 			nodes.add(node);
 		});
 
 		return nodes;
+
 	}
 
 	private static double getMaxScore(List<TermResult> list, List<String> stopwords) {
@@ -136,10 +147,10 @@ public class M2KExecutor implements AppConstant {
 						source.get(ROLE).toString(),
 						Double.parseDouble(StringUtils.defaultIfEmpty(source.get(SCORE).toString(), "0")),
 						source.get(GENRE).toString(),
-						source.get(GRADE).toString(),
+						RecommendUtil.getRating(id, source.get(GRADE).toString()),
 						source.get(OPENDAY).toString(),
 						fields.toArray(new String[0]),
-						null));
+						null, null));
 			} catch (Exception e) {
 				log.error("{}", source);
 				e.printStackTrace();
