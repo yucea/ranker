@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieCrawler implements AppConstant {
 	
-	private static final int DELAY_TIME = 5000;	
+	private static final int DELAY_TIME = 5000;
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	
 	@Autowired
