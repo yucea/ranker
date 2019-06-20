@@ -3,6 +3,7 @@ package kr.co.esjee.ranker.elasticsearch;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -50,8 +51,9 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 
-import kr.co.esjee.ranker.util.NormalizeUtil;
+import kr.co.esjee.ranker.util.RecommendUtil;
 import kr.co.esjee.ranker.webapp.AppConstant;
+import kr.co.esjee.ranker.webapp.model.recommend.Node;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -153,23 +155,28 @@ public class ElasticSearcher implements AppConstant {
 			});
 		});
 
-		Map<String, Double> result = NormalizeUtil.normalize(data);
+		Map<String, Double> result = RecommendUtil.normalize(data);
 
 		// result.forEach((k, v) -> log.info("{} : {}", k, v));
 
 		return result;
 	}
 
-	public static void multiTermvectors(Client client, String indexName, String typeName, String[] ids, String... fields) throws IOException {
+	public static Map<String, List<TermResult>> multiTermvectors(Client client, String indexName, String typeName, Map<String, Node> sources) throws Exception {
 		MultiTermVectorsRequestBuilder builder = new MultiTermVectorsRequestBuilder(client, MultiTermVectorsAction.INSTANCE);
-		for (String id : ids) {
-			builder.add(termVectorsRequest(indexName, typeName, id, fields));
+		for (String id : sources.keySet()) {
+			builder.add(termVectorsRequest(indexName, typeName, id, sources.get(id).getFields()));
 		}
 
 		MultiTermVectorsResponse responses = builder.get();
+
+		Map<String, List<TermResult>> result = new HashMap<>();
+
 		for (MultiTermVectorsItemResponse response : responses) {
-			if (response.isFailed())
+			if (response.isFailed()) {
+				response.getFailure().getCause().printStackTrace();
 				continue;
+			}
 
 			TermVectorsResponse res = response.getResponse();
 			if (!res.isExists())
@@ -192,33 +199,28 @@ public class ElasticSearcher implements AppConstant {
 					double score = boostAttribute.getBoost(); // score
 					String word = term.utf8ToString();
 
-					// if (StringUtils.contains(word, "/N") // 명사
-					// || StringUtils.contains(word, "/V") // 형용사
-					// || StringUtils.contains(word, "/XR") // 어근
-					// || (StringUtils.contains(word, "/SL") && word.length() > 6) // 외국어 3자 이상인 경우 : ab/SL
-					// || (StringUtils.contains(word, "/SN") && word.length() > 6) // 숫자 3자 이상인 경우
-					// ) {
-					if (word.split("/")[0].length() > 1) { // 단일문자 제외
-						log.info("{}, {}, {}, {}", id, field, word, score);
-						// result.put(word.split("/")[0], score);
-					}
-					// }
+					if (word.length() > 1) { // 단일문자 제외
+						List<TermResult> list = result.containsKey(id) ? result.get(id) : new ArrayList<>();
+						list.add(new TermResult(id, field, word.toUpperCase(), score * (RecommendUtil.isFieldValueString(sources.get(id), word) ? 0.001 : 1), score));
 
+						result.put(id, list);
+					}
 				}
 			}
-
 		}
+
+		return result;
 	}
 
 	private static TermVectorsRequest termVectorsRequest(String index, String type, String id, String... fields) {
-		TermVectorsRequest request = new TermVectorsRequest(index, type, id);
-		request.selectedFields(fields);
-		request.offsets(false);
-		request.positions(false);
-		request.termStatistics(true);
-		request.fieldStatistics(true);
-		request.filterSettings(new FilterSettings());
-		return request;
+		return new TermVectorsRequest(index, type, id)
+				.selectedFields(fields)
+				.offsets(false)
+				.positions(false)
+				.payloads(false)
+				.termStatistics(true)
+				.fieldStatistics(true)
+				.filterSettings(new FilterSettings());
 	}
 
 	public static SuggestResult suggest(Client client, String indexName, String searchKey, String fieldName, ElasticOption option) throws Exception {
