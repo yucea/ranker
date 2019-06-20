@@ -5,36 +5,31 @@
 				"type": "long"
 			},
 			"pId": {
-				"type": "keyword"
+				"type": "text"
 			},
 			"name": {
-				"type": "text",
-				"analyzer": "keyword"
+				"type": "text"
 			},
 			"birthday": {
-				"type": "text",
-				"analyzer": "korean"
+				"type": "text"
 			},
 			"profile": {
-				"type": "text",
-				"analyzer": "korean"
+				"type": "text"
 			},
-			"filmo" : {
-				"movieId" : {
-					"type": "text",
-					"analyzer": "korean"
-				},
-				"movieTitle" : {
-					"type": "text",
-					"analyzer": "korean"
-				},
-				"movieYear" : {
-					"type": "text",
-					"analyzer": "korean"
-				},
-				"movieDirector" : {
-					"type": "text",
-					"analyzer": "korean"
+			"filmo": {
+				"properties": {
+					"movieId": {
+						"type": "text"
+					},
+					"movieTitle": {
+						"type": "text"
+					},
+					"movieYear": {
+						"type": "text"
+					},
+					"movieDirector": {
+						"type": "text"
+					}
 				}
 			}
 		}
