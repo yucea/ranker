@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +50,24 @@ public class MovieController extends AppController {
 			result.put(SUCCESS, false);
 			result.put(MESSAGE, e.getLocalizedMessage());
 		}		
+
+		return result.toString();
+	}
+	
+	@RequestMapping(value = "/info/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String info(@PathVariable long id, Model model) {
+		JSONObject result = new JSONObject();
+
+		try {
+			Movie movie = movieService.findById(id);
+
+			result.put(SUCCESS, true);
+			result.put(DATA, new JSONObject(movie));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put(SUCCESS, false);
+			result.put(MESSAGE, e.getLocalizedMessage());
+		}
 
 		return result.toString();
 	}

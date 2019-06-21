@@ -1,0 +1,142 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<style>
+	.simplmargin { margin: 0 0 15px }
+	.zeromargin { margin: 0 }
+	.tlabel { width: 120px; background-color: #f7f7f7; }
+	.tvalue { min-width: 120px; max-width: 150px; }
+	.tdnum { width: 120px; }
+	.tdval { min-width: 120px; max-width: 150px; }
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Movie Infomation</h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+    	<article class="col-sm-12">    		
+    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-movie-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    			<header>
+					<span class="widget-icon"> <i class="fa fa-info"></i> </span>
+					<h2>Movie Infomation</h2>
+				</header>	
+							
+				<div>
+					<div class="widget-body no-padding">						
+						<table id="user" class="table table-bordered" style="clear: both">
+							<tbody>
+								<tr>
+									<td class="tlabel">Title</td>
+									<td class="tvalue" colspan="5" id="title"></td>
+								</tr>
+								<tr>
+									<td class="tlabel">Original Title</td>
+									<td class="tvalue" colspan="5" id="orgTitle"></td>
+								</tr>
+								<tr>
+									<td class="tlabel">Grade</td>
+									<td class="tvalue" colspan="5" id="grade"></td>
+								</tr>
+								<tr>
+									<td class="tlabel">Director</td>
+									<td class="tvalue" id="director" colspan="5"></td>
+								</tr>
+								<tr>
+									<td class="tlabel">Actor</td>
+									<td class="tvalue" id="actor" colspan="5"></td>
+								</tr>
+								<tr>
+									<td class="tlabel">Genre</td>
+									<td class="tvalue" id="genre"></td>
+									<td class="tlabel">Score</td>
+									<td class="tvalue" id="score"></td>
+									<td class="tlabel">Openday</td>
+									<td class="tvalue" id="openDay"></td>
+								</tr>
+							</tbody>
+						</table>
+					
+					</div>
+				</div>				
+			</div>
+
+    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-movie-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    			<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Synopsis</h2>
+				</header>	
+							
+				<div>
+					<div class="widget-body no-padding">
+						<div class="table-responsive">
+							<table id="user" class="table table-bordered" style="clear: both">
+								<tbody>
+									<tr>
+										<td class="tvalue" id="synopsis"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+    		</div>
+    		
+    		<div class="jarviswidget jarviswidget-color-blueDark zeromargin" id="wid-id-movie-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    			<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Making Note</h2>
+				</header>
+				
+				<div>
+					<div class="widget-body no-padding">						
+						<div class="table-responsive">
+							<table id="user" class="table table-bordered" style="clear: both">
+								<tbody>
+									<tr>
+										<td class="tvalue" id="makingNote"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+    		</div>    		
+    	</article>    	
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.get("/rest/movie/info/[[${params.id}]]").done(function(resp) { 
+		    if(resp.success) {
+		    	var data = resp.data;
+		    	
+		    	$('#title').text(data.title);
+		    	$('#orgTitle').text(data.orgTitle);
+		    	$('#orgTitle').text(data.orgTitle);
+		    	$('#grade').text(data.grade);
+		    	$('#director').text(data.director);
+		    	$('#actor').text(data.actor);
+		    	$('#score').text(data.score);
+		    	$('#genre').text(data.genre);
+		    	$('#openDay').text($.common.dateFormat(data.openDay));
+		    	$('#synopsis').text(data.synopsis);
+		    	$('#makingNote').text(data.makingNote);	
+		    } else {
+		    	alert(resp.message);
+		    }
+		});
+	});
+	
+	function loadPage(id, tid) {
+		alert(id + ' : ' + tid);
+	}
+</script>
+
+</html>

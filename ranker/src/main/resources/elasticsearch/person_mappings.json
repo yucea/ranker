@@ -4,10 +4,13 @@
 			"id": {
 				"type": "long"
 			},
-			"pId": {
+			"pid": {
 				"type": "keyword"
 			},
 			"name": {
+				"type": "text"
+			},
+			"job": {
 				"type": "text"
 			},
 			"birthday": {

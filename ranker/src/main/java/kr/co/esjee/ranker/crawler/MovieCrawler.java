@@ -165,7 +165,8 @@ public class MovieCrawler implements AppConstant {
 		movie.setOrgTitle(basicInfoDoc.select(movieVO.getOrgTitleAtrb()).text());
 		
 		// Score
-		movie.setScore(StringUtils.replace(basicInfoDoc.select(movieVO.getScoreAtrb()).text(), " ", ""));
+		String Score = StringUtils.replace(basicInfoDoc.select(movieVO.getScoreAtrb()).text(), " ", "");
+		movie.setScore(Score.isEmpty() ? "0.00" : Score);
 		
 		// Genre	
 		movie.setGenre((movieVO.getGenreAtrb().length > 1) ?
@@ -262,6 +263,7 @@ public class MovieCrawler implements AppConstant {
 			
 			// 인물 이름
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
+			person.setJob("배우");
 			
 			// XXX
 			// 인물 생년월일
@@ -333,6 +335,7 @@ public class MovieCrawler implements AppConstant {
 			
 			// 인물 이름
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
+			person.setJob("감독");
 			
 			// XXX
 			// 인물 생년월일

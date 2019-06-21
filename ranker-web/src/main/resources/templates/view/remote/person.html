@@ -47,6 +47,15 @@
 </section>
 <!-- end widget grid -->
 
+<!-- Modal -->
+<div class="modal fade" id="person_modal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<!-- end Modal -->
+
 <script type="text/javascript">
 
 	pageSetUp();
@@ -55,25 +64,34 @@
 		 $.datatable.display({
 			id : 'dt_person_widget',
 			url : '/rest/person/list',
-			columns : [
-						{
-							'name' : 'id',
-							'head' : { 'func' : $.common.upperCase }
-						},
-						{
-							'name' : 'pid',
-							'head' : { 'func' : $.common.upperCase }
-						},
-						{
-							'name' : 'name',
-							'head' : { 'func' : $.common.capitalize },
-							'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
-							'data' : {
-								'event' :  { 'name' : 'onClick', 'value' : 'javascript:goM2KPage(_ID_, _PID_)' }
-							}
+			columns : 
+				[		
+					{
+						'name' : 'id',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'pid',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'name',
+						'head' : { 'func' : $.common.capitalize },
+						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
+						'data' : {
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goPerson(_ID_, _PID_)' }
 						}
-					]
+					}
+				]
+		});
+		 
+		 goPerson = function(id, pid) {
+			$('#person_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/person_modal.html',
+				id : id,
+				pid : pid
 			});
+		};
 	};
 
 	// load related plugins
