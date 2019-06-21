@@ -50,75 +50,56 @@
 
 <script type="text/javascript">
 
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
-
 	pageSetUp();
-	
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 * 
-	 * var pagefunction = function() {
-	 *   ...
-	 * }
-	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
-	 * 
-	 */
-	
-	// PAGE RELATED SCRIPTS
-	
-	// pagefunction	
-	var pagefunction = function() {
 		
-		var url = '/rest/movie/list';
-		var widgetId = 'dt_movie_widget';
-		var tableId = 'dt_movie_basic';
-		var clazz = 'table table-bordered table-hover'; // table table-bordered table-hover table-striped
-		var columns = [
-			{ 'id' : '' },
-			{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #323d4f;' },
-			{ 'phone' : '' },
-			{ 'company' : '' },
-			{ 'zip' : '' },
-			{ 'city' : '' },
-			{ 'date' : '' }
-		];
-		
-		$.datatable.displayHead(widgetId, tableId, columns, clazz);
-		$.datatable.displayBody(url, tableId, columns);
-		
-		goDetailPage = function(id, name) {
-			console.info('detailpage', id, name);
-		};
-
+	var pagefunction = function() {		 
+		 $.datatable.display({
+			id : 'dt_movie_widget',
+			url : '/rest/movie/list',
+			columns : [
+						{
+							'name' : 'id',
+							'head' : { 'func' : $.common.upperCase }
+						}, 
+						{
+							'name' : 'tid',
+							'head' : { 'func' : $.common.upperCase }
+						}, 
+						{
+							'name' : 'title',
+							'head' : { 'func' : $.common.capitalize },
+							'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
+							'data' : {
+								'event' :  { 'name' : 'onClick', 'value' : 'javascript:goM2KPage(_ID_, _TID_)' }
+							}
+						},
+						{
+							'name' : 'orgTitle',
+							'head' : { 'func' : $.common.capitalize }
+						},
+						{
+							'name' : 'genre',
+							'head' : { 'func' : $.common.capitalize }
+						}, 
+						{
+							'name' : 'runTime',
+							'head' : { 'func' : $.common.capitalize }
+						}, 
+						{
+							'name' : 'director',
+							'head' : { 'func' : $.common.capitalize }
+						}, 
+						{
+							'name' : 'score',
+							'head' : { 'func' : $.common.capitalize }
+						}, 
+						{
+							'name' : 'openDay',
+							'head' : { 'func' : $.common.capitalize },
+							'data' : { 'func' : $.common.dateFormat }
+						}
+					]
+			});
 	};
 
 	// load related plugins
