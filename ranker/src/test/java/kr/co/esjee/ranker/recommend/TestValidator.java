@@ -21,7 +21,6 @@ public class TestValidator extends TestElasticsearch {
 
 	private Client client = null;
 	private String indexName = "mv_basic_info";
-	private String typeName = DOC;
 
 	@Before
 	public void init() throws UnknownHostException {
