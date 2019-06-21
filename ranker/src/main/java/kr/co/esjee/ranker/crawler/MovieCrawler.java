@@ -165,7 +165,8 @@ public class MovieCrawler implements AppConstant {
 		movie.setOrgTitle(basicInfoDoc.select(movieVO.getOrgTitleAtrb()).text());
 		
 		// Score
-		movie.setScore(StringUtils.replace(basicInfoDoc.select(movieVO.getScoreAtrb()).text(), " ", ""));
+		String Score = StringUtils.replace(basicInfoDoc.select(movieVO.getScoreAtrb()).text(), " ", "");
+		movie.setScore(Score.isEmpty() ? "0.00" : Score);
 		
 		// Genre	
 		movie.setGenre((movieVO.getGenreAtrb().length > 1) ?

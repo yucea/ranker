@@ -1,0 +1,140 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<style>
+	.simplmargin { margin: 0 0 15px }
+	.zeromargin { margin: 0 }
+	.tlabel { width: 120px; background-color: #f7f7f7; }
+	.tvalue { min-width: 120px; max-width: 150px; }
+	.tdnum { width: 120px; }
+	.tdval { min-width: 120px; max-width: 150px; }
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Person Infomation</h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+    	<article class="col-sm-12">    		
+    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-person-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    			<header>
+					<span class="widget-icon"> <i class="fa fa-info"></i> </span>
+					<h2>Person Infomation</h2>
+				</header>	
+							
+				<div>
+					<div class="widget-body no-padding">						
+						<table id="user" class="table table-bordered" style="clear: both">
+							<tbody>
+								<tr>
+									<td class="tlabel">Name</td>
+									<td class="tvalue" colspan="5" id="name"></td>
+								</tr>
+								<tr>
+									<td class="tlabel">Birthday</td>
+									<td class="tvalue" colspan="5" id="birthday"></td>
+								</tr>
+								<tr>
+									<td class="tlabel">Job</td>
+									<td class="tvalue" colspan="5" id="job"></td>
+								</tr>
+							</tbody>
+						</table>					
+					</div>
+				</div>				
+			</div>
+			
+			<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-person-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    			<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Profile</h2>
+				</header>	
+							
+				<div>
+					<div class="widget-body no-padding">
+						<div class="table-responsive">
+							<table id="user" class="table table-bordered" style="clear: both">
+								<tbody>
+									<tr>
+										<td class="tvalue" id="profile"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+    		</div>
+
+    		<div class="jarviswidget jarviswidget-color-blueDark zeromargin" id="wid-id-person-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    			<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Filmography</h2>
+				</header>	
+							
+				<div>
+					<div class="widget-body no-padding">
+						<div class="table-responsive">
+							<table id="filmoTable" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>No.</th>
+										<th>Title</th>
+										<th>Year</th>
+										<th>Director</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+    		</div>
+    		
+    	</article>    	
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.get("/rest/person/info/[[${params.id}]]").done(function(resp) { 
+		    if(resp.success) {
+		    	var data = resp.data;
+		    	var filmo
+		    	
+		    	$('#name').text(data.name);
+		    	$('#birthday').text("");
+		    	$('#job').text("배우");
+		    	$('#profile').text(data.profile);
+		    	
+		    	var html = '';
+		    	
+		    	for(var i in data.filmo) {
+		    		var row = data.filmo[i];
+		    		
+					html += '<tr>';
+					html += '<td class="tdnum">' + (Number(i) + 1) + '</td>';
+					html += '<td class="tdval">' + row.movieTitle + '</td>';
+					html += '<td class="tdval">' + row.movieYear + '</td>';
+					html += '<td class="tdval">' + row.movieDirector + '</td>';
+					html += '</tr>';
+		    	};
+		    	
+		    	$('#filmoTable > tbody').html(html);
+		    } else {
+		    	alert(resp.message);
+		    }
+		});
+	});
+	
+	function loadPage(id, tid) {
+		alert(id + ' : ' + tid);
+	}
+</script>
+
+</html>

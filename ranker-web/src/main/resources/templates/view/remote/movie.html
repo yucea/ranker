@@ -48,58 +48,77 @@
 </section>
 <!-- end widget grid -->
 
+<!-- Modal -->
+<div class="modal fade" id="movie_modal" tabindex="-1" role="dialog" aria-labelledby="movieModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<!-- content body here... -->
+        </div>
+    </div>
+</div>
+<!-- end Modal -->
+
 <script type="text/javascript">
 
 	pageSetUp();
 		
 	var pagefunction = function() {		 
-		 $.datatable.display({
+		$.datatable.display({
 			id : 'dt_movie_widget',
 			url : '/rest/movie/list',
-			columns : [
-						{
-							'name' : 'id',
-							'head' : { 'func' : $.common.upperCase }
-						}, 
-						{
-							'name' : 'tid',
-							'head' : { 'func' : $.common.upperCase }
-						}, 
-						{
-							'name' : 'title',
-							'head' : { 'func' : $.common.capitalize },
-							'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
-							'data' : {
-								'event' :  { 'name' : 'onClick', 'value' : 'javascript:goM2KPage(_ID_, _TID_)' }
-							}
-						},
-						{
-							'name' : 'orgTitle',
-							'head' : { 'func' : $.common.capitalize }
-						},
-						{
-							'name' : 'genre',
-							'head' : { 'func' : $.common.capitalize }
-						}, 
-						{
-							'name' : 'runTime',
-							'head' : { 'func' : $.common.capitalize }
-						}, 
-						{
-							'name' : 'director',
-							'head' : { 'func' : $.common.capitalize }
-						}, 
-						{
-							'name' : 'score',
-							'head' : { 'func' : $.common.capitalize }
-						}, 
-						{
-							'name' : 'openDay',
-							'head' : { 'func' : $.common.capitalize },
-							'data' : { 'func' : $.common.dateFormat }
+			columns : 
+				[
+					{
+						'name' : 'id',
+						'head' : { 'func' : $.common.upperCase }
+					}, 
+					{
+						'name' : 'tid',
+						'head' : { 'func' : $.common.upperCase }
+					}, 
+					{
+						'name' : 'title',
+						'head' : { 'func' : $.common.capitalize },
+						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
+						'data' : {
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goMovie(_ID_, _TID_)' }
 						}
-					]
+					},
+					{
+						'name' : 'genre',
+						'head' : { 'func' : $.common.capitalize }
+					},
+					{
+						'name' : 'runTime',
+						'head' : { 'func' : $.common.capitalize }
+					},
+					{
+						'name' : 'grade',
+						'head' : { 'func' : $.common.capitalize }
+					},
+					{
+						'name' : 'director',
+						'head' : { 'func' : $.common.capitalize }
+					}, 
+					{
+						'name' : 'score',
+						'head' : { 'func' : $.common.capitalize }
+					}, 
+					{
+						'name' : 'openDay',
+						'head' : { 'func' : $.common.capitalize },
+						'data' : { 'func' : $.common.dateFormat }
+					}
+				]
+		});
+		 
+		goMovie = function(id, tid) {
+			$('#movie_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/movie_modal.html',
+				id : id,
+				tid : tid
 			});
+		};
 	};
 
 	// load related plugins
