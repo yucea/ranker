@@ -267,8 +267,13 @@ public class MovieCrawler implements AppConstant {
 			
 			// XXX
 			// 인물 생년월일
-			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
-			person.setBirthday("");
+			String born = crewDoc.select("dl.info_spec dt em").first().text();
+			
+			if(born.contains("출생")) {
+				person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+			} else {
+				person.setBirthday("");
+			}
 			
 			// 인물 프로필
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
@@ -339,8 +344,13 @@ public class MovieCrawler implements AppConstant {
 			
 			// XXX
 			// 인물 생년월일
-			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
-			person.setBirthday("");
+			String born = crewDoc.select("dl.info_spec dt em").first().text();
+			
+			if(born.contains("출생")) {
+				person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+			} else {
+				person.setBirthday("");
+			}
 			
 			// 인물 프로필
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
