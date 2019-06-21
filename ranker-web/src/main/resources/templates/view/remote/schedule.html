@@ -48,79 +48,60 @@
 </section>
 <!-- end widget grid -->
 
+<!-- Modal -->
+<div class="modal fade" id="schedule_modal" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<!-- content body here... -->
+        </div>
+    </div>
+</div>
+<!-- end Modal -->
+
 <script type="text/javascript">
 
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
-
 	pageSetUp();
-	
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 * 
-	 * var pagefunction = function() {
-	 *   ...
-	 * }
-	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
-	 * 
-	 */
-	
-	// PAGE RELATED SCRIPTS
-	
-	// pagefunction	
-	var pagefunction = function() {
 		
+	var pagefunction = function() {		 
 		$.datatable.display({
-			url : '/rest/schedule/list',
 			id : 'dt_schedule_widget',
-			// clazz : 'table table-bordered table-hover table-striped',
-			columns : [
-				{ 'id' : '', 'hstyle' : 'text-align: center;', 'style' : 'text-align: center;'},
-				{ 'name' : 'javascript:goDetailPage(_ID_, _NAME_)', 'style' : 'font-weight: bold; color: #15428c; text-align: center;', 'hstyle' : 'text-align: center;', 'func' : $.common.upperCase },
-				{ 'phone' : 'javascript:goCallPhone(_ID_, _PHONE_)', 'style' : 'font-weight: bold; text-align: right;', 'hstyle' : 'text-align: right;' },
-				{ 'company' : '', 'func' : $.common.upperCase },
-				{ 'zip' : '', 'func' : $.common.capitalize },
-				{ 'city' : '' },
-				{ 'date' : '' }
-			]
+			url : '/rest/schedule/list',
+			columns : 
+				[
+					{
+						'name' : 'id',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'week',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'month',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'day',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'hour',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'minute',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'baseUrl',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'usable',
+						'head' : { 'func' : $.common.upperCase }
+					},
+				]
 		});
-		
-		goDetailPage = function(id, name) {
-			console.info('detailpage', id, name);
-		};
-		
-		goCallPhone = function(id, phone) {
-			console.info('goCallPhone', id, phone);
-		};
-
 	};
 
 	// load related plugins
