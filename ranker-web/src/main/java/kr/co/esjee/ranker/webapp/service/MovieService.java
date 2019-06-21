@@ -11,7 +11,7 @@ import kr.co.esjee.ranker.webapp.model.Movie;
 import kr.co.esjee.ranker.webapp.repository.MovieRepository;
 
 @Service
-public class MovieService extends AppService {
+public class MovieService {
 
 	@Autowired
 	private MovieRepository repository;
@@ -25,27 +25,8 @@ public class MovieService extends AppService {
 		if (optional.isPresent()) {
 			return optional.get();
 		} else {
-			throw new IllegalArgumentException("Item not found : " + id);
+			throw new IllegalArgumentException("Item not found :" + id);
 		}
-	}
-
-	public Movie save(Movie movie) {
-		if (movie.getId() == 0) {
-			movie.setId(super.getNextId(INDICES.mv_basic_info));
-		}
-		return repository.save(movie);
-	}
-
-	public void remove(long id) {
-		repository.deleteById(id);
-	}
-	
-	public boolean existsById(long id) {
-		return repository.existsById(id); 
-	}
-	
-	public Movie findByTid(String tid) {
-		return repository.findByTid(tid);
 	}
 	
 }
