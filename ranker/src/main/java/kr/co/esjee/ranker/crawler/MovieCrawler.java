@@ -262,6 +262,7 @@ public class MovieCrawler implements AppConstant {
 			
 			// 인물 이름
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
+			person.setJob("배우");
 			
 			// XXX
 			// 인물 생년월일
@@ -333,6 +334,7 @@ public class MovieCrawler implements AppConstant {
 			
 			// 인물 이름
 			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
+			person.setJob("감독");
 			
 			// XXX
 			// 인물 생년월일
