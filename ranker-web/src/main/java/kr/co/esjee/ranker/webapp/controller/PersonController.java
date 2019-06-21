@@ -5,6 +5,8 @@ import java.util.Map;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +37,7 @@ public class PersonController extends AppController {
 		
 		try {
 			
-			Page<Person> page = personService.findAll(super.getPageable(start, length));			
+			Page<Person> page = personService.findAll(super.getPageable(start, length, Sort.by(Direction.DESC, PID)));
 
 			result.put(DATA, page.getContent());
 			result.put(DRAW, draw);

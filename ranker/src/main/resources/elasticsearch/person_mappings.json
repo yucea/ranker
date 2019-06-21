@@ -4,7 +4,7 @@
 			"id": {
 				"type": "long"
 			},
-			"pId": {
+			"pid": {
 				"type": "keyword"
 			},
 			"name": {
