@@ -22,6 +22,7 @@ public class Person {
 	private long id;
 	private String pid;
 	private String name;
+	private String job;
 	private String birthday;
 	private String profile;
 	private List<PersonFilmo> filmo;
