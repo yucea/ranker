@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -22,7 +21,7 @@ public class PathController {
 		return "redirect:" + url;
 	}
 
-	@RequestMapping(value = "/page", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/page", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String goPage(@RequestParam Map<String, String> params, Model model) {
 		model.addAttribute("params", params);
 
