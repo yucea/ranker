@@ -5,7 +5,7 @@
 				"type": "long"
 			},
 			"pId": {
-				"type": "text"
+				"type": "keyword"
 			},
 			"name": {
 				"type": "text"

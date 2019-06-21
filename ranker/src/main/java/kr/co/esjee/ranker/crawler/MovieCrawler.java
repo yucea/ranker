@@ -266,6 +266,7 @@ public class MovieCrawler implements AppConstant {
 			// XXX
 			// 인물 생년월일
 			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+			person.setBirthday("");
 			
 			// 인물 프로필
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
@@ -336,6 +337,7 @@ public class MovieCrawler implements AppConstant {
 			// XXX
 			// 인물 생년월일
 			// person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+			person.setBirthday("");
 			
 			// 인물 프로필
 			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
