@@ -1,0 +1,119 @@
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-schedule"
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="false"
+				data-widget-sortable="false">
+
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Movie Keywords</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget content -->
+					<div id="dt_m2k_widget" class="widget-body no-padding">
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+</section>
+<!-- end widget grid -->
+
+<!-- Modal -->
+<div class="modal fade" id="m2k_modal" tabindex="-1" role="dialog" aria-labelledby="m2kModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<!-- content body here... -->
+        </div>
+    </div>
+</div>
+<!-- end Modal -->
+
+<script type="text/javascript">
+
+	pageSetUp();
+
+	var pagefunction = function() {
+	
+		$.datatable.display({
+			id : 'dt_m2k_widget',
+			url : '/rest/recommend/m2k/list',
+			columns : [{
+				'name' : 'id',
+				'head' : { 'func' : $.common.upperCase }
+			}, {
+				'name' : 'tid',
+				'head' : { 'func' : $.common.upperCase }
+			}, {
+				'name' : 'title',
+				'head' : { 'func' : $.common.capitalize },
+				'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
+				'data' : {
+					'event' :  { 'name' : 'onClick', 'value' : 'javascript:goM2KPage(_ID_, _TID_)' }
+				}
+			}, {
+				'name' : 'director',
+				'head' : { 'func' : $.common.capitalize }
+			}, {
+				'name' : 'starScore',
+				'head' : { 'func' : $.common.capitalize },
+				'data' : { 'func' : $.common.toFixed }
+			}, {
+				'name' : 'openDay',
+				'head' : { 'func' : $.common.capitalize },
+				'data' : { 'func' : $.common.dateFormat }
+			}]
+		});
+		
+		goM2KPage = function(id, tid) {
+			$('#m2k_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/recommend/m2k_modal.html',
+				id : id,
+				tid : tid
+			});
+		};
+		
+	};
+
+	loadScript("js/common.js", function(){
+		loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+					loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+						loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
+					});
+				});
+			});
+		});
+	});
+
+</script>
