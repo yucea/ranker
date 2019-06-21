@@ -1,4 +1,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
+
+<style>
+	.simplmargin { margin: 0 0 15px }
+	.zeromargin { margin: 0 }
+	.tlabel { width: 120px; background-color: #f7f7f7; }
+	.tvalue { min-width: 120px; max-width: 150px; }
+	.tdnum { width: 120px; }
+	.tdval { min-width: 120px; max-width: 150px; }
+</style>
+
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title" id="myModalLabel">Movie Keywords</h4>
@@ -7,71 +17,75 @@
     <div class="row">
     	<article class="col-sm-12">
     		
-    		<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-m2k-head" data-widget-colorbutton="false" data-widget-editbutton="false">
+    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-m2k-head" data-widget-colorbutton="false" data-widget-editbutton="false">
     		
     			<header>
-					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<span class="widget-icon"> <i class="fa fa-info"></i> </span>
 					<h2>Default Infomation</h2>
 				</header>
 				
 				<div>
 					<div class="widget-body no-padding">
-						<form class="form-horizontal">
-							<input type="hidden" id="id" th:value="${params.id}" />
-							<input type="hidden" id="tid" th:value="${params.tid}" />
-						</form>
 						
-						<table id="user" class="table table-bordered table-striped" style="clear: both">
+						<table id="user" class="table table-bordered" style="clear: both">
 							<tbody>
 								<tr>
-									<td style="width:150px;">Title</td>
-									<td style="width:*" id="title"></td>
+									<td class="tlabel">Title</td>
+									<td class="tvalue" colspan="5" id="title"></td>
 								</tr>
 								<tr>
-									<td>Director</td>
-									<td id="director"></td>
+									<td class="tlabel">Director</td>
+									<td class="tvalue" id="director" colspan="5"></td>
 								</tr>
 								<tr>
-									<td>Actor</td>
-									<td id="actor"></td>
+									<td class="tlabel">Actor</td>
+									<td class="tvalue" id="actor" colspan="5"></td>
 								</tr>
 								<tr>
-									<td>Star Score</td>
-									<td id="starScore"></td>
+									<td class="tlabel">Genre</td>
+									<td class="tvalue" id="genre"></td>
+									<td class="tlabel">Star Score</td>
+									<td class="tvalue" id="starScore"></td>
+									<td class="tlabel">Openday</td>
+									<td class="tvalue" id="openDay"></td>
 								</tr>
-								<tr>
-									<td>Genre</td>
-									<td id="genre"></td>
-								</tr>
-								<tr>
-									<td>Openday</td>
-									<td id="openDay"></td>
-								</tr>
-
 							</tbody>
 						</table>
 					
-					
-<!-- 						<form class="form-horizontal"> -->
-<!-- 							<input type="hidden" id="id" /> -->
-<!-- 							<input type="hidden" id="tid" /> -->
-						
-<!-- 							<fieldset> -->
-<!-- 								<div class="form-group"> -->
-<!-- 									<label class="col-md-2 control-label">Title</label> -->
-<!-- 									<div class="col-md-10"> -->
-<!-- 										<input class="form-control" placeholder="Default Text Field" type="text"> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-								
-<!-- 							</fieldset> -->
-							
-<!-- 						</form> -->
 					</div>
-				
 				</div>
-    	
-    	
+				
+			</div>
+
+    		<div class="jarviswidget jarviswidget-color-blueDark zeromargin" id="wid-id-m2k-head" data-widget-colorbutton="false" data-widget-editbutton="false">
+    		
+    			<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Keywords</h2>
+				</header>
+				
+				<div>
+					<div class="widget-body no-padding">
+						
+						<div class="table-responsive">
+						
+							<table id="m2ktable" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>No.</th>
+										<th>Keyword</th>
+										<th>Score</th>
+										<th>Source</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							
+						</div>
+					</div>
+				</div>
+				
     		</div>
     		
     	</article>
@@ -80,17 +94,52 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary btn-save">Save changes</button>
 </div>
 
 
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		console.info('########', [[ ${params.id} ]]);
-		
-		var id = $('#id').val();
-		alert(id);
+
+		$.get("/rest/recommend/m2k/info/[[${params.id}]]").done(function(resp) {
+		    if(resp.success) {
+		    	var data = resp.data;
+		    	
+		    	$('#title').text(data.title);
+		    	$('#director').text(data.director);
+		    	$('#actor').text(data.actor);
+		    	$('#starScore').text($.common.toFixed(data.starScore));
+		    	$('#genre').text(data.genre);
+		    	$('#openDay').text($.common.dateFormat(data.openDay));
+		    	
+		    	var html = '';
+		    	for(var i in data.keywords) {
+		    		var row = data.keywords[i];
+		    		if(row.score == 0)
+		    			break;
+		    		
+		    		var source = '';
+		    		var names = Object.getOwnPropertyNames(row.source);
+		    		for(var j in names) {
+		    			source += $.common.lowerCase(names[j]) + ' : ' + $.common.toFixed(row.source[names[j]]);
+		    			if(j != names.length - 1)
+		    				source += ', ';
+		    		}
+		    		
+					html += '<tr>';
+					html += '<td class="tdnum">' + (Number(i) + 1) + '</td>';
+					html += '<td class="tdval">' + row.word + '</td>';
+					html += '<td class="tdval">' + $.common.toFixed(row.score) + '</td>';
+					html += '<td class="tdval">' + source + '</td>';
+					html += '</tr>';
+		    	};
+		    	
+		    	$('#m2ktable > tbody').html(html);
+		    	
+		    } else {
+		    	alert(resp.message);
+		    }
+		});
 
 	});
 	
