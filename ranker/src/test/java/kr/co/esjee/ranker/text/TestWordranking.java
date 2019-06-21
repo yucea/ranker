@@ -37,7 +37,6 @@ public class TestWordranking extends TestElasticsearch {
 	private static final String CONTENT = "content";
 	private Client client = null;
 	private String indexName = "article";
-	private String typeName = DOC;
 	private int minCount = 30;
 	private int maxLength = 10;
 

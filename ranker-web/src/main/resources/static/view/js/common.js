@@ -29,6 +29,15 @@
 				console.warn('Non-numeric type : ', num);
 				return num;
 			}
+		},
+		'dateFormat' : function(str) {
+			if(str.length == 4) return str;
+			else if(str.length == 6) return str.substr(0, 4) + '.' + str.substr(4);
+			else if(str.length == 8) return str.substr(0, 4) + '.' + str.substr(4, 2) + '.' + str.substr(6);
+			else return str;
+		},
+		'toFixed' : function(v) {
+			return v.toFixed(2);
 		}
 	}
 
@@ -57,7 +66,7 @@
 			
 			this.displayHead(widgetId, tableId, columns, clazz);
 			this.displayBody(url, tableId, columns, listNum);
-		},		
+		},
 		'displayHead' : function(widgetId, tableId, columns, clazz) {
 			var html = this.header(tableId, columns, clazz);
 			$('#' + widgetId).html(html);

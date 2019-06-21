@@ -37,6 +37,7 @@ public interface AppConstant {
 	String OPTION = "option";
 
 	String ID = "id";
+	String TID = "tid";
 
 	long ES_START_ID = 10001;
 
@@ -50,5 +51,9 @@ public interface AppConstant {
 	String ARTICLE = "article";
 	String SCHEDULE = "schedule";
 	String DOC = "doc";
+	
+	String RECOMMEND_M2K = "mv_m2k";
+	String RECOMMEND_M2M = "mv_m2m";
+	String RECOMMEND_K2M = "mv_k2m";
 
 }
