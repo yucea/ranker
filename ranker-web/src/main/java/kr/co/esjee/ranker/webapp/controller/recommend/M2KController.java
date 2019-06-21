@@ -59,11 +59,20 @@ public class M2KController extends AppController {
 
 	@RequestMapping(value = "/info/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String info(@PathVariable long id, Model model) {
-		M2KNode node = service.findById(id);
-		
-		model.addAttribute("data", node);
+		JSONObject result = new JSONObject();
 
-		return "redirect:/remote/recommend/m2k_modal.html";
+		try {
+			M2KNode node = service.findById(id);
+
+			result.put(SUCCESS, true);
+			result.put(DATA, new JSONObject(node));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put(SUCCESS, false);
+			result.put(MESSAGE, e.getLocalizedMessage());
+		}
+
+		return result.toString();
 	}
-	
+
 }
