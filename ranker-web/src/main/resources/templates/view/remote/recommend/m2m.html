@@ -20,7 +20,7 @@
 
 				<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-					<h2>Movie Keywords</h2>
+					<h2>Similar Movies</h2>
 
 				</header>
 
@@ -28,7 +28,7 @@
 				<div>
 
 					<!-- widget content -->
-					<div id="dt_m2k_widget" class="widget-body no-padding">
+					<div id="dt_m2m_widget" class="widget-body no-padding">
 					</div>
 					<!-- end widget content -->
 
@@ -49,7 +49,7 @@
 <!-- end widget grid -->
 
 <!-- Modal -->
-<div class="modal fade" id="m2k_modal" tabindex="-1" role="dialog" aria-labelledby="m2kModalLabel" aria-hidden="true"> <!-- data-backdrop="static" data-keyboard="false" -->
+<div class="modal fade" id="m2m_modal" tabindex="-1" role="dialog" aria-labelledby="m2kModalLabel" aria-hidden="true"> <!-- data-backdrop="static" data-keyboard="false" -->
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
         	<!-- content body here... -->
@@ -65,7 +65,7 @@
 	var pagefunction = function() {
 	
 		$.datatable.display({
-			id : 'dt_m2k_widget',
+			id : 'dt_m2m_widget',
 			url : '/rest/recommend/movies',
 			columns : [{
 				'name' : 'id',
@@ -78,7 +78,7 @@
 				'head' : { 'func' : $.common.capitalize },
 				'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
 				'data' : {
-					'event' :  { 'name' : 'onClick', 'value' : 'javascript:goM2KPage(_ID_)' }
+					'event' :  { 'name' : 'onClick', 'value' : 'javascript:goM2MPage(_ID_, _TID_)' }
 				}
 			}, {
 				'name' : 'director',
@@ -94,10 +94,11 @@
 			}]
 		});
 		
-		goM2KPage = function(id, tid) {
-			$('#m2k_modal').modal('show').find('.modal-content').load('/page', {
-				url : 'view/remote/recommend/m2k_modal.html',
-				id : id
+		goM2MPage = function(id, tid) {
+			$('#m2m_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/recommend/m2m_modal.html',
+				id : id,
+				tid : tid
 			});
 		};
 		

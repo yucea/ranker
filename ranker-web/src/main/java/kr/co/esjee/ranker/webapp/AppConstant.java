@@ -6,6 +6,8 @@ public interface AppConstant {
 	String SUCCESS = "success";
 	String MESSAGE = "message";
 
+	String LIST = "list";
+	String INFO = "info";
 	String RESULT = "result";
 	String ERROR = "error";
 	String SCORE = "score";
@@ -13,8 +15,9 @@ public interface AppConstant {
 	String DRAW = "draw";
 	String RECORDS_TOTAL = "recordsTotal";
 	String RECORDS_FILTERED = "recordsFiltered";
-	
+
 	String KEY = "key";
+	String TITLE = "title";
 	String TERM = "term";
 	String TYPE = "type";
 	String COUNT = "count";
@@ -51,7 +54,7 @@ public interface AppConstant {
 	String ARTICLE = "article";
 	String SCHEDULE = "schedule";
 	String DOC = "doc";
-	
+
 	String RECOMMEND_M2K = "mv_m2k";
 	String RECOMMEND_M2M = "mv_m2m";
 	String RECOMMEND_K2M = "mv_k2m";

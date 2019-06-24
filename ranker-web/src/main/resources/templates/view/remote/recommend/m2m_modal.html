@@ -5,22 +5,23 @@
 	.zeromargin { margin: 0 }
 	.tlabel { width: 120px; background-color: #f7f7f7; }
 	.tvalue { min-width: 120px; max-width: 150px; }
-	.tdnum { width: 120px; }
-	.tdval { min-width: 120px; max-width: 150px; }
 	.tdscore { width: 120px; }
-	.tdsource { width: 250px; }
+	.tdnum { width: 120px; }
+	.tdval { min-width: 120px; }
+	.tdtitle { min-width: 200px; }
+	.tddirector { min-width: 100px; max-width: 102px; }
 	.table-fixed { max-height: 370px; overflow-y: auto; }
 </style>
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel">Movie Keywords</h4>
+    <h4 class="modal-title" id="myModalLabel">Similar Movies</h4>
 </div>
 <div class="modal-body">
     <div class="row">
     	<article class="col-sm-12">
     		
-    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-m2k-info" data-widget-colorbutton="false" data-widget-editbutton="false">
+    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-m2m-info" data-widget-colorbutton="false" data-widget-editbutton="false">
     		
     			<header>
 					<span class="widget-icon"> <i class="fa fa-info"></i> </span>
@@ -60,11 +61,11 @@
 				
 			</div>
 
-    		<div class="jarviswidget jarviswidget-color-blueDark zeromargin" id="wid-id-m2k-data" data-widget-colorbutton="false" data-widget-editbutton="false">
+    		<div class="jarviswidget jarviswidget-color-blueDark zeromargin" id="wid-id-m2m-data" data-widget-colorbutton="false" data-widget-editbutton="false">
     		
     			<header>
 					<span class="widget-icon"> <i class="fa fa-sort-amount-desc"></i> </span>
-					<h2>Keywords</h2>
+					<h2>Movies</h2>
 				</header>
 				
 				<div>
@@ -72,13 +73,13 @@
 						
 						<div class="table-responsive table-fixed">
 						
-							<table id="m2ktable" class="table table-bordered">
+							<table id="m2mtable" class="table table-bordered">
 								<thead>
 									<tr>
 										<th class="tdnum">No.</th>
-										<th class="tdval">Keyword</th>
+										<th class="tdtitle">Title</th>
+										<th class="tddirector">Director</th>
 										<th class="tdscore">Score</th>
-										<th class="tdsource">Source</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -104,62 +105,39 @@
 
 	$(document).ready(function() {
 
-		$.get('/rest/recommend/m2k/[[${params.id}]]').done(function(resp) {
+		$.get("/rest/recommend/m2m/[[${params.id}]]").done(function(resp) {
 		    if(resp.success) {
-		    	var data = resp.data;
+		    	var info = resp.data.info;
+		    	var list = resp.data.list;
 		    	var html = '';
 		    	
-		    	$('#title').text(data.title);
-		    	$('#director').html($.common.person(data.director, ',', 'goPerson'));
-		    	$('#actor').html($.common.person(data.actor, ',', 'goPerson'));
-		    	$('#starScore').text($.common.toFixed(data.starScore));
-		    	$('#genre').text(data.genre);
-		    	$('#openDay').text($.common.dateFormat(data.openDay));
+		    	$('#title').text(info.title);
+		    	$('#director').text(info.director);
+		    	$('#actor').text(info.actor);
+		    	$('#starScore').text($.common.toFixed(info.starScore));
+		    	$('#genre').text(info.genre);
+		    	$('#openDay').text($.common.dateFormat(info.openDay));
 		    	
-		    	for(var i in data.keywords) {
-		    		var row = data.keywords[i];
+		    	for(var i in list.scores) {
+		    		var row = list.scores[i];
+		    		
 		    		if(row.score == 0)
 		    			break;
 		    		
-		    		var source = '';
-		    		var names = Object.getOwnPropertyNames(row.source);
-		    		for(var j in names) {
-		    			source += $.common.lowerCase(names[j]) + ' : ' + $.common.toFixed(row.source[names[j]]);
-		    			if(j != names.length - 1)
-		    				source += ', ';
-		    		}
-		    		
 					html += '<tr>';
 					html += '<td>' + (Number(i) + 1) + '</td>';
-					html += '<td><span class="link-keyword" onclick="javascript:goK2MPop(\'' + row.word + '\');">' + row.word + '</span></td>';
+					html += '<td>' + row.title + '</td>';
+					html += '<td>' + row.director + '</td>';
 					html += '<td>' + $.common.toFixed(row.score) + '</td>';
-					html += '<td>' + source + '</td>';
 					html += '</tr>';
 		    	};
 		    	
-		    	$('#m2ktable > tbody').html(html);
+		    	$('#m2mtable > tbody').html(html);
 		    	
 		    } else {
 		    	alert(resp.message);
 		    }
 		});
-		
-		goPerson = function(name) {
-			console.info(name);
-		};
-		
-		goK2MPop = function(key) {
-			$.get('/keyword/' + key).done(function(resp) {
-				if(resp.success) {
-					$('.modal-content').load('/page', {
-						url : 'view/remote/recommend/k2m_modal.html',
-						id : resp.id
-					});
-				} else {
-					alert(resp.message);
-				}
-			});
-		};
 
 	});
 
