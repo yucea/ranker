@@ -38,6 +38,16 @@
 		},
 		'toFixed' : function(v) {
 			return v.toFixed(2);
+		},
+		'person' : function(source, separator, action) {
+			var html = '';
+			var arr = source.split(separator);
+			for(var i in arr) {
+				if(i > 0) html += ', '; 
+				html += '<span class="link-person" onclick="' + action + '(\'' + arr[i] + '\')">' + arr[i] + '</span>';
+			}
+
+			return html;
 		}
 	}
 
@@ -122,7 +132,7 @@
 			var data = [];
 			for(var i in columns) {
 				var col = new Object();
-				col.data = columns[i].name;
+				col.data = columns[i].key ? columns[i].key : columns[i].name;
 				
 				data.push(col);
 			}
@@ -172,7 +182,7 @@
 				"rowCallback" : function(row, data, index) {
 					for(var i in columns) {
 						var column = columns[i];
-						var value = eval('data.' + column.name);
+						var value = eval('data.' + (column.key ? column.key : column.name));
 						
 						if(column.body) {
 							if(column.body.event)

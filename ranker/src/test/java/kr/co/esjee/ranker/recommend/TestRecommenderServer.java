@@ -57,5 +57,13 @@ public class TestRecommenderServer extends TestElasticsearch {
 	public void k2mRunner() throws IOException {
 		Recommender.k2mRunner(service);
 	}
+	
+	@Test
+	public void allRunner() throws Exception {
+		int threadSize = 6;
+		int interval = 1000;
+		
+		Recommender.execute(service, threadSize, interval);
+	}
 
 }

@@ -20,7 +20,7 @@
 
 				<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-					<h2>Movie Keywords</h2>
+					<h2>Keyword Movies</h2>
 
 				</header>
 
@@ -49,7 +49,7 @@
 <!-- end widget grid -->
 
 <!-- Modal -->
-<div class="modal fade" id="m2k_modal" tabindex="-1" role="dialog" aria-labelledby="m2kModalLabel" aria-hidden="true"> <!-- data-backdrop="static" data-keyboard="false" -->
+<div class="modal fade" id="k2m_modal" tabindex="-1" role="dialog" aria-labelledby="m2kModalLabel" aria-hidden="true"> <!-- data-backdrop="static" data-keyboard="false" -->
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
         	<!-- content body here... -->
@@ -66,37 +66,29 @@
 	
 		$.datatable.display({
 			id : 'dt_m2k_widget',
-			url : '/rest/recommend/movies',
+			url : '/rest/recommend/k2m/list',
 			columns : [{
 				'name' : 'id',
-				'head' : { 'func' : $.common.upperCase }
+				'head' : { 'style' : 'width: 120px;', 'func' : $.common.upperCase }
 			}, {
-				'name' : 'tid',
-				'head' : { 'func' : $.common.upperCase }
-			}, {
-				'name' : 'title',
-				'head' : { 'func' : $.common.capitalize },
+				'key' : 'key',
+				'name' : 'Keyword',
 				'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
 				'data' : {
-					'event' :  { 'name' : 'onClick', 'value' : 'javascript:goM2KPage(_ID_)' }
+					'event' :  { 'name' : 'onClick', 'value' : 'javascript:goK2MPage(_ID_)' }
 				}
 			}, {
-				'name' : 'director',
-				'head' : { 'func' : $.common.capitalize }
-			}, {
-				'name' : 'starScore',
-				'head' : { 'func' : $.common.capitalize },
-				'data' : { 'func' : $.common.toFixed }
-			}, {
-				'name' : 'openDay',
-				'head' : { 'func' : $.common.capitalize },
-				'data' : { 'func' : $.common.dateFormat }
+				'key' : 'scores',
+				'name' : 'Count',
+				'head' : { 'style' : 'width: 120px;' },
+				'data' : { 'style' : 'width: 120px;', 'func' : function(data) { return data.length; } 
+				}
 			}]
 		});
 		
-		goM2KPage = function(id, tid) {
-			$('#m2k_modal').modal('show').find('.modal-content').load('/page', {
-				url : 'view/remote/recommend/m2k_modal.html',
+		goK2MPage = function(id, tid) {
+			$('#k2m_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/recommend/k2m_modal.html',
 				id : id
 			});
 		};
