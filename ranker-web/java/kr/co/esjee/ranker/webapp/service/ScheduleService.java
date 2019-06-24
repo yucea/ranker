@@ -11,7 +11,7 @@ import kr.co.esjee.ranker.webapp.model.Schedule;
 import kr.co.esjee.ranker.webapp.repository.ScheduleRepository;
 
 @Service
-public class ScheduleService {
+public class ScheduleService extends AppService {
 
 	@Autowired
 	private ScheduleRepository repository;
@@ -29,4 +29,15 @@ public class ScheduleService {
 		}
 	}
 	
+	public Schedule save(Schedule schedule) {
+		if (schedule.getId() == 0) {
+			schedule.setId(super.getNextId(INDICES.schedule));
+		}
+
+		return repository.save(schedule);
+	}
+	
+	public void remove(long id) {
+		repository.deleteById(id);
+	}
 }

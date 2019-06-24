@@ -105,7 +105,6 @@
 		$.get("/rest/person/info/[[${params.id}]]").done(function(resp) { 
 		    if(resp.success) {
 		    	var data = resp.data;
-		    	var filmo
 		    	
 		    	$('#name').text(data.name);
 		    	$('#birthday').text(data.birthday);

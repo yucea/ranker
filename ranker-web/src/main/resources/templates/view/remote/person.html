@@ -84,16 +84,16 @@
 					},
 					{
 						'name' : 'job',
-						'head' : { 'func' : $.common.upperCase }
+						'head' : { 'func' : $.common.capitalize }
 					},
 					{
 						'name' : 'birthday',
-						'head' : { 'func' : $.common.upperCase }
+						'head' : { 'func' : $.common.capitalize }
 					}
 				]
 		});
 		 
-		 goPerson = function(id, pid) {
+		goPerson = function(id, pid) {
 			$('#person_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/person_modal.html',
 				id : id,

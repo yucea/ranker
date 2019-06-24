@@ -1,0 +1,358 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<style>
+	.simplmargin { margin: 0 0 15px }
+	.zeromargin { margin: 0 }
+	.tlabel { width: 120px; background-color: #f7f7f7; }
+	.tvalue { min-width: 120px; max-width: 150px; }
+	.tdnum { width: 120px; }
+	.tdval { min-width: 120px; max-width: 150px; }
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Schedule Infomation</h4>
+</div>
+
+<div class="modal-body">
+	<form id="saveForm" name="saveForm" method="post">	
+	    <div class="row">
+	    	<article class="col-sm-12">    		
+	    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-schedule-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+	    			<header>
+						<span class="widget-icon"> <i class="fa fa-info"></i> </span>
+						<h2>Schedule Basic Infomation</h2>
+					</header>	
+								
+					<div>
+						<div class="widget-body no-padding">
+							<table id="scheduleInfo" class="table table-bordered" style="clear: both">
+								<tbody>
+									<tr>
+										<td class="tlabel">ScheduleName</td>
+										<td class="tvalue" colspan="5">
+											<input type="hidden" id="id" name="id" />
+											<input type="text" id="scheduleName" name="scheduleName" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">Week</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="week" name="week" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">Month</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="month" name="month" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">Day</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="day" name="day" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">Hour</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="hour" name="hour" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">Minute</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="minute" name="minute" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">Usable</td>
+										<td class="tvalue" colspan="5">
+											<select id="usable" name="usable">
+												<option value="true">True</option>
+												<option value="false">False</option>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>					
+						</div>
+					</div>				
+				</div>
+				
+				<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-schedule-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+	    			<header>
+						<span class="widget-icon"> <i class="fa fa-info"></i> </span>
+						<h2>Movie Infomation</h2>
+					</header>	
+								
+					<div>
+						<div class="widget-body no-padding">
+							<div class="table-responsive">
+								<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both">
+								<tbody>
+									<tr>
+										<td class="tlabel">MovieListUrl</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="movieListUrl" name="movieListUrl" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">MovieUrlAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="movieUrlAtrb" name="movieUrlAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">RemoveAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="removeAtrb" name="removeAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">MovieKey</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="movieKey" name="movieKey" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">TitleAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="titleAtrb" name="titleAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">OrgTitleAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="orgTitleAtrb" name="orgTitleAtrb" style="width: 100%" />
+										</td>	
+									</tr>
+									<tr>
+										<td class="tlabel">ScoreAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="scoreAtrb" name="scoreAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">RunTimeAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="runTimeAtrb" name="runTimeAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">GenreAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="genreAtrb" name="genreAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">NationAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="nationAtrb" name="nationAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">GradeAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="gradeAtrb" name="gradeAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">OpenDayAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="openDayAtrb" name="openDayAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">SynopsisAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="synopsisAtrb" name="synopsisAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">MakingNoteAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="makingNoteAtrb" name="makingNoteAtrb" style="width: 100%" />
+										</td>
+									</tr>
+								</tbody>
+							</table>	
+							</div>
+						</div>
+					</div>				
+	    		</div>	    
+	    		
+	    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-schedule-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+	    			<header>
+						<span class="widget-icon"> <i class="fa fa-info"></i> </span>
+						<h2>Person Infomation</h2>
+					</header>	
+								
+					<div>
+						<div class="widget-body no-padding">
+							<div class="table-responsive">
+								<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both">
+								<tbody>
+									<tr>
+										<td class="tlabel">PersonUrl</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="personUrl" name="personUrl" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">FilmoUrl</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="filmoUrl" name="filmoUrl" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">ActorAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="actorAtrb" name="actorAtrb" style="width: 100%" />
+										</td>	
+									</tr>
+									<tr>
+										<td class="tlabel">RoleAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="roleAtrb" name="roleAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">DirectorAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="directorAtrb" name="directorAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">CrewNameAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="crewNameAtrb" name="crewNameAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">CrewProfileAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="crewProfileAtrb" name="crewProfileAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">CrewBirthdayAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="crewBirthdayAtrb" name="crewBirthdayAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">FilmoListAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="filmoListAtrb" name="filmoListAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">FilmoTitleAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="filmoTitleAtrb" name="filmoTitleAtrb" style="width: 100%" />
+										</td>
+									</tr>
+									<tr>
+										<td class="tlabel">FilmoYearAtrb</td>
+										<td class="tvalue" colspan="5">
+											<input type="text" id="filmoYearAtrb" name="filmoYearAtrb" style="width: 100%" />
+										</td>
+									</tr>
+								</tbody>
+							</table>	
+							</div>
+						</div>
+					</div>				
+	    		</div> 		
+	    	</article>    	
+	    </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="save">Save</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Close</button>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		if("[[${params.id}]]" != null) {
+			$.get("/rest/schedule/info/[[${params.id}]]").done(function(resp) { 
+			    if(resp.success) {
+			    	var data = resp.data;
+			    	
+			    	$("#id").val(data.id);
+			    	$("#scheduleName").val(data.scheduleName);
+			    	$("#week").val(data.week);
+			    	$("#month").val(data.month);
+			    	$("#day").val(data.day);
+			    	$("#hour").val(data.hour);
+			    	$("#minute").val(data.minute);
+
+					if(data.usable) {
+						$("#usable").val("true");	
+					} else {
+						$("#usable").val("false");
+					}
+			    	
+			    	$("#movieListUrl").val(data.movieListUrl);
+			    	$("#movieUrlAtrb").val(data.movieUrlAtrb);
+			    	$("#removeAtrb").val(data.removeAtrb);
+			    	$("#movieKey").val(data.movieKey);
+			    	$("#titleAtrb").val(data.titleAtrb);
+			    	$("#orgTitleAtrb").val(data.orgTitleAtrb);
+			    	$("#scoreAtrb").val(data.scoreAtrb);
+			    	$("#runTimeAtrb").val(data.runTimeAtrb);
+			    	$("#genreAtrb").val(data.genreAtrb);
+			    	$("#nationAtrb").val(data.nationAtrb);
+			    	$("#gradeAtrb").val(data.gradeAtrb);
+			    	$("#openDayAtrb").val(data.openDayAtrb);
+			    	$("#synopsisAtrb").val(data.synopsisAtrb);
+			    	$("#makingNoteAtrb").val(data.makingNoteAtrb);
+			    	
+			    	$("#personUrl").val(data.personUrl);
+			    	$("#filmoUrl").val(data.filmoUrl);
+			    	$("#actorAtrb").val(data.actorAtrb);
+			    	$("#roleAtrb").val(data.roleAtrb);
+			    	$("#directorAtrb").val(data.directorAtrb);
+			    	$("#crewNameAtrb").val(data.crewNameAtrb);
+			    	$("#crewProfileAtrb").val(data.crewProfileAtrb);
+			    	$("#crewBirthdayAtrb").val(data.crewBirthdayAtrb);
+			    	$("#filmoListAtrb").val(data.filmoListAtrb);
+			    	$("#filmoTitleAtrb").val(data.filmoTitleAtrb);
+			    	$("#filmoYearAtrb").val(data.filmoYearAtrb);
+			    } else {
+			    	alert(resp.message);
+			    }
+			});
+		}
+	});
+	
+	$("#save").click(function(){
+		if(confirm('Save?')) { 
+			$.post("/rest/schedule/save", $("#saveForm").serialize()).done(function(resp) {
+				if(resp.success) {
+					alert(resp.message);
+					location.reload();
+				} else {
+			    	alert(resp.message);
+			    }
+			});
+		}	
+	});
+	
+	$("#close").click(function(){
+		if("[[${params.id}]]" != null) {
+			setTimeout(function() { 
+				$('#schedule_modify_modal').find('.modal-content').empty();
+				$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
+					url : 'view/remote/schedule_view_modal.html',
+					id : "[[${params.id}]]"
+				});
+			}, 400);
+		}
+	});
+</script>
+
+</html>

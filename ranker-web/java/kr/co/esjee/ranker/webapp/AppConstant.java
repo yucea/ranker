@@ -59,5 +59,9 @@ public interface AppConstant {
 	
 	String MOVIE = "mv_basic_info";
 	String PERSON = "mv_person_info";
+	
+	enum INDICES {
+		schedule
+	}
 
 }

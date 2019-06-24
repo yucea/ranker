@@ -49,11 +49,15 @@
 <!-- end widget grid -->
 
 <!-- Modal -->
-<div class="modal fade" id="schedule_modal" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+<div class="modal fade" id="schedule_view_modal" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-        	<!-- content body here... -->
-        </div>
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="schedule_modify_modal" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div>
     </div>
 </div>
 <!-- end Modal -->
@@ -73,35 +77,46 @@
 						'head' : { 'func' : $.common.upperCase }
 					},
 					{
+						'name' : 'scheduleName',
+						'head' : { 'func' : $.common.capitalize },
+						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
+						'data' : {
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goSchedule(_ID_)' }
+						}
+					},
+					{
 						'name' : 'week',
-						'head' : { 'func' : $.common.upperCase }
+						'head' : { 'func' : $.common.capitalize }
 					},
 					{
 						'name' : 'month',
-						'head' : { 'func' : $.common.upperCase }
+						'head' : { 'func' : $.common.capitalize }
 					},
 					{
 						'name' : 'day',
-						'head' : { 'func' : $.common.upperCase }
+						'head' : { 'func' : $.common.capitalize }
 					},
 					{
 						'name' : 'hour',
-						'head' : { 'func' : $.common.upperCase }
+						'head' : { 'func' : $.common.capitalize }
 					},
 					{
 						'name' : 'minute',
-						'head' : { 'func' : $.common.upperCase }
-					},
-					{
-						'name' : 'baseUrl',
-						'head' : { 'func' : $.common.upperCase }
-					},
+						'head' : { 'func' : $.common.capitalize }
+					},					
 					{
 						'name' : 'usable',
-						'head' : { 'func' : $.common.upperCase }
+						'head' : { 'func' : $.common.capitalize }
 					},
 				]
 		});
+		
+		goSchedule = function(id) {
+			$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/schedule_view_modal.html',
+				id : id
+			});
+		};
 	};
 
 	// load related plugins

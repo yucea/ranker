@@ -16,37 +16,75 @@ public class Schedule implements AppConstant {
 
 	@Id
 	private long id;
+	
 	private String scheduleName = "";
-	private String baseUrl = "";
-	private String attribute = "";
-	private int startYear;
-	private int endYear;
-	private String listUrl = "";	
-	private String basicUrl = "";	
-	private String crewUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";
-	private String FilmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?year=0&totalCount=1000&page=1000&peopleCode=";
-	private String keyParam = "code";	
-	private String pagingParam = "page";
-	private String removeAtrb = "div.wide_info_area";
-	private String titleAtrb = "h3.h_movie a";
-	private String orgTitleAtrb = "strong.h_movie2";	
-	private String scoreAtrb = "a#pointNetizenPersentBasic em";
-	private String runTimeAtrb = "dl.info_spec span";
-	private String[] genreAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?genre="};
-	private String[] nationAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?nation="};
-	private String[] gradeAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?grade="};
-	private String[] openDayAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?open="};
-	private String synopsisAtrb = "div.story_area";
-	private String makingNoteAtrb = "div.making_note p.con_tx";
-	private String actorAtrb = "ul.lst_people li div.p_info a.k_name";
-	private String roleAtrb = "ul.lst_people li div.p_info div.part p.pe_cmt span";
-	private String directorAtrb = "div.dir_product a.k_name";
-	private String crewNameAtrb = "h3.h_movie a";
-	private String crewProfileAtrb = "div.con_tx";
-	private String crewBirthdayAtrb = "dl.info_spec dd";
-	private String filmoListAtrb = "div.pilmo_info";	
-	private String filmoTitleAtrb = "strong.pilmo_tit a";
-	private String filmoYearAtrb = "p.pilmo_genre a";
+	
+	/* Directory Movie List */
+	private String movieDirUrl = "";
+	
+	private String movieDirAtrb = "";
+
+	private String movieDirPage = "";
+	
+	private Integer startYear;
+	
+	private Integer endYear;
+	
+	
+	/* Movie */
+	private String movieListUrl = "";
+	
+	private String movieUrlAtrb = ""; 
+	
+	private String movieUrl = "";
+	
+	private String personUrl = "";	
+	
+	private String filmoUrl = "";
+	
+	private String removeAtrb = "";
+	
+	private String movieKey = "";
+	
+	private String titleAtrb = "";
+	
+	private String orgTitleAtrb = "";
+	
+	private String scoreAtrb = "";
+	
+	private String runTimeAtrb = "";
+	
+	private String[] genreAtrb;
+	
+	private String[] nationAtrb;
+	
+	private String[] gradeAtrb;
+	
+	private String[] openDayAtrb;
+	
+	private String synopsisAtrb = "";
+	
+	private String makingNoteAtrb = "";
+	
+	
+	/* Person */
+	private String actorAtrb = "";
+	
+	private String roleAtrb = "";
+	
+	private String directorAtrb = "";	
+	
+	private String crewNameAtrb = "";
+	
+	private String crewProfileAtrb = "";
+	
+	private String crewBirthdayAtrb = "";
+		
+	private String filmoListAtrb = "";
+	
+	private String filmoTitleAtrb = "";
+	
+	private String filmoYearAtrb = "";
 	
 	private int[] week; 	// 일요일 : 1, 토요일 : 7, 매주 : 0
 	private int[] month; 	// 1-12, 매월 : 0

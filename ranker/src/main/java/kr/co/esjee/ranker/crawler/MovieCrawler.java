@@ -89,16 +89,16 @@ public class MovieCrawler implements AppConstant {
 		MovieInfo movieInfo = new MovieInfo();
 		
 		// Movie Key
-		String movieKey = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
-				getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) : "";
+		String movieKey = (getQueryMap(movieVO.getMovieUrl()) != null && getQueryMap(movieVO.getMovieUrl()).get(movieVO.getMovieKey()) != null) ? 
+				getQueryMap(movieVO.getMovieUrl()).get(movieVO.getMovieKey()) : "";
 				
 		try {
 			
 			// 영화 정보 연결
-			Document basicInfoDoc = jsoupConnect(movieVO.getBasicUrl());
+			Document basicInfoDoc = jsoupConnect(movieVO.getMovieUrl());
 			
 			// 인물 정보 연결
-			Document crewInfoDoc = jsoupConnect(movieVO.getCrewUrl() + (movieKey.isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ movieKey));
+			Document crewInfoDoc = jsoupConnect(movieVO.getPersonUrl() + (movieKey.isEmpty() ? "" : "?" + movieVO.getMovieKey() + "="+ movieKey));
 			
 			if(basicInfoDoc != null && crewInfoDoc != null) {
 				
@@ -151,8 +151,8 @@ public class MovieCrawler implements AppConstant {
 		}
 		
 		// Movie ID
-		String movieId = (getQueryMap(movieVO.getBasicUrl()) != null && getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) != null) ? 
-				getQueryMap(movieVO.getBasicUrl()).get(movieVO.getKeyParam()) : "";
+		String movieId = (getQueryMap(movieVO.getMovieUrl()) != null && getQueryMap(movieVO.getMovieUrl()).get(movieVO.getMovieKey()) != null) ? 
+				getQueryMap(movieVO.getMovieUrl()).get(movieVO.getMovieKey()) : "";
 		movie.setMovieId(movieId);		
 		
 		// tID
@@ -256,8 +256,8 @@ public class MovieCrawler implements AppConstant {
 			}
 			
 			// 인물 ID
-			String pId = (getQueryMap(crewUrl) != null && getQueryMap(crewUrl).get(movieVO.getKeyParam()) != null) ? 
-					getQueryMap(crewUrl).get(movieVO.getKeyParam()) : "";
+			String pId = (getQueryMap(crewUrl) != null && getQueryMap(crewUrl).get(movieVO.getMovieKey()) != null) ? 
+					getQueryMap(crewUrl).get(movieVO.getMovieKey()) : "";
 					
 			person.setPid(pId);
 			
@@ -292,8 +292,8 @@ public class MovieCrawler implements AppConstant {
 				String movieUrl = filmoElement.select(movieVO.getFilmoTitleAtrb()).attr("abs:href");
 				
 				// 영화 ID
-				filmo.setMovieId((getQueryMap(movieUrl) != null && getQueryMap(movieUrl).get(movieVO.getKeyParam()) != null) ? 
-						getQueryMap(movieUrl).get(movieVO.getKeyParam()) : "");
+				filmo.setMovieId((getQueryMap(movieUrl) != null && getQueryMap(movieUrl).get(movieVO.getMovieKey()) != null) ? 
+						getQueryMap(movieUrl).get(movieVO.getMovieKey()) : "");
 				
 				// 영화제목
 				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
@@ -301,7 +301,7 @@ public class MovieCrawler implements AppConstant {
 				// 영화 개봉년도
 				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
 
-				Document directorDoc = jsoupConnect(movieVO.getCrewUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ filmo.getMovieId()));
+				Document directorDoc = jsoupConnect(movieVO.getPersonUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getMovieKey() + "="+ filmo.getMovieId()));
 				
 				// 감독
 				String director = "";
@@ -333,8 +333,8 @@ public class MovieCrawler implements AppConstant {
 			}
 			
 			// 인물 ID
-			String pId = (getQueryMap(crewUrl) != null && getQueryMap(crewUrl).get(movieVO.getKeyParam()) != null) ? 
-					getQueryMap(crewUrl).get(movieVO.getKeyParam()) : "";
+			String pId = (getQueryMap(crewUrl) != null && getQueryMap(crewUrl).get(movieVO.getMovieKey()) != null) ? 
+					getQueryMap(crewUrl).get(movieVO.getMovieKey()) : "";
 					
 			person.setPid(pId);
 			
@@ -369,8 +369,8 @@ public class MovieCrawler implements AppConstant {
 				String movieUrl = filmoElement.select(movieVO.getFilmoTitleAtrb()).attr("abs:href");
 				
 				// 영화 ID
-				filmo.setMovieId((getQueryMap(movieUrl) != null && getQueryMap(movieUrl).get(movieVO.getKeyParam()) != null) ? 
-						getQueryMap(movieUrl).get(movieVO.getKeyParam()) : "");
+				filmo.setMovieId((getQueryMap(movieUrl) != null && getQueryMap(movieUrl).get(movieVO.getMovieKey()) != null) ? 
+						getQueryMap(movieUrl).get(movieVO.getMovieKey()) : "");
 				
 				// 영화제목
 				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
@@ -378,7 +378,7 @@ public class MovieCrawler implements AppConstant {
 				// 영화 개봉년도
 				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
 
-				Document directorDoc = jsoupConnect(movieVO.getCrewUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getKeyParam() + "="+ filmo.getMovieId()));
+				Document directorDoc = jsoupConnect(movieVO.getPersonUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getMovieKey() + "="+ filmo.getMovieId()));
 				
 				// 감독
 				String director = "";
@@ -404,26 +404,36 @@ public class MovieCrawler implements AppConstant {
 	 * @param movieVO
 	 * @return
 	 */
-	public List<Map<String, Object>> getUrlList(String url, String attribute, int startYear, int endYear) {
+	public List<Map<String, Object>> getMovieDirectList(String movieDirUrl, String movieDirAtrb, Integer startYear, Integer endYear) {
 		
 		List<Map<String, Object>> urlList = new ArrayList<Map<String, Object>>();
 		
-		MovieCrawler mc = new MovieCrawler();
+		MovieCrawler movieCrawler = new MovieCrawler();
 		
-		Document doc = mc.jsoupConnect(url);
-		
-		if(doc != null) {
-			for(Element element : doc.select(attribute)) {
-				
-				Map<String, Object> urlMap = new HashMap<String, Object>();
-				
-				String strYear = element.text();
-				int year = Integer.parseInt(strYear.replaceAll("[^0-9]", ""));
-				
-				if(year >= startYear && year <= endYear) {
-					urlMap.put("year", year);
-					urlMap.put("url", element.absUrl("href"));
-					urlList.add(urlMap);
+		if(!movieDirUrl.isEmpty() && !movieDirAtrb.isEmpty()) {
+			
+			Document doc = movieCrawler.jsoupConnect(movieDirUrl);
+			
+			if(doc != null) {
+				for(Element element : doc.select(movieDirAtrb)) {
+					
+					Map<String, Object> urlMap = new HashMap<String, Object>();
+					
+					if(startYear != null && endYear != null) {
+						String strYear = element.text();
+						Integer year = Integer.parseInt(strYear.replaceAll("[^0-9]", ""));
+						
+						if(year >= startYear && year <= endYear) {
+							urlMap.put("progress", year);
+							urlMap.put("url", element.absUrl("href"));
+							urlList.add(urlMap);
+						}
+					} else {
+						String progress = element.text();
+						urlMap.put("progress", progress);
+						urlMap.put("url", element.absUrl("href"));
+						urlList.add(urlMap);
+					}
 				}
 			}
 		}
@@ -442,12 +452,13 @@ public class MovieCrawler implements AppConstant {
 		
 		List<String> urlList = new ArrayList<String>();
 		
-		if(movieVO.getPagingParam().isEmpty()) {
+		if(movieVO.getMovieDirPage().isEmpty()) {
 			
-			Document doc = jsoupConnect(movieVO.getListUrl());
+			Document doc = jsoupConnect(movieVO.getMovieListUrl());
 			
 			if(doc != null) {
-				Elements elements = doc.select("ul.directory_list li a");
+				
+				Elements elements = doc.select(movieVO.getMovieUrlAtrb());
 				
 				for(Element element : elements) {
 					if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
@@ -465,10 +476,10 @@ public class MovieCrawler implements AppConstant {
 			
 			while(true) {
 				
-				Document doc = jsoupConnect(movieVO.getListUrl() + "&" + movieVO.getPagingParam() + "=" + pageCount);
+				Document doc = jsoupConnect(movieVO.getMovieListUrl() + "&" + movieVO.getMovieDirPage() + "=" + pageCount);
 				
 				if(doc != null) {
-					Elements elements = doc.select("ul.directory_list li a");
+					Elements elements = doc.select(movieVO.getMovieUrlAtrb());
 					
 					int urlCount = 1;
 					

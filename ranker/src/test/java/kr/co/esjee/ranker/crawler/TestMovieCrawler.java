@@ -1,15 +1,8 @@
 package kr.co.esjee.ranker.crawler;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,100 +55,41 @@ public class TestMovieCrawler {
 		
 		MovieVO movieVO = new MovieVO();
 		
-		log.info("=========== Movie Crawer Start ===========");
+		List<Map<String, Object>> movieDirectList = 
+				movieCrawler.getMovieDirectList(movieVO.getMovieDirUrl(), movieVO.getMovieDirAtrb(), movieVO.getStartYear(), movieVO.getEndYear());
 		
-		List<String> urlList = movieCrawler.getMovieUrlList(movieVO);
-		
-		if(!urlList.isEmpty()) {
+		if(!movieDirectList.isEmpty()) {
 			
-			log.info("=========== Movie Crawering TotalCount = {} ===========", urlList.size());
-			
-			int count = 1;
-			
-			for(String basicUrl : urlList) {
-				
-				movieVO.setBasicUrl(basicUrl);
-				
-				log.info("=========== Movie Crawering Start = {}/{} ===========", count, urlList.size());
-				
-				MovieInfo movieInfo = movieCrawler.execute(movieVO);
-				
-				if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
-					
-					try {
-						// Movie Info
-						movieService.merge(movieInfo.getMovieInfo());
-						
-						// Person Info
-						for (Person person : movieInfo.getPersonInfo()) {
-							personService.merge(person);
-						}
-						
-						log.info("=========== Movie Crawering Success = {}/{} ===========", count, urlList.size());						
-					} catch (Exception e) {
-						log.info("=========== Movie Crawering Error = {}/{} ===========", count, urlList.size());
-					}
-				} else {
-					log.info("=========== Movie Crawering Error = {}/{} ===========", count, urlList.size());
-				}
-				
-				count++;
-				
-				try {
-					Thread.sleep(DELAY_TIME);
-				} catch (InterruptedException e) {
-					log.error("Sleep Error = {}", e.getLocalizedMessage());
-				}
-			}
-		}
-		
-		log.info("=========== Movie Crawering Finish ===========");		
-	}	
-	
-	@Test
-	public void testTermCrawler() {
-		
-		String baseUrl = "https://movie.naver.com/movie/sdb/browsing/bmovie_open.nhn";
-		String attribute = "table.directory_item_other tbody tr td a";
-		int startYear = 2000;
-		int endYear = 2010;
-		
-		MovieVO movieVO = new MovieVO();
-		
-		List<Map<String, Object>> baseUrlList = movieCrawler.getUrlList(baseUrl, attribute, startYear, endYear);
-		
-		if(!baseUrlList.isEmpty()) {
-			
-			log.info("=========== Year TotalCount = {} ===========", baseUrlList.size());
+			log.info("[ Find Year Count = {} ]", movieDirectList.size());
 			
 			int yearCount = 1;
 			
-			for(Map<String, Object> bUrl : baseUrlList) {
+			for(Map<String, Object> mvDirMap : movieDirectList) {
 					
-				log.info("=========== {} Year Crawering = {}/{} ===========", bUrl.get("year"), yearCount, baseUrlList.size());
+				log.info("[ {} Year ] Crawling Start = {}/{}", mvDirMap.get("progress"), yearCount, movieDirectList.size());
 				
 				// URL Setting
-				movieVO.setListUrl(bUrl.get("url").toString());
+				movieVO.setMovieListUrl(mvDirMap.get("url").toString());
 				
 				List<String> urlList = movieCrawler.getMovieUrlList(movieVO);
 				
 				if(!urlList.isEmpty()) {
 					
-					log.info("=========== {] Year Movie TotalCount = {} ===========", bUrl.get("year"), urlList.size());
+					log.info("[ {} Year ] Movie TotalCount = {}", mvDirMap.get("progress"), urlList.size());
 					
 					int count = 1;
 					
-					for(String basicUrl : urlList) {
+					for(String movieUrl : urlList) {
 						
-						movieVO.setBasicUrl(basicUrl);
+						movieVO.setMovieUrl(movieUrl);
 						
-						log.info("=========== {] Year Movie Crawering Start = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+						log.info("[ {} Year ] Movie Crawling Start = {}/{}", mvDirMap.get("progress"), count, urlList.size());
 						
 						MovieInfo movieInfo = movieCrawler.execute(movieVO);
 						
 						if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
 							
-							try {								
+							try {
 								// Movie Info
 								movieService.merge(movieInfo.getMovieInfo());
 								
@@ -164,12 +98,12 @@ public class TestMovieCrawler {
 									personService.merge(person);
 								}
 								
-								log.info("=========== {} Year Movie Crawering Success = {}/{} ===========", bUrl.get("year"), count, urlList.size());						
+								log.info("[ {} Year ] Movie Crawling Success = {}/{}", mvDirMap.get("progress"), count, urlList.size());						
 							} catch (Exception e) {
-								log.error("=========== {} Year Movie Crawering Error = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+								log.error("[ {} Year ] Movie Crawling Failed = {}/{}", mvDirMap.get("progress"), count, urlList.size());
 							}
 						} else {
-							log.error("=========== {} Year Movie Crawering Error = {}/{} ===========", bUrl.get("year"), count, urlList.size());
+							log.error("[ {} Year ] Movie Crawling Failed = {}/{}", mvDirMap.get("progress"), count, urlList.size());
 						}
 						
 						count++;
@@ -180,11 +114,13 @@ public class TestMovieCrawler {
 							log.error("Sleep Error = {}", e.getLocalizedMessage());
 						}
 					}
+				} else {
+					log.info("URL is Empty");
 				}
 				
-				yearCount++;
+				log.info("[ {} Year ] Crawling Success = {}/{}", mvDirMap.get("progress"), yearCount, movieDirectList.size());
 				
-				log.info("=========== {} Year Movie Crawering Success ===========", bUrl.get("year"));
+				yearCount++;
 				
 				try {
 					Thread.sleep(DELAY_TIME);
@@ -192,65 +128,56 @@ public class TestMovieCrawler {
 					log.error("Sleep Error = {}", e.getLocalizedMessage());
 				}
 			}
-		}
-	}
-	
-	 @Test
-	 public void tesxts () {		 
-		 Date date = Calendar.getInstance().getTime();
-		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-		 String result = format.format(date);
-		 System.out.println(result);
-	 }
-	 
-	 @Test
-	 public void tetet () {
-		 
-		 MovieCrawler movieCrawler2 = new MovieCrawler();
-		 
-		 List<String> urlList = new ArrayList<String>();
-		 
-		 boolean stop = false;
-		 String prevUrl = "";
-		 
-		 int pageCount = 1;
-		 
-		 while(true) {
+		} else if (movieDirectList.isEmpty() && !movieVO.getMovieListUrl().isEmpty()) {
 			
-			Document doc = movieCrawler2.jsoupConnect("https://movie.naver.com/movie/sdb/browsing/bmovie.nhn?open=198" + "&" + "page" + "=" + pageCount);
+			List<String> urlList = movieCrawler.getMovieUrlList(movieVO);
 			
-			if(doc != null) {
-				Elements elements = doc.select("ul.directory_list li a");
+			if(!urlList.isEmpty()) {
 				
-				int urlCount = 1;
+				log.info("Movie TotalCount = {}", urlList.size());
 				
-				for(Element element : elements) {
-					if(element.absUrl("href").contains("/movie/bi/mi/basic.nhn?code=")) {
+				int count = 1;
+				
+				for(String movieUrl : urlList) {
+					
+					movieVO.setMovieUrl(movieUrl);
+					
+					log.info("Movie Crawling Start = {}/{}", count, urlList.size());
+					
+					MovieInfo movieInfo = movieCrawler.execute(movieVO);
+					
+					if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
 						
-						if(urlCount == 1) {
-							if(prevUrl.equals(element.attr("abs:href"))) {
-								stop = true;
-								break;
-							}else {
-								prevUrl = element.attr("abs:href");
+						try {
+							// Movie Info
+							movieService.merge(movieInfo.getMovieInfo());
+							
+							// Person Info
+							for (Person person : movieInfo.getPersonInfo()) {
+								personService.merge(person);
 							}
+							
+							log.info("Movie Crawling Success = {}/{}", count, urlList.size());						
+						} catch (Exception e) {
+							log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
 						}
-						
-						urlList.add(element.attr("abs:href"));
-						urlCount ++;
+					} else {
+						log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
+					}
+					
+					count++;
+					
+					try {
+						Thread.sleep(DELAY_TIME);
+					} catch (InterruptedException e) {
+						log.error("Sleep Error = {}", e.getLocalizedMessage());
 					}
 				}
-				
-				if(stop) {
-					break;
-				}
-				
-				pageCount++;
+			} else {
+				log.info("URL is Empty");
 			}
-		 }
-		 
-		 for(String a : urlList) {
-			 System.out.println(a);
-		 }
-	 }
+		} else {
+			log.info("URL is Empty");
+		}
+	}
 }

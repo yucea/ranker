@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +49,64 @@ public class ScheduleController extends AppController {
 			result.put(SUCCESS, false);
 			result.put(MESSAGE, e.getLocalizedMessage());
 		}		
+
+		return result.toString();
+	}
+	
+	@RequestMapping(value = "/info/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String info(@PathVariable long id, Model model) {
+		JSONObject result = new JSONObject();
+
+		try {
+			Schedule schedule = scheduleService.findById(id);
+
+			result.put(SUCCESS, true);
+			result.put(DATA, new JSONObject(schedule));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put(SUCCESS, false);
+			result.put(MESSAGE, e.getLocalizedMessage());
+		}
+
+		return result.toString();
+	}
+	
+	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String save(Schedule schedule) {
+		
+		JSONObject result = new JSONObject();
+
+		try {
+			
+			scheduleService.save(schedule);
+
+			result.put(SUCCESS, true);
+			result.put(MESSAGE, "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put(SUCCESS, false);
+			result.put(MESSAGE, "failed");
+		}
+
+		return result.toString();
+	}
+	
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String delete(@PathVariable long id, Model model) {
+		
+		JSONObject result = new JSONObject();
+
+		try {
+			
+			scheduleService.remove(id);
+
+			result.put(SUCCESS, true);
+			result.put(MESSAGE, "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put(SUCCESS, false);
+			result.put(MESSAGE, "failed");
+		}
 
 		return result.toString();
 	}
