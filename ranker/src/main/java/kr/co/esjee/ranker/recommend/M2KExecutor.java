@@ -66,8 +66,8 @@ public class M2KExecutor implements AppConstant {
 					return;
 
 				double score = Math.round(t.getScore() / maxScore * NORMALIZING_SCORE * 100d) / 100d;
-				if (score < 0.1)
-					return;
+//				if (score < 0.1)
+//					return;
 
 				Keyword keyword = map.containsKey(word) ? map.get(word) : new Keyword(word, score);
 				keyword.putSource(t.getField(), score);

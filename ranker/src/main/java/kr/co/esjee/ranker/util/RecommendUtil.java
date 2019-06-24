@@ -62,6 +62,7 @@ public class RecommendUtil implements AppConstant {
 		ratings.put("고등학생가", 15);
 		ratings.put("15세관람가", 15);
 		ratings.put("15세관람가NR", 15);
+		ratings.put("15세관람가PG", 15);
 		ratings.put("15세관람가R", 15);
 		ratings.put("15세관람가PG-13", 15);
 		ratings.put("PG-13", 15);

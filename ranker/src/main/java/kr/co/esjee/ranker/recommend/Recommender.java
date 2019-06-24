@@ -21,7 +21,7 @@ public class Recommender implements AppConstant {
 
 		k2mRunner(service);
 
-		log.info("Recommender.execute completed - {}", System.currentTimeMillis() - s);
+		log.info("Recommender.execute completed - {}(ms)", System.currentTimeMillis() - s);
 	}
 
 	public static void m2kRunner(RecommendService service, String indexName, String typeName) throws Exception {
