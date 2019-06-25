@@ -37,7 +37,7 @@
 										<td class="tlabel">ScheduleName</td>
 										<td class="tvalue" colspan="5">
 											<input type="hidden" id="id" name="id" value="0"/>
-											<input type="text" name="scheduleName" class="required" />
+											<input type="text" id="scheduleName" name="scheduleName" class="required" />
 										</td>
 									</tr>
 									<tr>
@@ -320,18 +320,18 @@
 	});
 	
 	$("#save").click(function(){
-		alert($('#saveForm').valid());
-		
-// 		if(confirm('Save?')) {
-// 			$.post("/rest/schedule/save", $("#saveForm").serialize()).done(function(resp) {
-// 				if(resp.success) {
-// 					alert(resp.message);
-// 					location.reload();
-// 				} else {
-// 			    	alert(resp.message);
-// 			    }
-// 			});
-// 		}	
+		if($('#saveForm').valid()){
+			if(confirm('Save?')) {
+	 			$.post("/rest/schedule/save", $("#saveForm").serialize()).done(function(resp) {
+	 				if(resp.success) {
+	 					alert(resp.message);
+	 					location.reload();
+	 				} else {
+	 			    	alert(resp.message);
+	 			    }
+	 			});
+	 		}
+		}	
 	});
 	
 	$("#close").click(function(){
