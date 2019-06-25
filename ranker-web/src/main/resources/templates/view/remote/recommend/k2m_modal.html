@@ -77,7 +77,7 @@
 
 					html += '<tr>';
 					html += '<td>' + (Number(i) + 1) + '</td>';
-					html += '<td><span class="link-keyword" onclick="javascript:goM2KPop(\'' + row.title + '\');">' + row.title + '</span></td>';
+					html += '<td><span class="link-keyword" onclick="javascript:goM2KPop(\'' + row.id + '\');">' + row.title + '</span></td>';
 					html += '<td>' + $.common.toFixed(row.score) + '</td>';
 					html += '</tr>';
 		    	};
@@ -89,16 +89,10 @@
 		    }
 		});
 		
-		goM2KPop = function(title) {
-			$.get('/movie/' + title).done(function(resp) {
-				if(resp.success) {
-					$('.modal-content').load('/page', {
-						url : 'view/remote/recommend/m2k_modal.html',
-						id : resp.id
-					});
-				} else {
-					alert(resp.message);
-				}
+		goM2KPop = function(id) {
+			$('.modal-content').load('/page', {
+				url : 'view/remote/recommend/m2k_modal.html',
+				id : id
 			});
 		};
 
