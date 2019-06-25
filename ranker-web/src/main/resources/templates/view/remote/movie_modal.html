@@ -141,8 +141,12 @@
 		});
 	});
 	
-	goP2MPop = function(name) {		
-		location.href = "view/remote/person";
+	goP2MPop = function(name) {
+		$('#movie_modal').modal('hide').find('.modal-content').empty();
+		$('#person_list_modal').modal('show').find('.modal-content').load('/page', {
+			url : 'view/remote/person_list_modal.html',
+			name : name
+		});
 	}
 </script>
 

@@ -10,4 +10,6 @@ public interface PersonRepository extends ElasticsearchRepository<Person, Long> 
 	
 	Page<Person> findByNameLike(String searchKey, Pageable pageable);
 	
+	Page<Person> findByName(String searchKey, Pageable pageable);
+	
 }

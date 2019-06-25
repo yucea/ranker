@@ -16,7 +16,7 @@ public class PathController {
 		return "redirect:view/index.html";
 	}
 
-	@RequestMapping("/redirect}")
+	@RequestMapping("/redirect")
 	public String redirect(@RequestParam String url) {
 		return "redirect:" + url;
 	}

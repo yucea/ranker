@@ -21,7 +21,6 @@
 				<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 					<h2>Movie List</h2>
-
 				</header>
 
 				<!-- widget div-->
@@ -50,6 +49,22 @@
 
 <!-- Modal -->
 <div class="modal fade" id="movie_modal" tabindex="-1" role="dialog" aria-labelledby="movieModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<!-- content body here... -->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="person_list_modal" tabindex="-1" role="dialog" aria-labelledby="personListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<!-- content body here... -->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="person_modal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
         	<!-- content body here... -->
@@ -117,6 +132,7 @@
 		});
 		 
 		goMoviePage = function(id, tid) {
+			$('#person_list_modal').modal('hide').find('.modal-content').empty();
 			$('#movie_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/movie_modal.html',
 				id : id,
