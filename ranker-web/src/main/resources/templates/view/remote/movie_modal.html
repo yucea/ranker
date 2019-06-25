@@ -150,10 +150,11 @@
 	}
 	
 	goGenrePop = function(name) {
+		var genre = name.split("/");
 		$('#movie_modal').modal('hide').find('.modal-content').empty();
 		$('#movie_genre_modal').modal('show').find('.modal-content').load('/page', {
 			url : 'view/remote/movie_genre_modal.html',
-			genre : name
+			genre : genre[0]
 		});
 	}
 </script>

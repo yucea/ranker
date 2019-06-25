@@ -109,7 +109,7 @@ public class MovieController extends AppController {
 
 		try {
 			
-			Page<Movie> page = movieService.findByGenre(genre, super.getPageable(start, length, Sort.by(Direction.DESC, TID)));
+			Page<Movie> page = movieService.findByGenreLike(genre, super.getPageable(start, length, Sort.by(Direction.DESC, TID)));
 
 			result.put(DATA, page.getContent());
 			result.put(DRAW, draw);
