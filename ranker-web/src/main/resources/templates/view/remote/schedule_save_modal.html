@@ -10,6 +10,8 @@
 	.tdscore { width: 120px; }
 	.tdsource { width: 250px; }
 	.table-fixed { max-height: 250px; overflow-y: auto; }
+	input.error, textarea.error { border:1px dashed red; }
+	label.error{ display:block; color:red; }
 </style>
 
 <div class="modal-header">
@@ -34,26 +36,27 @@
 									<tr>
 										<td class="tlabel">ScheduleName</td>
 										<td class="tvalue" colspan="5">
-											<input type="hidden" id="id" name="id" />
-											<input type="text" id="scheduleName" name="scheduleName" style="width: 100%" />
+											<input type="hidden" id="id" name="id" value="0"/>
+											<input type="text" name="scheduleName" class="required" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">Week</td>
-										<td class="tvalue"><input type="text" id="week" name="week" style="width: 100%" /></td>
+										<td class="tvalue"><input type="text" id="week" name="week" class="required" style="width: 100%;" /></td>
 										<td class="tlabel">Month</td>
-										<td class="tvalue"><input type="text" id="month" name="month" style="width: 100%" /></td>
+										<td class="tvalue"><input type="text" id="month" name="month" class="required" style="width: 100%;" /></td>
 										<td class="tlabel">Day</td>
-										<td class="tvalue"><input type="text" id="day" name="day" style="width: 100%" /></td>
+										<td class="tvalue"><input type="text" id="day" name="day" class="required" style="width: 100%;" /></td>
 									</tr>	
 									<tr>
 										<td class="tlabel">Hour</td>
-										<td class="tvalue"><input type="text" id="hour" name="hour" style="width: 100%" /></td>
+										<td class="tvalue"><input type="text" id="hour" name="hour" class="required" style="width: 100%;" /></td>
 										<td class="tlabel">Minute</td>
-										<td class="tvalue"><input type="text" id="minute" name="minute" style="width: 100%" /></td>
+										<td class="tvalue"><input type="text" id="minute" name="minute" class="required" style="width: 100%;" /></td>
 										<td class="tlabel">Usable</td>
 										<td class="tvalue">
-											<select id="usable" name="usable" style="width: 100%" >
+											<select class="input-xs required" style="width: 100%;">
+												<option value="">Choose Usable</option>
 												<option value="true">True</option>
 												<option value="false">False</option>
 											</select>
@@ -79,85 +82,85 @@
 									<tr>
 										<td class="tlabel">MovieListUrl</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="movieListUrl" name="movieListUrl" style="width: 100%" />
+											<input type="text" id="movieListUrl" name="movieListUrl" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">MovieUrlAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="movieUrlAtrb" name="movieUrlAtrb" style="width: 100%" />
+											<input type="text" id="movieUrlAtrb" name="movieUrlAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">RemoveAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="removeAtrb" name="removeAtrb" style="width: 100%" />
+											<input type="text" id="removeAtrb" name="removeAtrb" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">MovieKey</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="movieKey" name="movieKey" style="width: 100%" />
+											<input type="text" id="movieKey" name="movieKey" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">TitleAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="titleAtrb" name="titleAtrb" style="width: 100%" />
+											<input type="text" id="titleAtrb" name="titleAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">OrgTitleAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="orgTitleAtrb" name="orgTitleAtrb" style="width: 100%" />
+											<input type="text" id="orgTitleAtrb" name="orgTitleAtrb" class="required"  style="width: 100%;" />
 										</td>	
 									</tr>
 									<tr>
 										<td class="tlabel">ScoreAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="scoreAtrb" name="scoreAtrb" style="width: 100%" />
+											<input type="text" id="scoreAtrb" name="scoreAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">RunTimeAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="runTimeAtrb" name="runTimeAtrb" style="width: 100%" />
+											<input type="text" id="runTimeAtrb" name="runTimeAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">GenreAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="genreAtrb" name="genreAtrb" style="width: 100%" />
+											<input type="text" id="genreAtrb" name="genreAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">NationAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="nationAtrb" name="nationAtrb" style="width: 100%" />
+											<input type="text" id="nationAtrb" name="nationAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">GradeAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="gradeAtrb" name="gradeAtrb" style="width: 100%" />
+											<input type="text" id="gradeAtrb" name="gradeAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">OpenDayAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="openDayAtrb" name="openDayAtrb" style="width: 100%" />
+											<input type="text" id="openDayAtrb" name="openDayAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">SynopsisAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="synopsisAtrb" name="synopsisAtrb" style="width: 100%" />
+											<input type="text" id="synopsisAtrb" name="synopsisAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">MakingNoteAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="makingNoteAtrb" name="makingNoteAtrb" style="width: 100%" />
+											<input type="text" id="makingNoteAtrb" name="makingNoteAtrb" class="required"  style="width: 100%;" />
 										</td>
 									</tr>
 								</tbody>
@@ -176,72 +179,72 @@
 					<div>
 						<div class="widget-body no-padding">
 							<div class="table-responsive table-fixed">
-								<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both">
+								<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both;">
 								<tbody>
 									<tr>
 										<td class="tlabel">PersonUrl</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="personUrl" name="personUrl" style="width: 100%" />
+											<input type="text" id="personUrl" name="personUrl" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">FilmoUrl</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="filmoUrl" name="filmoUrl" style="width: 100%" />
+											<input type="text" id="filmoUrl" name="filmoUrl" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">ActorAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="actorAtrb" name="actorAtrb" style="width: 100%" />
+											<input type="text" id="actorAtrb" name="actorAtrb" class="required" style="width: 100%;" />
 										</td>	
 									</tr>
 									<tr>
 										<td class="tlabel">RoleAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="roleAtrb" name="roleAtrb" style="width: 100%" />
+											<input type="text" id="roleAtrb" name="roleAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">DirectorAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="directorAtrb" name="directorAtrb" style="width: 100%" />
+											<input type="text" id="directorAtrb" name="directorAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">CrewNameAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="crewNameAtrb" name="crewNameAtrb" style="width: 100%" />
+											<input type="text" id="crewNameAtrb" name="crewNameAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">CrewProfileAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="crewProfileAtrb" name="crewProfileAtrb" style="width: 100%" />
+											<input type="text" id="crewProfileAtrb" name="crewProfileAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">CrewBirthdayAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="crewBirthdayAtrb" name="crewBirthdayAtrb" style="width: 100%" />
+											<input type="text" id="crewBirthdayAtrb" name="crewBirthdayAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">FilmoListAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="filmoListAtrb" name="filmoListAtrb" style="width: 100%" />
+											<input type="text" id="filmoListAtrb" name="filmoListAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">FilmoTitleAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="filmoTitleAtrb" name="filmoTitleAtrb" style="width: 100%" />
+											<input type="text" id="filmoTitleAtrb" name="filmoTitleAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 									<tr>
 										<td class="tlabel">FilmoYearAtrb</td>
 										<td class="tvalue" colspan="5">
-											<input type="text" id="filmoYearAtrb" name="filmoYearAtrb" style="width: 100%" />
+											<input type="text" id="filmoYearAtrb" name="filmoYearAtrb" class="required" style="width: 100%;" />
 										</td>
 									</tr>
 								</tbody>
@@ -262,7 +265,9 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		if("[[${params.id}]]" != null) {
+		$("#saveForm").validate();
+		
+		if("[[${params.id}]]" != 0) {
 			$.get("/rest/schedule/info/[[${params.id}]]").done(function(resp) { 
 			    if(resp.success) {
 			    	var data = resp.data;
@@ -315,20 +320,22 @@
 	});
 	
 	$("#save").click(function(){
-		if(confirm('Save?')) { 
-			$.post("/rest/schedule/save", $("#saveForm").serialize()).done(function(resp) {
-				if(resp.success) {
-					alert(resp.message);
-					location.reload();
-				} else {
-			    	alert(resp.message);
-			    }
-			});
-		}	
+		alert($('#saveForm').valid());
+		
+// 		if(confirm('Save?')) {
+// 			$.post("/rest/schedule/save", $("#saveForm").serialize()).done(function(resp) {
+// 				if(resp.success) {
+// 					alert(resp.message);
+// 					location.reload();
+// 				} else {
+// 			    	alert(resp.message);
+// 			    }
+// 			});
+// 		}	
 	});
 	
 	$("#close").click(function(){
-		if("[[${params.id}]]" != null) {
+		if("[[${params.id}]]" != 0) {
 			$('#schedule_modify_modal').modal('hide').find('.modal-content').empty();
 			$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/schedule_view_modal.html',
