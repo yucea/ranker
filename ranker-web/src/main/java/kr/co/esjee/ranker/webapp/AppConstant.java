@@ -41,6 +41,7 @@ public interface AppConstant {
 
 	String ID = "id";
 	String TID = "tid";
+	String PID = "pid";
 
 	long ES_START_ID = 10001;
 
@@ -54,9 +55,16 @@ public interface AppConstant {
 	String ARTICLE = "article";
 	String SCHEDULE = "schedule";
 	String DOC = "doc";
-
+	
 	String RECOMMEND_M2K = "mv_m2k";
 	String RECOMMEND_M2M = "mv_m2m";
 	String RECOMMEND_K2M = "mv_k2m";
+	
+	String MOVIE = "mv_basic_info";
+	String PERSON = "mv_person_info";
+	
+	enum INDICES {
+		schedule
+	}
 
 }

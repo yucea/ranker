@@ -1,3 +1,16 @@
+/*
+ * Copyright (C) SK telecom Co., Ltd. - All Rights Reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property
+ * of SK telecom Co., Ltd. (hereinafter referred to as "SK telecom")
+ * and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to SK telecom and its suppliers
+ * and may be covered by patents, patents in process, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior
+ * written permission is obtained from SK telecom.
+ */
+
 package kr.co.esjee.ranker.util;
 
 import java.text.ParseException;
