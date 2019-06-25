@@ -128,10 +128,10 @@
 		    	$('#orgTitle').text(data.orgTitle);
 		    	$('#nation').text(data.nation);
 		    	$('#grade').text(data.grade);
-		    	$('#actor').html($.common.person(data.actor, ',', 'goP2MPop'));
-		    	$('#director').html($.common.person(data.director, ',', 'goP2MPop'));
+		    	$('#actor').html($.common.link(data.actor, ',', 'goP2MPop'));
+		    	$('#director').html($.common.link(data.director, ',', 'goP2MPop'));
 		    	$('#score').text(data.score);
-		    	$('#genre').html($.common.person(data.genre, ',', 'goGenre'));
+		    	$('#genre').html($.common.link(data.genre, ',', 'goGenre'));
 		    	$('#openDay').text($.common.dateFormat(data.openDay));
 		    	$('#synopsis').text(data.synopsis);
 		    	$('#makingNote').text(data.makingNote);	
