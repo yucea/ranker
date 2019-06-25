@@ -7,6 +7,9 @@
 	.tvalue { min-width: 120px; max-width: 150px; }
 	.tdnum { width: 120px; }
 	.tdval { min-width: 120px; max-width: 150px; }
+	.tdscore { width: 120px; }
+	.tdsource { width: 250px; }
+	.table-fixed { max-height: 250px; overflow-y: auto; }
 </style>
 
 <div class="modal-header">
@@ -37,38 +40,20 @@
 									</tr>
 									<tr>
 										<td class="tlabel">Week</td>
-										<td class="tvalue" colspan="5">
-											<input type="text" id="week" name="week" style="width: 100%" />
-										</td>
-									</tr>
-									<tr>
+										<td class="tvalue"><input type="text" id="week" name="week" style="width: 100%" /></td>
 										<td class="tlabel">Month</td>
-										<td class="tvalue" colspan="5">
-											<input type="text" id="month" name="month" style="width: 100%" />
-										</td>
-									</tr>
-									<tr>
+										<td class="tvalue"><input type="text" id="month" name="month" style="width: 100%" /></td>
 										<td class="tlabel">Day</td>
-										<td class="tvalue" colspan="5">
-											<input type="text" id="day" name="day" style="width: 100%" />
-										</td>
-									</tr>
+										<td class="tvalue"><input type="text" id="day" name="day" style="width: 100%" /></td>
+									</tr>	
 									<tr>
 										<td class="tlabel">Hour</td>
-										<td class="tvalue" colspan="5">
-											<input type="text" id="hour" name="hour" style="width: 100%" />
-										</td>
-									</tr>
-									<tr>
+										<td class="tvalue"><input type="text" id="hour" name="hour" style="width: 100%" /></td>
 										<td class="tlabel">Minute</td>
-										<td class="tvalue" colspan="5">
-											<input type="text" id="minute" name="minute" style="width: 100%" />
-										</td>
-									</tr>
-									<tr>
+										<td class="tvalue"><input type="text" id="minute" name="minute" style="width: 100%" /></td>
 										<td class="tlabel">Usable</td>
-										<td class="tvalue" colspan="5">
-											<select id="usable" name="usable">
+										<td class="tvalue">
+											<select id="usable" name="usable" style="width: 100%" >
 												<option value="true">True</option>
 												<option value="false">False</option>
 											</select>
@@ -88,7 +73,7 @@
 								
 					<div>
 						<div class="widget-body no-padding">
-							<div class="table-responsive">
+							<div class="table-responsive table-fixed">
 								<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both">
 								<tbody>
 									<tr>
@@ -190,7 +175,7 @@
 								
 					<div>
 						<div class="widget-body no-padding">
-							<div class="table-responsive">
+							<div class="table-responsive table-fixed">
 								<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both">
 								<tbody>
 									<tr>
@@ -344,13 +329,11 @@
 	
 	$("#close").click(function(){
 		if("[[${params.id}]]" != null) {
-			setTimeout(function() { 
-				$('#schedule_modify_modal').find('.modal-content').empty();
-				$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
-					url : 'view/remote/schedule_view_modal.html',
-					id : "[[${params.id}]]"
-				});
-			}, 400);
+			$('#schedule_modify_modal').modal('hide').find('.modal-content').empty();
+			$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/schedule_view_modal.html',
+				id : "[[${params.id}]]"
+			});
 		}
 	});
 </script>

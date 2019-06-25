@@ -2,6 +2,7 @@ package kr.co.esjee.ranker.webapp.controller;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,13 @@ public class PersonController extends AppController {
 		
 		try {
 			
-			Page<Person> page = personService.findAll(super.getPageable(start, length, Sort.by(Direction.DESC, PID)));
+			Page<Person> page = null;
+			
+			if (StringUtils.isEmpty(searchKey)) {
+				page = personService.findAll(super.getPageable(start, length, Sort.by(Direction.DESC, PID)));		
+			} else {
+				page = personService.findByNameLike(searchKey, super.getPageable(start, length, Sort.by(Direction.DESC, PID)));
+			}		
 
 			result.put(DATA, page.getContent());
 			result.put(DRAW, draw);

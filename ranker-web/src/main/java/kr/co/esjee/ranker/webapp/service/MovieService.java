@@ -19,6 +19,10 @@ public class MovieService {
 	public Page<Movie> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
 	}
+	
+	public Page<Movie> findByTitleLike(String searchKey, Pageable pageable) {
+		return repository.findByTitleLike(searchKey, pageable);
+	}
 
 	public Movie findById(long id) {
 		Optional<Movie> optional = repository.findById(id);
@@ -27,6 +31,22 @@ public class MovieService {
 		} else {
 			throw new IllegalArgumentException("Item not found :" + id);
 		}
+	}
+	
+	public Movie findByTid(String tid) {
+		Movie movie = repository.findByTid(tid);
+		if(movie == null) {
+			throw new IllegalArgumentException("Item not found :" + tid);
+		}
+		return movie;
+	}
+	
+	public Movie findByMovieId(String movieId) {
+		Movie movie = repository.findByMovieId(movieId);
+		if(movie == null) {
+			throw new IllegalArgumentException("Item not found :" + movieId);
+		}
+		return movie;
 	}
 	
 }

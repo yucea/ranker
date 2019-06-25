@@ -7,6 +7,9 @@
 	.tvalue { min-width: 120px; max-width: 150px; }
 	.tdnum { width: 120px; }
 	.tdval { min-width: 120px; max-width: 150px; }
+	.tdscore { width: 120px; }
+	.tdsource { width: 250px; }
+	.table-fixed { max-height: 400px; overflow-y: auto; }
 </style>
 
 <div class="modal-header">
@@ -74,7 +77,7 @@
 							
 				<div>
 					<div class="widget-body no-padding">
-						<div class="table-responsive">
+						<div class="table-responsive table-fixed">
 							<table id="filmoTable" class="table table-bordered">
 								<thead>
 									<tr>
@@ -118,7 +121,7 @@
 		    		
 					html += '<tr>';
 					html += '<td class="tdnum">' + (Number(i) + 1) + '</td>';
-					html += '<td class="tdval">' + row.movieTitle + '</td>';
+					html += '<td><span class="link-keyword" onclick="javascript:goM2PPop(\'' + row.movieId + '\');">' + row.movieTitle + '</span></td>';
 					html += '<td class="tdval">' + row.movieYear + '</td>';
 					html += '<td class="tdval">' + row.movieDirector + '</td>';
 					html += '</tr>';
@@ -131,8 +134,18 @@
 		});
 	});
 	
-	function loadPage(id, tid) {
-		alert(id + ' : ' + tid);
+	goM2PPop = function(movieId) {
+		$.get('/rest/movie/infoByMovieId/' + movieId).done(function(resp) {
+			if(resp.success) {
+				$("#person_modal").modal("hide").find('.modal-content').empty();
+				$('#movie_modal').modal('show').find('.modal-content').load('/page', {
+					url : 'view/remote/movie_modal.html',
+					id : resp.data.id
+				});
+			} else {
+				alert(resp.message);
+			}
+		});
 	}
 </script>
 

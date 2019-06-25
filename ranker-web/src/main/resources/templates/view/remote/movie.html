@@ -81,7 +81,7 @@
 						'head' : { 'func' : $.common.capitalize },
 						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
 						'data' : {
-							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goMovie(_ID_, _TID_)' }
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goMoviePage(_ID_, _TID_)' }
 						}
 					},
 					{
@@ -116,7 +116,7 @@
 				]
 		});
 		 
-		goMovie = function(id, tid) {
+		goMoviePage = function(id, tid) {
 			$('#movie_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/movie_modal.html',
 				id : id,

@@ -7,6 +7,9 @@
 	.tvalue { min-width: 120px; max-width: 150px; }
 	.tdnum { width: 120px; }
 	.tdval { min-width: 120px; max-width: 150px; }
+	.tdscore { width: 120px; }
+	.tdsource { width: 250px; }
+	.table-fixed { max-height: 300px; overflow-y: auto; }
 </style>
 
 <div class="modal-header">
@@ -74,7 +77,7 @@
 							
 				<div>
 					<div class="widget-body no-padding">
-						<div class="table-responsive">
+						<div class="table-responsive table-fixed">
 							<table id="user" class="table table-bordered" style="clear: both">
 								<tbody>
 									<tr>
@@ -95,7 +98,7 @@
 				
 				<div>
 					<div class="widget-body no-padding">						
-						<div class="table-responsive">
+						<div class="table-responsive table-fixed">
 							<table id="user" class="table table-bordered" style="clear: both">
 								<tbody>
 									<tr>
@@ -125,10 +128,10 @@
 		    	$('#orgTitle').text(data.orgTitle);
 		    	$('#nation').text(data.nation);
 		    	$('#grade').text(data.grade);
-		    	$('#director').text(data.director);
-		    	$('#actor').text(data.actor);
+		    	$('#actor').html($.common.person(data.actor, ',', 'goP2MPop'));
+		    	$('#director').html($.common.person(data.director, ',', 'goP2MPop'));
 		    	$('#score').text(data.score);
-		    	$('#genre').text(data.genre);
+		    	$('#genre').html($.common.person(data.genre, ',', 'goGenre'));
 		    	$('#openDay').text($.common.dateFormat(data.openDay));
 		    	$('#synopsis').text(data.synopsis);
 		    	$('#makingNote').text(data.makingNote);	
@@ -138,8 +141,8 @@
 		});
 	});
 	
-	function loadPage(id, tid) {
-		alert(id + ' : ' + tid);
+	goP2MPop = function(name) {
+		alert(name);
 	}
 </script>
 

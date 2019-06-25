@@ -2,6 +2,7 @@ package kr.co.esjee.ranker.webapp.controller;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,13 @@ public class ScheduleController extends AppController {
 		
 		try {
 			
-			Page<Schedule> page = scheduleService.findAll(super.getPageable(start, length));
+			Page<Schedule> page = null;
+			
+			if (StringUtils.isEmpty(searchKey)) {
+				page = scheduleService.findAll(super.getPageable(start, length));		
+			} else {
+				page = scheduleService.findByScheduleNameLike(searchKey, super.getPageable(start, length));
+			}
 
 			result.put(DATA, page.getContent());
 			result.put(DRAW, draw);
