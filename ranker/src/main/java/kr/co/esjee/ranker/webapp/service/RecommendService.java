@@ -60,4 +60,14 @@ public class RecommendService {
 		k2m.refresh();
 	}
 
+	public void m2kDeleteAll() {
+		m2k.deleteAll();
+		m2k.refresh();
+	}
+
+	public void m2mDeleteAll() {
+		m2m.deleteAll();
+		m2m.refresh();
+	}
+
 }

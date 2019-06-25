@@ -29,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class M2KExecutor implements AppConstant {
 
 	public synchronized static int execute(RecommendService service, String indexName, String typeName, List<String> stopwords) throws Exception {
+		service.m2kDeleteAll();
+		
 		List<M2KNode> nodes = execute(service.getClient(), indexName, typeName, stopwords);
 
 		service.m2kSaveAll(nodes);
@@ -61,13 +63,13 @@ public class M2KExecutor implements AppConstant {
 			double maxScore = getMaxScore(terms, stopwords);
 
 			terms.forEach(t -> {
-				String word = t.getWord();
+				String word = t.getWord().toUpperCase();
 				if (stopwords.contains(word))
 					return;
 
 				double score = Math.round(t.getScore() / maxScore * NORMALIZING_SCORE * 100d) / 100d;
-//				if (score < 0.1)
-//					return;
+				// if (score < 0.1)
+				// return;
 
 				Keyword keyword = map.containsKey(word) ? map.get(word) : new Keyword(word, score);
 				keyword.putSource(t.getField(), score);
@@ -88,7 +90,7 @@ public class M2KExecutor implements AppConstant {
 
 	private static double getMaxScore(List<TermResult> list, List<String> stopwords) {
 		for (TermResult term : list) {
-			if (!stopwords.contains(term.getWord()))
+			if (!stopwords.contains(term.getWord().toUpperCase()))
 				return term.getScore();
 		}
 

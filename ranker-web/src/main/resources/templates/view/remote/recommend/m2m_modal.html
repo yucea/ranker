@@ -9,7 +9,7 @@
 	.tdnum { width: 120px; }
 	.tdval { min-width: 120px; }
 	.tdtitle { min-width: 200px; }
-	.tddirector { min-width: 100px; max-width: 102px; }
+	.tddirector { width: 30%; }
 	.table-fixed { max-height: 370px; overflow-y: auto; }
 </style>
 
@@ -112,10 +112,10 @@
 		    	var html = '';
 		    	
 		    	$('#title').text(info.title);
-		    	$('#director').text(info.director);
-		    	$('#actor').text(info.actor);
+		    	$('#director').html($.common.link(info.director, ',', 'goPerson'));
+		    	$('#actor').html($.common.link(info.actor, ',', 'goPerson'));
 		    	$('#starScore').text($.common.toFixed(info.starScore));
-		    	$('#genre').text(info.genre);
+		    	$('#genre').html($.common.link(info.genre, ','));
 		    	$('#openDay').text($.common.dateFormat(info.openDay));
 		    	
 		    	for(var i in list.scores) {
@@ -126,8 +126,8 @@
 		    		
 					html += '<tr>';
 					html += '<td>' + (Number(i) + 1) + '</td>';
-					html += '<td>' + row.title + '</td>';
-					html += '<td>' + row.director + '</td>';
+					html += '<td><span class="link-keyword" onclick="javascript:goM2KPop(\'' + row.id + '\');">' + row.title + '</span></td>';
+					html += '<td><span class="link-keyword" onclick="javascript:goPerson(\'' + row.director + '\');">' + row.director + '</span></td>';
 					html += '<td>' + $.common.toFixed(row.score) + '</td>';
 					html += '</tr>';
 		    	};
@@ -139,6 +139,13 @@
 		    }
 		});
 
+		goM2KPop = function(id) {
+			$('.modal-content').load('/page', {
+				url : 'view/remote/recommend/m2k_modal.html',
+				id : id
+			});
+		};
+		
 	});
 
 </script>

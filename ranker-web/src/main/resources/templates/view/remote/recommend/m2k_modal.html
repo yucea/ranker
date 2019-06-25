@@ -110,10 +110,10 @@
 		    	var html = '';
 		    	
 		    	$('#title').text(data.title);
-		    	$('#director').html($.common.person(data.director, ',', 'goPerson'));
-		    	$('#actor').html($.common.person(data.actor, ',', 'goPerson'));
+		    	$('#director').html($.common.link(data.director, ',', 'goPerson'));
+		    	$('#actor').html($.common.link(data.actor, ',', 'goPerson'));
 		    	$('#starScore').text($.common.toFixed(data.starScore));
-		    	$('#genre').text(data.genre);
+		    	$('#genre').text($.common.link(data.genre, ','));
 		    	$('#openDay').text($.common.dateFormat(data.openDay));
 		    	
 		    	for(var i in data.keywords) {

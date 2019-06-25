@@ -39,12 +39,12 @@
 		'toFixed' : function(v) {
 			return v.toFixed(2);
 		},
-		'person' : function(source, separator, action) {
+		'link' : function(source, separator, action) {
 			var html = '';
 			var arr = source.split(separator);
 			for(var i in arr) {
 				if(i > 0) html += ', '; 
-				html += '<span class="link-person" onclick="' + action + '(\'' + arr[i] + '\')">' + arr[i] + '</span>';
+				html += action == null ? arr[i] : '<span class="link-person" onclick="' + action + '(\'' + arr[i] + '\')">' + arr[i] + '</span>';
 			}
 
 			return html;

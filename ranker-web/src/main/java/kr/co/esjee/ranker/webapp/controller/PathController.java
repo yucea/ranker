@@ -24,6 +24,11 @@ public class PathController extends AppController {
 		return "redirect:view/index.html";
 	}
 
+	@RequestMapping("/index")
+	public String index() {
+		return "redirect:view/index.html";
+	}
+
 	@RequestMapping("/redirect}")
 	public String redirect(@RequestParam String url) {
 		return "redirect:" + url;
@@ -52,32 +57,6 @@ public class PathController extends AppController {
 			} else {
 				result.put(SUCCESS, false);
 				result.put(MESSAGE, "Item not found : " + key);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put(SUCCESS, false);
-			result.put(MESSAGE, e.getLocalizedMessage());
-		}
-
-		return result.toString();
-	}
-	
-	@RequestMapping(value = "/movie/{title}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public String movie(@PathVariable String title) {
-		JSONObject result = new JSONObject();
-
-		try {
-			ElasticOption option = ElasticOption.newInstance()
-					.queryBuilder(QueryBuilders.matchQuery(TITLE, title));
-			SearchHits search = ElasticSearcher.search(super.getClient(), RECOMMEND_M2K, option);
-
-			if (search.getTotalHits() > 0) {
-				result.put(SUCCESS, true);
-				result.put(ID, search.getHits()[0].getId());
-			} else {
-				result.put(SUCCESS, false);
-				result.put(MESSAGE, "Item not found : " + title);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

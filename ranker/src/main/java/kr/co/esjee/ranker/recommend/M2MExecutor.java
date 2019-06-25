@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 public class M2MExecutor implements AppConstant {
 
 	public synchronized static long execute(RecommendService service, int threadSize, int interval) throws Exception {
+		service.m2mDeleteAll();
+		
 		long start = System.currentTimeMillis();
 
 		List<M2KNode> nodes = service.findAllM2KNode();
