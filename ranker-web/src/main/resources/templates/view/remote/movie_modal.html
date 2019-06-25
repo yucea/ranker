@@ -69,7 +69,7 @@
 				</div>				
 			</div>
 
-    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-movie-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    		<div class="jarviswidget jarviswidget-color-blueDark simplmargin" id="wid-id-movie-synopsis-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
     			<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 					<h2>Synopsis</h2>
@@ -90,7 +90,7 @@
 				</div>				
     		</div>
     		
-    		<div class="jarviswidget jarviswidget-color-blueDark zeromargin" id="wid-id-movie-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
+    		<div class="jarviswidget jarviswidget-color-blueDark zeromargin" id="wid-id-movie-makingNote-head" data-widget-colorbutton="false" data-widget-editbutton="false">    		
     			<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 					<h2>Making Note</h2>
@@ -131,7 +131,7 @@
 		    	$('#actor').html($.common.link(data.actor, ',', 'goP2MPop'));
 		    	$('#director').html($.common.link(data.director, ',', 'goP2MPop'));
 		    	$('#score').text(data.score);
-		    	$('#genre').html($.common.link(data.genre, ',', 'goGenre'));
+		    	$('#genre').html($.common.link(data.genre, ',', 'goGenrePop'));
 		    	$('#openDay').text($.common.dateFormat(data.openDay));
 		    	$('#synopsis').text(data.synopsis);
 		    	$('#makingNote').text(data.makingNote);	
@@ -146,6 +146,14 @@
 		$('#person_list_modal').modal('show').find('.modal-content').load('/page', {
 			url : 'view/remote/person_list_modal.html',
 			name : name
+		});
+	}
+	
+	goGenrePop = function(name) {
+		$('#movie_modal').modal('hide').find('.modal-content').empty();
+		$('#movie_genre_modal').modal('show').find('.modal-content').load('/page', {
+			url : 'view/remote/movie_genre_modal.html',
+			genre : name
 		});
 	}
 </script>

@@ -106,7 +106,5 @@ public class PersonController extends AppController {
 
 		return result.toString();
 	}
-	
-	
 
 }

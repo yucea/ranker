@@ -49,4 +49,8 @@ public class MovieService {
 		return movie;
 	}
 	
+	public Page<Movie> findByGenre(String genre, Pageable pageable) {
+		return repository.findByGenre(genre, pageable);
+	}
+	
 }

@@ -96,5 +96,32 @@ public class MovieController extends AppController {
 
 		return result.toString();
 	}
+	
+	@RequestMapping(value = "/listByGenre/{genre}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String info(
+			@RequestParam int draw,
+			@RequestParam int start,
+			@RequestParam int length,
+			@PathVariable String genre, 
+			Model model) {
+		
+		JSONObject result = new JSONObject();
+
+		try {
+			
+			Page<Movie> page = movieService.findByGenre(genre, super.getPageable(start, length, Sort.by(Direction.DESC, TID)));
+
+			result.put(DATA, page.getContent());
+			result.put(DRAW, draw);
+			result.put(RECORDS_TOTAL, page.getTotalElements());
+			result.put(RECORDS_FILTERED, page.getTotalElements());
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put(SUCCESS, false);
+			result.put(MESSAGE, e.getLocalizedMessage());
+		}
+
+		return result.toString();
+	}
 
 }

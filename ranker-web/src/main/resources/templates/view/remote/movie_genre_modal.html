@@ -1,0 +1,139 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Genre List</h4>
+</div>
+
+<div class="modal-body">
+
+	<!-- widget grid -->
+	<section id="widget-grid" class="">
+	
+		<!-- row -->
+		<div class="row">
+	
+			<!-- NEW WIDGET START -->
+			<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	
+				<!-- Widget ID (each widget will need unique ID)-->
+				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-genre-modal"
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="false"
+					data-widget-sortable="false">
+	
+					<header>
+						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+						<h2 id="genreName"></h2>
+					</header>
+	
+					<!-- widget div-->
+					<div>
+	
+						<!-- widget content -->
+						<div id="dt_genre_modal_widget" class="widget-body no-padding">
+						</div>
+						<!-- end widget content -->
+	
+					</div>
+					<!-- end widget div -->
+	
+				</div>
+				<!-- end widget -->
+	
+			</article>
+			<!-- WIDGET END -->
+	
+		</div>
+	
+		<!-- end row -->
+	
+	</section>
+	<!-- end widget grid -->
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$("#genreName").text("[[${params.genre}]]");
+	});
+
+	pageSetUp();
+		
+	var pagefunction = function() {
+		$.datatable.display({
+			id : 'dt_genre_modal_widget',
+			url : '/rest/movie/listByGenre/[[${params.genre}]]',
+			columns : 
+				[
+					{
+						'name' : 'id',
+						'head' : { 'func' : $.common.upperCase }
+					}, 
+					{
+						'name' : 'tid',
+						'head' : { 'func' : $.common.upperCase }
+					}, 
+					{
+						'name' : 'title',
+						'head' : { 'func' : $.common.capitalize },
+						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
+						'data' : {
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goG2MPop(_ID_, _TID_)' }
+						}
+					},					
+					{
+						'name' : 'genre',
+						'head' : { 'func' : $.common.capitalize }
+					},					
+					{
+						'name' : 'director',
+						'head' : { 'func' : $.common.capitalize }
+					}, 
+					{
+						'name' : 'score',
+						'head' : { 'func' : $.common.capitalize }
+					}, 
+					{
+						'name' : 'openDay',
+						'head' : { 'func' : $.common.capitalize },
+						'data' : { 'func' : $.common.dateFormat }
+					}
+				],
+			search : false
+		});
+		
+		goG2MPop = function(id, tid) {
+			$('#movie_genre_modal').modal('hide').find('.modal-content').empty();
+			$('#movie_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/movie_modal.html',
+				id : id,
+				tid : tid
+			});
+		};
+	};
+
+	// load related plugins
+	loadScript("js/common.js", function(){
+		loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+					loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+						loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
+					});
+				});
+			});
+		});
+	});
+
+</script>
