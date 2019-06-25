@@ -29,7 +29,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-						<h2>Person List</h2>
+						<h2 id="personName"></h2>
 					</header>
 	
 					<!-- widget div-->
@@ -63,6 +63,10 @@
 </div>
 
 <script type="text/javascript">
+
+	$(document).ready(function() {
+		$("#personName").text("[[${params.name}]]");
+	});
 
 	pageSetUp();
 		
