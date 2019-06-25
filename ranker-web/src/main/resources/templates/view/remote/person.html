@@ -1,3 +1,5 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
 <!-- widget grid -->
 <section id="widget-grid" class="">
 
@@ -65,8 +67,8 @@
 
 	pageSetUp();
 		
-	var pagefunction = function() {		 
-		 $.datatable.display({
+	var pagefunction = function() {
+		$.datatable.display({
 			id : 'dt_person_widget',
 			url : '/rest/person/list',
 			columns : 
@@ -97,7 +99,7 @@
 					}
 				]
 		});
-		 
+		
 		goPersonPage = function(id, pid) {
 			$('#person_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/person_modal.html',

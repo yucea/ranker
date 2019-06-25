@@ -81,7 +81,7 @@
 						'head' : { 'func' : $.common.capitalize },
 						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
 						'data' : {
-							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goSchedule(_ID_)' }
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goSchedulePage(_ID_)' }
 						}
 					},
 					{
@@ -111,7 +111,7 @@
 				]
 		});
 		
-		goSchedule = function(id) {
+		goSchedulePage = function(id) {
 			$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/schedule_view_modal.html',
 				id : id

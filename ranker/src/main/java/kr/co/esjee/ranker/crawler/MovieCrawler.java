@@ -201,7 +201,13 @@ public class MovieCrawler implements AppConstant {
 		movie.setOpenDay(StringUtils.replace(StringUtils.replace(openDay, " ", ""), ".", ""));
 		
 		// Actors
-		movie.setActor(StringUtils.replace(crewInfoDoc.select(movieVO.getActorAtrb()).text(), " ", ","));
+		// Director
+		String actor = "";
+		for(Element actors : crewInfoDoc.select(movieVO.getActorAtrb())) {
+			actor += actors.text() + ",";
+		}
+		
+		movie.setActor(StringUtils.substring(actor, 0, actor.length() - 1));
 		
 		// Roles
 		String role = "";
