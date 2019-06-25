@@ -7,6 +7,9 @@
 	.tvalue { min-width: 120px; max-width: 150px; }
 	.tdnum { width: 120px; }
 	.tdval { min-width: 120px; max-width: 150px; }
+	.tdscore { width: 120px; }
+	.tdsource { width: 250px; }
+	.table-fixed { max-height: 250px; overflow-y: auto; }
 </style>
 
 <div class="modal-header">
@@ -33,27 +36,19 @@
 								</tr>
 								<tr>
 									<td class="tlabel">Week</td>
-									<td class="tvalue" colspan="5" id="week"></td>
-								</tr>
-								<tr>
+									<td class="tvalue" id="week"></td>
 									<td class="tlabel">Month</td>
-									<td class="tvalue" colspan="5" id="month"></td>
-								</tr>
-								<tr>
+									<td class="tvalue" id="month"></td>
 									<td class="tlabel">Day</td>
-									<td class="tvalue" colspan="5" id="day"></td>
+									<td class="tvalue" id="day"></td>
 								</tr>
 								<tr>
 									<td class="tlabel">Hour</td>
-									<td class="tvalue" colspan="5" id="hour"></td>
-								</tr>
-								<tr>
+									<td class="tvalue" id="hour"></td>
 									<td class="tlabel">Minute</td>
-									<td class="tvalue" colspan="5" id="minute"></td>
-								</tr>
-								<tr>
+									<td class="tvalue" id="minute"></td>
 									<td class="tlabel">Usable</td>
-									<td class="tvalue" colspan="5" id="usable"></td>
+									<td class="tvalue" id="usable"></td>
 								</tr>
 							</tbody>
 						</table>					
@@ -69,7 +64,7 @@
 							
 				<div>
 					<div class="widget-body no-padding">
-						<div class="table-responsive">
+						<div class="table-responsive table-fixed">
 							<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both">
 							<tbody>
 								<tr>
@@ -143,7 +138,7 @@
 							
 				<div>
 					<div class="widget-body no-padding">
-						<div class="table-responsive">
+						<div class="table-responsive table-fixed">
 							<table id="scheduleDetailInfo" class="table table-bordered" style="clear: both">
 							<tbody>
 								<tr>
@@ -201,7 +196,7 @@
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal" id="modify">Modify</button>
+	<button type="button" class="btn btn-default" id="modify">Modify</button>
 	<button type="button" class="btn btn-default" id="delete">Delete</button>
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 </div>
@@ -256,13 +251,12 @@
 	});
 	
 	$("#modify").click(function(){
-		setTimeout(function() { 
-			$('#schedule_view_modal').find('.modal-content').empty();
+			$('#schedule_view_modal').modal("hide").find('.modal-content').empty();
 			$('#schedule_modify_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/schedule_save_modal.html',
 				id : "[[${params.id}]]"
 			});
-		}, 400);
+		
 	});
 	
 	$("#delete").click(function(){

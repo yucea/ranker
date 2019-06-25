@@ -2,6 +2,7 @@ package kr.co.esjee.ranker.webapp.controller;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,13 @@ public class PersonController extends AppController {
 		
 		try {
 			
-			Page<Person> page = personService.findAll(super.getPageable(start, length, Sort.by(Direction.DESC, PID)));
+			Page<Person> page = null;
+			
+			if (StringUtils.isEmpty(searchKey)) {
+				page = personService.findAll(super.getPageable(start, length, Sort.by(Direction.DESC, PID)));		
+			} else {
+				page = personService.findByNameLike(searchKey, super.getPageable(start, length, Sort.by(Direction.DESC, PID)));
+			}		
 
 			result.put(DATA, page.getContent());
 			result.put(DRAW, draw);
@@ -72,5 +79,34 @@ public class PersonController extends AppController {
 
 		return result.toString();
 	}
+	
+	@RequestMapping(value = "/listByName/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String info(
+			@RequestParam int draw,
+			@RequestParam int start,
+			@RequestParam int length,
+			@PathVariable String name, 
+			Model model) {
+		
+		JSONObject result = new JSONObject();
+
+		try {
+			
+			Page<Person> page = personService.findByName(name, super.getPageable(start, length, Sort.by(Direction.DESC, PID)));
+
+			result.put(DATA, page.getContent());
+			result.put(DRAW, draw);
+			result.put(RECORDS_TOTAL, page.getTotalElements());
+			result.put(RECORDS_FILTERED, page.getTotalElements());
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put(SUCCESS, false);
+			result.put(MESSAGE, e.getLocalizedMessage());
+		}
+
+		return result.toString();
+	}
+	
+	
 
 }

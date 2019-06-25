@@ -19,6 +19,14 @@ public class PersonService {
 	public Page<Person> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
 	}
+	
+	public Page<Person> findByNameLike(String searchKey, Pageable pageable) {
+		return repository.findByNameLike(searchKey, pageable);
+	}
+	
+	public Page<Person> findByName(String searchKey, Pageable pageable) {
+		return repository.findByName(searchKey, pageable);
+	}
 
 	public Person findById(long id) {
 		Optional<Person> optional = repository.findById(id);

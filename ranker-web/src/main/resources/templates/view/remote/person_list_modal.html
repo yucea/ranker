@@ -1,0 +1,130 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Person List</h4>
+</div>
+
+<div class="modal-body">
+
+	<!-- widget grid -->
+	<section id="widget-grid" class="">
+	
+		<!-- row -->
+		<div class="row">
+	
+			<!-- NEW WIDGET START -->
+			<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	
+				<!-- Widget ID (each widget will need unique ID)-->
+				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-person-modal"
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="false"
+					data-widget-sortable="false">
+	
+					<header>
+						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+						<h2 id="personName"></h2>
+					</header>
+	
+					<!-- widget div-->
+					<div>
+	
+						<!-- widget content -->
+						<div id="dt_person_modal_widget" class="widget-body no-padding">
+						</div>
+						<!-- end widget content -->
+	
+					</div>
+					<!-- end widget div -->
+	
+				</div>
+				<!-- end widget -->
+	
+			</article>
+			<!-- WIDGET END -->
+	
+		</div>
+	
+		<!-- end row -->
+	
+	</section>
+	<!-- end widget grid -->
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$("#personName").text("[[${params.name}]]");
+	});
+
+	pageSetUp();
+		
+	var pagefunction = function() {
+		$.datatable.display({
+			id : 'dt_person_modal_widget',
+			url : '/rest/person/listByName/[[${params.name}]]',
+			columns : 
+				[		
+					{
+						'name' : 'id',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'pid',
+						'head' : { 'func' : $.common.upperCase }
+					},
+					{
+						'name' : 'name',
+						'head' : { 'func' : $.common.capitalize },
+						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
+						'data' : {
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goPersonPage(_ID_, _PID_)' }
+						}
+					},
+					{
+						'name' : 'job',
+						'head' : { 'func' : $.common.capitalize }
+					},
+					{
+						'name' : 'birthday',
+						'head' : { 'func' : $.common.capitalize }
+					}
+				],
+			search : false
+		});
+		
+		goPersonPage = function(id, pid) {
+			$('#person_list_modal').modal('hide').find('.modal-content').empty();
+			$('#person_modal').modal('show').find('.modal-content').load('/page', {
+				url : 'view/remote/person_modal.html',
+				id : id,
+				pid : pid
+			});
+		};
+	};
+
+	// load related plugins
+	loadScript("js/common.js", function(){
+		loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+					loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+						loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
+					});
+				});
+			});
+		});
+	});
+
+</script>

@@ -21,7 +21,6 @@
 				<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 					<h2>Movie List</h2>
-
 				</header>
 
 				<!-- widget div-->
@@ -56,6 +55,22 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="person_list_modal" tabindex="-1" role="dialog" aria-labelledby="personListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<!-- content body here... -->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="person_modal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<!-- content body here... -->
+        </div>
+    </div>
+</div>
 <!-- end Modal -->
 
 <script type="text/javascript">
@@ -81,7 +96,7 @@
 						'head' : { 'func' : $.common.capitalize },
 						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
 						'data' : {
-							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goMovie(_ID_, _TID_)' }
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goMoviePage(_ID_, _TID_)' }
 						}
 					},
 					{
@@ -116,7 +131,8 @@
 				]
 		});
 		 
-		goMovie = function(id, tid) {
+		goMoviePage = function(id, tid) {
+			$('#person_list_modal').modal('hide').find('.modal-content').empty();
 			$('#movie_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/movie_modal.html',
 				id : id,

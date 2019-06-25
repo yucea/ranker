@@ -17,13 +17,14 @@
 				data-widget-custombutton="false"
 				data-widget-collapsed="false"
 				data-widget-sortable="false">
+				
+				
 
 				<header>
 					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 					<h2>Schedule List</h2>
-
 				</header>
-
+				
 				<!-- widget div-->
 				<div>
 
@@ -36,11 +37,15 @@
 				<!-- end widget div -->
 
 			</div>
+			
+			<div style="text-align: right;">
+				<a class="btn btn-primary" href="javascript:void(0);" onclick="insFunction();">New Schedule</a>
+			</div>
 			<!-- end widget -->
 
 		</article>
 		<!-- WIDGET END -->
-
+		
 	</div>
 
 	<!-- end row -->
@@ -81,7 +86,7 @@
 						'head' : { 'func' : $.common.capitalize },
 						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
 						'data' : {
-							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goSchedule(_ID_)' }
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goSchedulePage(_ID_)' }
 						}
 					},
 					{
@@ -111,13 +116,20 @@
 				]
 		});
 		
-		goSchedule = function(id) {
+		goSchedulePage = function(id) {
 			$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/schedule_view_modal.html',
 				id : id
 			});
 		};
 	};
+	
+	var insFunction = function() {
+		$('#schedule_view_modal').modal('show').find('.modal-content').load('/page', {
+			url : 'view/remote/schedule_save_modal.html',
+			id : 0
+		});
+	}
 
 	// load related plugins
 	loadScript("js/common.js", function(){

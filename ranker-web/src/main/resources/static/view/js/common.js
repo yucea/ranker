@@ -71,11 +71,12 @@
 			var columns = option.columns;
 			var clazz = option.clazz;
 			var listNum = option.listNum;
+			var search = option.search == null ? true : option.search;
 			
 			if(option.lengthMenu) this.lengthMenu = option.lengthMenu;
 			
 			this.displayHead(widgetId, tableId, columns, clazz);
-			this.displayBody(url, tableId, columns, listNum);
+			this.displayBody(url, tableId, columns, listNum, search);
 		},
 		'displayHead' : function(widgetId, tableId, columns, clazz) {
 			var html = this.header(tableId, columns, clazz);
@@ -139,7 +140,7 @@
 
 			return data;
 		},
-		'displayBody' : function(url, tableId, columns, listNum) {
+		'displayBody' : function(url, tableId, columns, listNum, search) {
 			/* // DOM Position key index //
 			
 				l - Length changing (dropdown)
@@ -158,7 +159,7 @@
 			var self = this;
 
 			$('#' + tableId).dataTable({
-		        "searching" : true,		// Search Box will Be Disabled
+		        "searching" : search,		// Search Box will Be Disabled
 		        "ordering" : false,     // Ordering (Sorting on Each Column)will Be Disabled
 		        "info" : true,          // Will show "1 to n of n entries" Text at bottom
 		        "lengthChange" : this,	// Will Disabled Record number per page

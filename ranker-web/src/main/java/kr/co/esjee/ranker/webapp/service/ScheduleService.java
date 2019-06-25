@@ -19,6 +19,10 @@ public class ScheduleService extends AppService {
 	public Page<Schedule> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
 	}
+	
+	public Page<Schedule> findByScheduleNameLike(String searchKey, Pageable pageable) {
+		return repository.findByScheduleNameLike(searchKey, pageable);
+	}
 
 	public Schedule findById(long id) {
 		Optional<Schedule> optional = repository.findById(id);

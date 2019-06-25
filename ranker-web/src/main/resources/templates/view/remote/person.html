@@ -1,3 +1,5 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
 <!-- widget grid -->
 <section id="widget-grid" class="">
 
@@ -50,7 +52,20 @@
 <!-- Modal -->
 <div class="modal fade" id="person_modal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="movie_modal" tabindex="-1" role="dialog" aria-labelledby="movieModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="person_list_modal" tabindex="-1" role="dialog" aria-labelledby="personListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
+        	<!-- content body here... -->
         </div>
     </div>
 </div>
@@ -60,8 +75,8 @@
 
 	pageSetUp();
 		
-	var pagefunction = function() {		 
-		 $.datatable.display({
+	var pagefunction = function() {
+		$.datatable.display({
 			id : 'dt_person_widget',
 			url : '/rest/person/list',
 			columns : 
@@ -79,7 +94,7 @@
 						'head' : { 'func' : $.common.capitalize },
 						'body' : { 'style' : 'font-weight: bold; color: #15428c; cursor: pointer;' },
 						'data' : {
-							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goPerson(_ID_, _PID_)' }
+							'event' :  { 'name' : 'onClick', 'value' : 'javascript:goPersonPage(_ID_, _PID_)' }
 						}
 					},
 					{
@@ -92,8 +107,8 @@
 					}
 				]
 		});
-		 
-		goPerson = function(id, pid) {
+		
+		goPersonPage = function(id, pid) {
 			$('#person_modal').modal('show').find('.modal-content').load('/page', {
 				url : 'view/remote/person_modal.html',
 				id : id,
