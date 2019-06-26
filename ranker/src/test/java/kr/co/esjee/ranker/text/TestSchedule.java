@@ -85,7 +85,7 @@ public class TestSchedule extends TestElasticsearch {
  
 		Schedule schedule = new Schedule();
 		
-		schedule.setScheduleName("네이버 영화");
+		schedule.setScheduleName("네이버 영화2");
 		schedule.setWeek(week);
 		schedule.setMonth(month);
 		schedule.setDay(day);
