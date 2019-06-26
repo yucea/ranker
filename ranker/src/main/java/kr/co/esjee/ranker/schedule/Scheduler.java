@@ -2,6 +2,7 @@ package kr.co.esjee.ranker.schedule;
 
 import java.util.Calendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
@@ -27,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling
 @Slf4j
 public class Scheduler implements AppConstant {
+	
+	public static String scheduleIds = "";
 
 	@Autowired
 	private ElasticsearchTemplate template;
@@ -66,9 +69,28 @@ public class Scheduler implements AppConstant {
 			log.info("{}", hits.totalHits);
 
 			hits.forEach(h -> {
+				
+				boolean isProgress = false;
+				
 				MovieVO movieVO = new Gson().fromJson(new Gson().toJson(h.getSourceAsMap()), MovieVO.class);
-
-				this.callCrawler(movieVO);
+				
+				if(!scheduleIds.equals("")) {
+					String[] scheduleId = StringUtils.split(scheduleIds, "|");
+					
+					for(String s : scheduleId) {
+						if(movieVO.getId() == Long.parseLong(s)) {
+							isProgress = true;
+						}
+					}
+				}
+				
+				if(!isProgress) {
+					Scheduler.scheduleIds +=  movieVO.getId() + "|" ;
+					
+					if(callMovieCrawler(movieVO)) {
+						Scheduler.scheduleIds = StringUtils.replace(scheduleIds, String.valueOf(movieVO.getId()), "");
+					}
+				}
 
 				// if (rabbitTemplate == null) {
 				// this.callCrawler(schedule);
@@ -90,9 +112,10 @@ public class Scheduler implements AppConstant {
 		}
 	}
 
-	private void callCrawler(MovieVO movieVO) {
-		log.info("Call Crawler : {}", movieVO);
+	private boolean callMovieCrawler(MovieVO movieVO) {
+		log.info("Call MovieCrawler = {}", movieVO);
 		movieCrawlerService.execute(movieVO);
+		return true;
 	}
 
 	// private void sendMessage(String message) {
