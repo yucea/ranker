@@ -1,17 +1,30 @@
 package kr.co.esjee.ranker.crawler;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHits;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.google.gson.Gson;
+
+import kr.co.esjee.ranker.elasticsearch.ElasticOption;
+import kr.co.esjee.ranker.elasticsearch.ElasticQuery;
+import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
+import kr.co.esjee.ranker.util.CalendarUtil;
+import kr.co.esjee.ranker.webapp.AppConstant;
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
+import kr.co.esjee.ranker.webapp.service.MovieCrawlerService;
 import kr.co.esjee.ranker.webapp.service.MovieService;
 import kr.co.esjee.ranker.webapp.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class TestMovieCrawler {
+public class TestMovieCrawler implements AppConstant {
 	
 	private static final int DELAY_TIME = 5000;
 	
@@ -31,6 +44,12 @@ public class TestMovieCrawler {
 	
 	@Autowired
 	private MovieCrawler movieCrawler;
+	
+	@Autowired
+	private ElasticsearchTemplate template;
+	
+	@Autowired
+	private MovieCrawlerService movieCrawlerService;
 
 	@Test
 	public void testCrawler(){
@@ -212,4 +231,43 @@ public class TestMovieCrawler {
 			log.error("Crawler URL is Empty");
 		}
 	}
+	
+	@Test
+	public void testSchedule() {
+		log.info("Schedule time: {}", CalendarUtil.getCurrentDateTime());
+		
+		try {
+			Calendar calendar = CalendarUtil.getToday();
+
+			BoolQueryBuilder query = QueryBuilders.boolQuery();
+			query.must(ElasticQuery.termsQuery(FINISH, false));
+			query.must(ElasticQuery.termsQuery(USABLE, true));
+			query.must(ElasticQuery.termsQuery(WEEK, 0, calendar.get(Calendar.DAY_OF_WEEK)));
+			query.must(ElasticQuery.termsQuery(MONTH, 0, calendar.get(Calendar.MONTH) + 1));
+			query.must(ElasticQuery.termsQuery(DAY, 0, calendar.get(Calendar.DATE)));
+			query.must(ElasticQuery.termsQuery(HOUR, 24, calendar.get(Calendar.HOUR)));
+			query.must(ElasticQuery.termsQuery(MINUTE, 60, calendar.get(Calendar.MINUTE)));
+
+			ElasticOption option = ElasticOption.newInstance()
+					.queryBuilder(query)
+					.page(1, 10000);
+
+			SearchHits hits = ElasticSearcher.search(template.getClient(), SCHEDULE, option);
+
+			log.info("{}", hits.totalHits);
+
+			hits.forEach(h -> {
+				MovieVO movieVO = new Gson().fromJson(new Gson().toJson(h.getSourceAsMap()), MovieVO.class);
+				this.callCrawler(movieVO);
+			});
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+		}		
+	}
+	
+	private void callCrawler(MovieVO movieVO) {
+		log.info("call crawler : {}", movieVO);
+		movieCrawlerService.execute(movieVO);
+	}
+	
 }

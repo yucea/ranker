@@ -20,7 +20,7 @@ public class MovieVO implements AppConstant {
 	
 	private String movieDirAtrb = "";
 
-	private String movieDirPage = "";
+	private String movieDirPage = "page";
 	
 	private Integer startYear = null;
 	
