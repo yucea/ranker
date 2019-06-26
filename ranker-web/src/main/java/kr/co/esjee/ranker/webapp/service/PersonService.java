@@ -37,7 +37,7 @@ public class PersonService {
 		if (optional.isPresent()) {
 			return optional.get();
 		} else {
-			throw new IllegalArgumentException("Item not found :" + id);
+			throw new IllegalArgumentException("Person not found : " + id);
 		}
 	}
 	

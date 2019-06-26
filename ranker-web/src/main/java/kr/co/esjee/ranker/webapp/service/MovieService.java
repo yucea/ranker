@@ -29,14 +29,14 @@ public class MovieService {
 		if (optional.isPresent()) {
 			return optional.get();
 		} else {
-			throw new IllegalArgumentException("Item not found :" + id);
+			throw new IllegalArgumentException("Movie is not found : " + id);
 		}
 	}
 	
 	public Movie findByTid(String tid) {
 		Movie movie = repository.findByTid(tid);
 		if(movie == null) {
-			throw new IllegalArgumentException("Item not found :" + tid);
+			throw new IllegalArgumentException("Movie is not found : " + tid);
 		}
 		return movie;
 	}
@@ -44,7 +44,7 @@ public class MovieService {
 	public Movie findByMovieId(String movieId) {
 		Movie movie = repository.findByMovieId(movieId);
 		if(movie == null) {
-			throw new IllegalArgumentException("Item not found :" + movieId);
+			throw new IllegalArgumentException("Movie is not found : " + movieId);
 		}
 		return movie;
 	}
