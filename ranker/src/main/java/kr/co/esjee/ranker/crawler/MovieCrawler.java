@@ -193,12 +193,12 @@ public class MovieCrawler implements AppConstant {
 		movie.setGrade((movieVO.getGradeAtrb().length > 1) ?
 				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGradeAtrb()[0], movieVO.getGradeAtrb()[1]).text() :
 					basicInfoDoc.select(movieVO.getGradeAtrb()[0]).text());
-				
-		// OpenDay
+			
 		String openDay = (movieVO.getOpenDayAtrb().length > 1) ?
 				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).text() :
-					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).text();				
-		movie.setOpenDay(StringUtils.replace(StringUtils.replace(openDay, " ", ""), ".", ""));
+					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).text();	
+		openDay = StringUtils.replace(StringUtils.replace(StringUtils.replace(openDay, " .", "."), " ", ","), ".", "");
+		movie.setOpenDay(StringUtils.split(openDay, ",")[0]);
 		
 		// Actors
 		// Director

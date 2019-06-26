@@ -20,7 +20,7 @@ public class Schedule implements AppConstant {
 	private long id;
 	
 	@Field(type = FieldType.Text)
-	private String scheduleName = "";
+	private String scheduleName;
 	
 	/* Directory Movie List */
 	@Field(type = FieldType.Text)
@@ -40,84 +40,84 @@ public class Schedule implements AppConstant {
 	
 	/* Movie */
 	@Field(type = FieldType.Text)
-	private String movieListUrl = "";
+	private String movieListUrl = "https://movie.naver.com/movie/running/current.nhn";
 	
 	@Field(type = FieldType.Text)
-	private String movieUrlAtrb = "";
+	private String movieUrlAtrb = "ul.lst_detail_t1 li dl a";
 	
 	@Field(type = FieldType.Text)
 	private String movieUrl = "";
 	
 	@Field(type = FieldType.Text)
-	private String personUrl = "";	
+	private String personUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
 		
 	@Field(type = FieldType.Text)
-	private String filmoUrl = "";
+	private String filmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?year=0&totalCount=1000&page=1000&peopleCode=";
 	
 	@Field(type = FieldType.Text)
-	private String removeAtrb = "";
+	private String removeAtrb = "div.wide_info_area";
 	
 	@Field(type = FieldType.Text)
-	private String movieKey = "";
+	private String movieKey = "code";
 	
 	@Field(type = FieldType.Text)
-	private String titleAtrb = "";
+	private String titleAtrb = "h3.h_movie a";
 	
 	@Field(type = FieldType.Text)
-	private String orgTitleAtrb = "";
+	private String orgTitleAtrb = "strong.h_movie2";
 	
 	@Field(type = FieldType.Text)
-	private String scoreAtrb = "";
+	private String scoreAtrb = "a#pointNetizenPersentBasic em";
 	
 	@Field(type = FieldType.Text)
-	private String runTimeAtrb = "";
+	private String runTimeAtrb = "dl.info_spec span";
 	
 	@Field(type = FieldType.Text)
-	private String[] genreAtrb;
+	private String[] genreAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?genre="};
 	
 	@Field(type = FieldType.Text)
-	private String[] nationAtrb;
+	private String[] nationAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?nation="};
 	
 	@Field(type = FieldType.Text)
-	private String[] gradeAtrb;
+	private String[] gradeAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?grade="};
 	
 	@Field(type = FieldType.Text)
-	private String[] openDayAtrb;
+	private String[] openDayAtrb = {"href", "/movie/sdb/browsing/bmovie.nhn?open="};
 	
 	@Field(type = FieldType.Text)
-	private String synopsisAtrb = "";
+	private String synopsisAtrb = "div.story_area";
 	
 	@Field(type = FieldType.Text)
-	private String makingNoteAtrb = "";
+	private String makingNoteAtrb = "div.making_note p.con_tx";
 	
 	
 	/* Person */
 	@Field(type = FieldType.Text)
-	private String actorAtrb = "";
+	private String actorAtrb = "ul.lst_people li div.p_info a.k_name";
 	
 	@Field(type = FieldType.Text)
-	private String roleAtrb = "";
+	private String roleAtrb = "ul.lst_people li div.p_info div.part p.pe_cmt span";
 	
 	@Field(type = FieldType.Text)
-	private String directorAtrb = "";	
+	private String directorAtrb = "div.dir_product a.k_name";	
 	
 	@Field(type = FieldType.Text)
-	private String crewNameAtrb = "";
+	private String crewNameAtrb = "h3.h_movie a";
 	
 	@Field(type = FieldType.Text)
-	private String crewProfileAtrb = "";
+	private String crewProfileAtrb = "div.con_tx";
 	
 	@Field(type = FieldType.Text)
-	private String crewBirthdayAtrb = "";
+	private String crewBirthdayAtrb = "dl.info_spec dd";
 		
 	@Field(type = FieldType.Text)
-	private String filmoListAtrb = "";
+	private String filmoListAtrb = "div.pilmo_info";
 	
 	@Field(type = FieldType.Text)
-	private String filmoTitleAtrb = "";
+	private String filmoTitleAtrb = "strong.pilmo_tit a";
 	
 	@Field(type = FieldType.Text)
-	private String filmoYearAtrb = "";
+	private String filmoYearAtrb = "p.pilmo_genre a";
 	
 	/** Schedule */
 	@Field(type = FieldType.Integer)
