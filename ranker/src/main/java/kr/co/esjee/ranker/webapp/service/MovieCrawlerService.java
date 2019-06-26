@@ -130,6 +130,7 @@ public class MovieCrawlerService {
 		List<Map<String, Object>> movieDirectList = 
 				movieCrawler.getMovieDirectList(movieVO.getMovieDirUrl(), movieVO.getMovieDirAtrb(), movieVO.getStartYear(), movieVO.getEndYear());
 		
+		// Movie Directory Crawler
 		if(!movieDirectList.isEmpty()) {
 			
 			log.info("[ Find Year Count = {} ]", movieDirectList.size());
@@ -170,7 +171,7 @@ public class MovieCrawlerService {
 									personService.merge(person);
 								}
 								
-								log.info("[ {} Year ] Movie Crawling Success = {}/{}", mvDirMap.get("progress"), count, urlList.size());						
+								log.info("[ {} Year ] Movie Crawling Success = {}/{}", mvDirMap.get("progress"), count, urlList.size());
 							} catch (Exception e) {
 								log.error("[ {} Year ] Movie Crawling Failed = {}/{}", mvDirMap.get("progress"), count, urlList.size());
 							}
@@ -187,7 +188,7 @@ public class MovieCrawlerService {
 						}
 					}
 				} else {
-					log.info("URL is Empty");
+					log.error("Movie List URL is Empty");
 				}
 				
 				log.info("[ {} Year ] Crawling Success = {}/{}", mvDirMap.get("progress"), yearCount, movieDirectList.size());
@@ -200,7 +201,10 @@ public class MovieCrawlerService {
 					log.error("Sleep Error = {}", e.getLocalizedMessage());
 				}
 			}
-		} else if (movieDirectList.isEmpty() && !movieVO.getMovieListUrl().isEmpty()) {
+		} 
+		
+		// Movie List Crawler
+		else if (movieDirectList.isEmpty() && !movieVO.getMovieListUrl().isEmpty()) {
 			
 			List<String> urlList = movieCrawler.getMovieUrlList(movieVO);
 			
@@ -246,10 +250,38 @@ public class MovieCrawlerService {
 					}
 				}
 			} else {
-				log.info("URL is Empty");
+				log.error("Movie List URL is Empty");
 			}
+		} 
+		
+		// Movie Crawler
+		else if (movieDirectList.isEmpty() && movieVO.getMovieListUrl().isEmpty() && !movieVO.getMovieUrl().isEmpty()) {
+			
+			log.info("Movie Crawling Start");
+			
+			MovieInfo movieInfo = movieCrawler.execute(movieVO);
+			
+			if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
+				
+				try {
+					// Movie Info
+					movieService.merge(movieInfo.getMovieInfo());
+					
+					// Person Info
+					for (Person person : movieInfo.getPersonInfo()) {
+						personService.merge(person);
+					}
+					
+					log.info("Movie Crawling Success");
+				} catch (Exception e) {
+					log.error("Movie Crawling Failed");
+				}
+			} else {
+				log.error("Movie Crawling Failed");
+			}
+			
 		} else {
-			log.info("URL is Empty");
+			log.error("Crawler URL is Empty");
 		}
 	}
 }

@@ -421,6 +421,7 @@ public class MovieCrawler implements AppConstant {
 			Document doc = movieCrawler.jsoupConnect(movieDirUrl);
 			
 			if(doc != null) {
+				
 				for(Element element : doc.select(movieDirAtrb)) {
 					
 					Map<String, Object> urlMap = new HashMap<String, Object>();

@@ -20,6 +20,10 @@ public class PersonService {
 		return repository.findAll(pageable);
 	}
 	
+	public Page<Person> findAllPerson(Pageable pageable) {
+		return repository.findAll(pageable);
+	}
+	
 	public Page<Person> findByNameLike(String searchKey, Pageable pageable) {
 		return repository.findByNameLike(searchKey, pageable);
 	}

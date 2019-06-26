@@ -15,29 +15,31 @@ public class MovieVO implements AppConstant {
 	@Id
 	private long id;
 	
-	/* Directory Movie List */
+	// Directory Movie List
 	private String movieDirUrl = "";
 	
 	private String movieDirAtrb = "";
 
 	private String movieDirPage = "";
 	
-	private Integer startYear;
+	private Integer startYear = null;
 	
-	private Integer endYear;
+	private Integer endYear = null;
 	
 	
-	/* Movie */
-	private String movieListUrl = "https://movie.naver.com/movie/running/current.nhn";
+	// Movie List
+	// private String movieListUrl = "https://movie.naver.com/movie/running/current.nhn";
+	private String movieListUrl = "";
 	
-	private String movieUrlAtrb = "ul.lst_detail_t1 li dl a"; 
+	// private String movieUrlAtrb = "ul.lst_detail_t1 li dl a";
+	private String movieUrlAtrb = "";
 	
-	private String movieUrl = "";
 	
-	private String personUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
+	// Movie
+	private String movieUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=99829";
 	
-	private String filmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?year=0&totalCount=1000&page=1000&peopleCode=";
 	
+	// Movie Info
 	private String removeAtrb = "div.wide_info_area";
 	
 	private String movieKey = "code";
@@ -63,7 +65,11 @@ public class MovieVO implements AppConstant {
 	private String makingNoteAtrb = "div.making_note p.con_tx";
 	
 	
-	/* Person */
+	// Person
+	private String personUrl = "https://movie.naver.com/movie/bi/mi/detail.nhn";	
+	
+	private String filmoUrl = "https://movie.naver.com/movie/bi/pi/filmoMission.nhn?year=0&totalCount=1000&page=1000&peopleCode=";
+	
 	private String actorAtrb = "ul.lst_people li div.p_info a.k_name";
 	
 	private String roleAtrb = "ul.lst_people li div.p_info div.part p.pe_cmt span";

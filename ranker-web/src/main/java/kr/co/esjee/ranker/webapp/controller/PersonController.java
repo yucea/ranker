@@ -43,7 +43,7 @@ public class PersonController extends AppController {
 			Page<Person> page = null;
 			
 			if (StringUtils.isEmpty(searchKey)) {
-				page = personService.findAll(super.getPageable(start, length, Sort.by(Direction.DESC, PID)));		
+				page = personService.findAllPerson(super.getPageable(start, length));		
 			} else {
 				page = personService.findByNameLike(searchKey, super.getPageable(start, length, Sort.by(Direction.DESC, PID)));
 			}		
