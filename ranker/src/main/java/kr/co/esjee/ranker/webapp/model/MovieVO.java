@@ -32,11 +32,12 @@ public class MovieVO implements AppConstant {
 	private String movieListUrl = "";
 	
 	// private String movieUrlAtrb = "ul.lst_detail_t1 li dl a";
-	private String movieUrlAtrb = "";
+	private String movieUrlAtrb = "ul.directory_list li a";
 	
 	
 	// Movie
-	private String movieUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=99829";
+	// private String movieUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=99829";
+	private String movieUrl = "";
 	
 	
 	// Movie Info

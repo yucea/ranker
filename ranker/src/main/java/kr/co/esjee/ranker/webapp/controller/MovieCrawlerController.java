@@ -48,8 +48,8 @@ public class MovieCrawlerController implements AppConstant {
 	public String mvExecute(HttpServletRequest request,
 			@RequestParam String url,
 			@RequestParam String attribute,
-			@RequestParam int startYear, 
-			@RequestParam int endYear) {
+			@RequestParam Integer startYear, 
+			@RequestParam Integer endYear) {
 				
 		JSONObject returnObj = new JSONObject();
 		

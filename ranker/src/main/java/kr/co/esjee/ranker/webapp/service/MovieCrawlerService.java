@@ -35,7 +35,7 @@ public class MovieCrawlerService {
 	 * @param startYear
 	 * @param endYear
 	 */
-	public void execute(String baseUrl, String attribute, int startYear, int endYear) {
+	public void execute(String baseUrl, String attribute, Integer startYear, Integer endYear) {
 		
 		MovieVO movieVO = new MovieVO();
 		
