@@ -1,8 +1,8 @@
 package kr.co.esjee.ranker.schedule;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Scheduler implements AppConstant {
 	
-	public static String scheduleIds = "";
+	public static ArrayList<Long> scheduleIds = new ArrayList<Long>();
 
 	@Autowired
 	private ElasticsearchTemplate template;
@@ -74,18 +74,16 @@ public class Scheduler implements AppConstant {
 				
 				MovieVO movieVO = new Gson().fromJson(new Gson().toJson(h.getSourceAsMap()), MovieVO.class);
 				
-				if(!scheduleIds.equals("")) {
-					String[] scheduleId = StringUtils.split(scheduleIds, "|");
-					
-					for(String s : scheduleId) {
-						if(movieVO.getId() == Long.parseLong(s)) {
+				if(scheduleIds.size() > 0) {
+					for(Long id : scheduleIds) {
+						if(movieVO.getId() == id) {
 							isProgress = true;
 						}
 					}
 				}
 				
 				if(!isProgress) {
-					Scheduler.scheduleIds +=  movieVO.getId() + "|" ;
+					scheduleIds.add(movieVO.getId());
 					callMovieCrawler(movieVO);
 				}
 

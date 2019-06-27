@@ -3,7 +3,6 @@ package kr.co.esjee.ranker.webapp.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -145,7 +144,6 @@ public class MovieCrawlerService {
 					
 				log.info("[ {} Year ] Crawling Start = {}/{}", mvDirMap.get("progress"), yearCount, movieDirectList.size());
 				
-				// URL Setting
 				movieVO.setMovieListUrl(mvDirMap.get("url").toString());
 				
 				List<String> urlList = movieCrawler.getMovieUrlList(movieVO);
@@ -167,10 +165,8 @@ public class MovieCrawlerService {
 						if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
 							
 							try {
-								// Movie Info
 								movieService.merge(movieInfo.getMovieInfo());
 								
-								// Person Info
 								for (Person person : movieInfo.getPersonInfo()) {
 									personService.merge(person);
 								}
@@ -229,10 +225,8 @@ public class MovieCrawlerService {
 					if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
 						
 						try {
-							// Movie Info
 							movieService.merge(movieInfo.getMovieInfo());
 							
-							// Person Info
 							for (Person person : movieInfo.getPersonInfo()) {
 								personService.merge(person);
 							}
@@ -245,7 +239,7 @@ public class MovieCrawlerService {
 						log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
 					}
 					
-					count++;
+					count++;					
 					
 					try {
 						Thread.sleep(DELAY_TIME);
@@ -268,10 +262,8 @@ public class MovieCrawlerService {
 			if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
 				
 				try {
-					// Movie Info
 					movieService.merge(movieInfo.getMovieInfo());
 					
-					// Person Info
 					for (Person person : movieInfo.getPersonInfo()) {
 						personService.merge(person);
 					}
@@ -288,6 +280,6 @@ public class MovieCrawlerService {
 			log.error("Crawler URL is Empty");
 		}
 		
-		Scheduler.scheduleIds = StringUtils.replace(Scheduler.scheduleIds, String.valueOf(movieVO.getId()), "");
+		Scheduler.scheduleIds.remove(movieVO.getId());
 	}
 }
