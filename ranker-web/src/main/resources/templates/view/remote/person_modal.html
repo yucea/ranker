@@ -123,7 +123,7 @@
 					html += '<td class="tdnum">' + (Number(i) + 1) + '</td>';
 					html += '<td><span class="link-keyword" onclick="javascript:goM2PPop(\'' + row.movieId + '\');">' + row.movieTitle + '</span></td>';
 					html += '<td class="tdval">' + row.movieYear + '</td>';
-					html += '<td class="tdval">' + row.movieDirector + '</td>';
+					html += '<td>'+$.common.link(row.movieDirector, ',', 'goP2PPop')+'</td>';
 					html += '</tr>';
 		    	};
 		    	
@@ -145,6 +145,14 @@
 			} else {
 				alert(resp.message);
 			}
+		});
+	}
+	
+	goP2PPop = function(name) {
+		$('#person_modal').modal('hide').find('.modal-content').empty();
+		$('#person_list_modal').modal('show').find('.modal-content').load('/page', {
+			url : 'view/remote/person_list_modal.html',
+			name : name
 		});
 	}
 </script>
