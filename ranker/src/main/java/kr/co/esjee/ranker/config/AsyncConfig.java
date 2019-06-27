@@ -11,13 +11,13 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 public class AsyncConfig {
 	
-	@Bean(name = "CrawlerExecutor")
-    public Executor fooExecutor() {
+	@Bean(name = "scheduleExecutor")
+    public Executor scheduleExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(5);
         taskExecutor.setMaxPoolSize(10);
         taskExecutor.setQueueCapacity(30);
-        taskExecutor.setThreadNamePrefix("CrawlerExecutor-");
+        taskExecutor.setThreadNamePrefix("scheduleExecutor-");
         taskExecutor.initialize();
         return taskExecutor;
     }

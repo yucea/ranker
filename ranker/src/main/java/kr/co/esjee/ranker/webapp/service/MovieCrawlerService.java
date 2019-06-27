@@ -128,7 +128,7 @@ public class MovieCrawlerService {
 	 * @param endYear
 	 * @param movieVO
 	 */
-	@Async("CrawlerExecutor")
+	@Async("scheduleExecutor")
 	public void execute(MovieVO movieVO) {
 		
 		List<Map<String, Object>> movieDirectList = 
