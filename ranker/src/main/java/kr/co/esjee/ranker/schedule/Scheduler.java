@@ -86,10 +86,7 @@ public class Scheduler implements AppConstant {
 				
 				if(!isProgress) {
 					Scheduler.scheduleIds +=  movieVO.getId() + "|" ;
-					
-					if(callMovieCrawler(movieVO)) {
-						Scheduler.scheduleIds = StringUtils.replace(scheduleIds, String.valueOf(movieVO.getId()), "");
-					}
+					callMovieCrawler(movieVO);
 				}
 
 				// if (rabbitTemplate == null) {
@@ -112,10 +109,9 @@ public class Scheduler implements AppConstant {
 		}
 	}
 
-	private boolean callMovieCrawler(MovieVO movieVO) {
+	private void callMovieCrawler(MovieVO movieVO) {
 		log.info("Call MovieCrawler = {}", movieVO);
 		movieCrawlerService.execute(movieVO);
-		return true;
 	}
 
 	// private void sendMessage(String message) {

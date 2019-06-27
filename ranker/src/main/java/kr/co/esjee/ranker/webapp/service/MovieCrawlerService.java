@@ -3,10 +3,13 @@ package kr.co.esjee.ranker.webapp.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import kr.co.esjee.ranker.crawler.MovieCrawler;
+import kr.co.esjee.ranker.schedule.Scheduler;
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
@@ -125,6 +128,7 @@ public class MovieCrawlerService {
 	 * @param endYear
 	 * @param movieVO
 	 */
+	@Async("CrawlerExecutor")
 	public void execute(MovieVO movieVO) {
 		
 		List<Map<String, Object>> movieDirectList = 
@@ -283,5 +287,7 @@ public class MovieCrawlerService {
 		} else {
 			log.error("Crawler URL is Empty");
 		}
+		
+		Scheduler.scheduleIds = StringUtils.replace(Scheduler.scheduleIds, String.valueOf(movieVO.getId()), "");
 	}
 }
