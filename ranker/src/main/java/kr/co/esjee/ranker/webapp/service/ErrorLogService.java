@@ -15,6 +15,10 @@ public class ErrorLogService extends AppService {
 
 	@Autowired
 	private ErrorLogRepository repository;
+	
+	public Iterable<ErrorLog> findAll() {
+		return repository.findAll();
+	}
 
 	public Page<ErrorLog> findAll(Pageable pageable) {
 		return repository.findAll(pageable);

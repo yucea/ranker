@@ -66,5 +66,32 @@ public class MovieCrawlerController implements AppConstant {
 		}
 		
         return returnObj.toString();		
-	}	
+	}
+	
+	@ApiOperation(value = "mvErrorExecute")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query", defaultValue = "https://movie.naver.com/movie/bi/mi/basic.nhn?code="),
+		@ApiImplicitParam(name = "startDate", value = "시작일자", required = false, dataType = "string", paramType = "query"),
+		@ApiImplicitParam(name = "endDate", value = "종료일자", required = false, dataType = "string", paramType = "query")
+		})
+	@RequestMapping(value = "/errorExecute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String errorExecute(HttpServletRequest request, @RequestParam String url, @RequestParam String startDate, @RequestParam String endDate) {
+		
+		JSONObject returnObj = new JSONObject();
+		
+		try {
+			
+			movieCrawlerService.errorExecute(url, startDate, endDate);
+			returnObj.put(SUCCESS, true);
+						
+		} catch (Exception e) {
+			log.error("Error = {}", e.getLocalizedMessage());
+
+			returnObj.put(SUCCESS, false);
+			returnObj.put(ERROR, e.getLocalizedMessage());
+		}
+		
+		return returnObj.toString();
+	}
+
 }

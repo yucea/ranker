@@ -1,14 +1,18 @@
 package kr.co.esjee.ranker.webapp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import kr.co.esjee.ranker.crawler.MovieCrawler;
 import kr.co.esjee.ranker.schedule.Scheduler;
+import kr.co.esjee.ranker.util.CalendarUtil;
+import kr.co.esjee.ranker.webapp.model.ErrorLog;
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
@@ -28,6 +32,9 @@ public class MovieCrawlerService {
 	
 	@Autowired
 	private PersonService personService;
+	
+	@Autowired
+	private ErrorLogService errorLogService;
 
 	/**
 	 * execute
@@ -281,5 +288,83 @@ public class MovieCrawlerService {
 		}
 		
 		Scheduler.scheduleIds.remove(movieVO.getId());
+	}
+	
+	public void errorExecute(String url, String startDate, String endDate) {
+		
+		List<String> urlList = new ArrayList<String>();
+		List<ErrorLog> errorLogList = new ArrayList<ErrorLog>();
+		
+		try {
+			
+			Iterable<ErrorLog> items = errorLogService.findAll();
+			
+			CollectionUtils.addAll(errorLogList, items.iterator());
+			
+			if(!errorLogList.isEmpty()) {
+				
+				MovieVO movieVO = new MovieVO();
+				
+				for(ErrorLog errorLog : errorLogList) {					
+					if(startDate != null && endDate != null) {
+
+						int gDate = Integer.parseInt(CalendarUtil.getString(CalendarUtil.getDate(errorLog.getTime(), "yyyy-MM-dd HH:mm:ss")));
+						int sDate = Integer.parseInt(startDate);
+						int eDate = Integer.parseInt(endDate);
+						
+						if(sDate <= gDate && gDate <= eDate) {
+							urlList.add(url + errorLog.getMovieId());
+						}						
+					} else {
+						urlList.add(url + errorLog.getMovieId());
+					}
+				}
+					
+				if(!urlList.isEmpty()) {
+					
+					log.info("Movie TotalCount = {}", urlList.size());
+					
+					int count = 1;
+					
+					for(String movieUrl : urlList) {
+						
+						movieVO.setMovieUrl(movieUrl);
+						
+						log.info("Movie Crawling Start = {}/{}", count, urlList.size());
+						
+						MovieInfo movieInfo = movieCrawler.execute(movieVO);
+						
+						if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
+							
+							try {
+								movieService.merge(movieInfo.getMovieInfo());
+								
+								for (Person person : movieInfo.getPersonInfo()) {
+									personService.merge(person);
+								}
+								
+								log.info("Movie Crawling Success = {}/{}", count, urlList.size());						
+							} catch (Exception e) {
+								log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
+							}
+						} else {
+							log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
+						}
+						
+						count++;					
+						
+						try {
+							Thread.sleep(DELAY_TIME);
+						} catch (InterruptedException e) {
+							log.error("Sleep Error = {}", e.getLocalizedMessage());
+						}
+					}
+				} else {
+					log.error("Movie List URL is Empty");
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+		}
 	}
 }
