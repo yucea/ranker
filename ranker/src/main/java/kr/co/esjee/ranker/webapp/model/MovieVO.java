@@ -34,7 +34,7 @@ public class MovieVO implements AppConstant {
 	
 	
 	// Movie Info
-	private String movieUrl = "";
+	private String movieUrl = "https://movie.naver.com/movie/bi/mi/basic.nhn?code=159695";
 	
 	private String removeAtrb = "div.wide_info_area";
 	

@@ -306,15 +306,14 @@ public class MovieCrawlerService {
 				MovieVO movieVO = new MovieVO();
 				
 				for(ErrorLog errorLog : errorLogList) {					
-					if(startDate != null && endDate != null) {
-
+					if(!startDate.equals("") && !endDate.equals("")) {
 						int gDate = Integer.parseInt(CalendarUtil.getString(CalendarUtil.getDate(errorLog.getTime(), "yyyy-MM-dd HH:mm:ss")));
 						int sDate = Integer.parseInt(startDate);
 						int eDate = Integer.parseInt(endDate);
 						
 						if(sDate <= gDate && gDate <= eDate) {
 							urlList.add(url + errorLog.getMovieId());
-						}						
+						}
 					} else {
 						urlList.add(url + errorLog.getMovieId());
 					}

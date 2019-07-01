@@ -75,7 +75,10 @@ public class MovieCrawlerController implements AppConstant {
 		@ApiImplicitParam(name = "endDate", value = "종료일자", required = false, dataType = "string", paramType = "query")
 		})
 	@RequestMapping(value = "/errorExecute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public String errorExecute(HttpServletRequest request, @RequestParam String url, @RequestParam String startDate, @RequestParam String endDate) {
+	public String errorExecute(HttpServletRequest request, 
+			@RequestParam String url, 
+			@RequestParam(defaultValue = "") String startDate, 
+			@RequestParam(defaultValue = "") String endDate) {
 		
 		JSONObject returnObj = new JSONObject();
 		

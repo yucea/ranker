@@ -198,7 +198,7 @@ public class MovieCrawler implements AppConstant {
 				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).text() :
 					basicInfoDoc.select(movieVO.getOpenDayAtrb()[0]).text();	
 		openDay = StringUtils.replace(StringUtils.replace(StringUtils.replace(openDay, " .", "."), " ", ","), ".", "");
-		movie.setOpenDay(StringUtils.split(openDay, ",")[0]);
+		movie.setOpenDay(openDay.isEmpty() ? "" : StringUtils.split(openDay, ",")[0]);
 		
 		// Actors
 		// Director
