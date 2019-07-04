@@ -15,6 +15,10 @@ public class MovieService extends AppService {
 
 	@Autowired
 	private MovieRepository repository;
+	
+	public Iterable<Movie> findAll() {
+		return repository.findAll();
+	}
 
 	public Page<Movie> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -59,6 +63,6 @@ public class MovieService extends AppService {
 			movie.setId(movieInfo.getId());
 		}	
 		
-		return this.save(movie);
+		return save(movie);
 	}
 }

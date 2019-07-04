@@ -120,6 +120,7 @@ public class MovieCrawler implements AppConstant {
 			}
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			ErrorLog errorLog = new ErrorLog();
 			errorLog.setMovieId(movieKey);
 			errorLog.setMessage(e.getLocalizedMessage());
@@ -159,40 +160,41 @@ public class MovieCrawler implements AppConstant {
 		movie.setTid("N_" + movieId);
 		
 		// Title
-		movie.setTitle(basicInfoDoc.select(movieVO.getTitleAtrb()).first().text());
+		movie.setTitle(basicInfoDoc.select(movieVO.getTitleAtrb()).isEmpty() ? "" : basicInfoDoc.select(movieVO.getTitleAtrb()).first().text());
 		
 		// Original Title
-		movie.setOrgTitle(basicInfoDoc.select(movieVO.getOrgTitleAtrb()).text());
+		movie.setOrgTitle(basicInfoDoc.select(movieVO.getOrgTitleAtrb()).isEmpty() ? "" : basicInfoDoc.select(movieVO.getOrgTitleAtrb()).text());
 		
 		// Score
-		String Score = StringUtils.replace(basicInfoDoc.select(movieVO.getScoreAtrb()).text(), " ", "");
-		movie.setScore(Score.isEmpty() ? "0.00" : Score);
+		String score = StringUtils.replace(basicInfoDoc.select(movieVO.getScoreAtrb()).isEmpty() ? "" : basicInfoDoc.select(movieVO.getScoreAtrb()).text(), " ", "");
+		movie.setScore(score.isEmpty() ? "0.00" : score);
 		
 		// Genre	
 		movie.setGenre((movieVO.getGenreAtrb().length > 1) ?
-				StringUtils.replace(basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGenreAtrb()[0], movieVO.getGenreAtrb()[1]).text(), " ", ",") :
-					StringUtils.replace(basicInfoDoc.select(movieVO.getGenreAtrb()[0]).text(), " ", ","));		
+				StringUtils.replace(basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGenreAtrb()[0], movieVO.getGenreAtrb()[1]).isEmpty() ? "" : basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGenreAtrb()[0], movieVO.getGenreAtrb()[1]).text(), " ", ",") :
+					StringUtils.replace(basicInfoDoc.select(movieVO.getGenreAtrb()[0]).isEmpty() ? "" : basicInfoDoc.select(movieVO.getGenreAtrb()[0]).text(), " ", ","));
 		
 		// Runtime
-		Elements runTimeElements = basicInfoDoc.select(movieVO.getRunTimeAtrb());
 		String runTime = "";
-		for (int r = 0; r < runTimeElements.size(); r++) {
-			if (runTimeElements.eq(r).text().trim().matches("^[0-9]+[분]")) {
-				runTime = runTimeElements.eq(r).text().trim();
+		if(!basicInfoDoc.select(movieVO.getRunTimeAtrb()).isEmpty()) {
+			Elements runTimeElements = basicInfoDoc.select(movieVO.getRunTimeAtrb());
+			for (int r = 0; r < runTimeElements.size(); r++) {
+				if (runTimeElements.eq(r).text().trim().matches("^[0-9]+[분]")) {
+					runTime = runTimeElements.eq(r).text().trim();
+				}
 			}
 		}
+		movie.setRunTime(runTime.isEmpty() ? "" : runTime);
 		
-		movie.setRunTime(runTime);
-		
-		// Nation		
+		// Nation	
 		movie.setNation((movieVO.getNationAtrb().length > 1) ? 
-				StringUtils.replace(basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getNationAtrb()[0], movieVO.getNationAtrb()[1]).text(), " ", ",") :
-					basicInfoDoc.select(movieVO.getNationAtrb()[0]).text());
+				StringUtils.replace(basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getNationAtrb()[0], movieVO.getNationAtrb()[1]).isEmpty() ? "" : basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getNationAtrb()[0], movieVO.getNationAtrb()[1]).text(), " ", ",") :
+					basicInfoDoc.select(movieVO.getNationAtrb()[0]).isEmpty() ? "" : basicInfoDoc.select(movieVO.getNationAtrb()[0]).text());
 		
 		// Grade	
 		movie.setGrade((movieVO.getGradeAtrb().length > 1) ?
-				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGradeAtrb()[0], movieVO.getGradeAtrb()[1]).text() :
-					basicInfoDoc.select(movieVO.getGradeAtrb()[0]).text());
+				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGradeAtrb()[0], movieVO.getGradeAtrb()[1]).isEmpty() ? "" : basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getGradeAtrb()[0], movieVO.getGradeAtrb()[1]).text() :
+					basicInfoDoc.select(movieVO.getGradeAtrb()[0]).isEmpty() ? "" : basicInfoDoc.select(movieVO.getGradeAtrb()[0]).text());
 			
 		String openDay = (movieVO.getOpenDayAtrb().length > 1) ?
 				basicInfoDoc.getElementsByAttributeValueContaining(movieVO.getOpenDayAtrb()[0], movieVO.getOpenDayAtrb()[1]).text() :
@@ -203,35 +205,38 @@ public class MovieCrawler implements AppConstant {
 		// Actors
 		// Director
 		String actor = "";
-		for(Element actors : crewInfoDoc.select(movieVO.getActorAtrb())) {
-			actor += actors.text() + ",";
+		if(!crewInfoDoc.select(movieVO.getActorAtrb()).isEmpty()) {
+			for(Element actors : crewInfoDoc.select(movieVO.getActorAtrb())) {
+				actor += actors.text() + ",";
+			}
 		}
-		
 		movie.setActor(StringUtils.substring(actor, 0, actor.length() - 1));
 		
 		// Roles
 		String role = "";
-		for(Element roles : crewInfoDoc.select(movieVO.getRoleAtrb())) {
-			role += roles.text() + ",";
+		if(!crewInfoDoc.select(movieVO.getRoleAtrb()).isEmpty()) {
+			for(Element roles : crewInfoDoc.select(movieVO.getRoleAtrb())) {
+				role += roles.text() + ",";
+			}
 		}
-		
 		movie.setRole(StringUtils.substring(role, 0, role.length() - 1));
 		
 		// Director
 		String director = "";
-		for(Element directors : crewInfoDoc.select(movieVO.getDirectorAtrb())) {
-			director += directors.text() + ",";
+		if(!crewInfoDoc.select(movieVO.getDirectorAtrb()).isEmpty()) {
+			for(Element directors : crewInfoDoc.select(movieVO.getDirectorAtrb())) {
+				director += directors.text() + ",";
+			}
 		}
-		
 		movie.setDirector(StringUtils.substring(director, 0, director.length() - 1));		
 		
 		// Synopsis
-		String synopsis =basicInfoDoc.select(movieVO.getSynopsisAtrb()).text();
+		String synopsis = basicInfoDoc.select(movieVO.getSynopsisAtrb()).isEmpty() ? "" : basicInfoDoc.select(movieVO.getSynopsisAtrb()).text();
 		synopsis = StringUtils.replace(StringUtils.replace(synopsis, "줄거리 ", ""), " 제작노트 보기", "");
 		movie.setSynopsis(synopsis);
 		
 		// MakingNote
-		movie.setMakingNote(basicInfoDoc.select(movieVO.getMakingNoteAtrb()).text());
+		movie.setMakingNote(basicInfoDoc.select(movieVO.getMakingNoteAtrb()).isEmpty() ? "" : basicInfoDoc.select(movieVO.getMakingNoteAtrb()).text());
 		
 		return movie;		
 	}
@@ -268,21 +273,23 @@ public class MovieCrawler implements AppConstant {
 			person.setPid(pId);
 			
 			// 인물 이름
-			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
-			person.setJob("배우");
+			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).isEmpty() ? "" : crewDoc.select(movieVO.getCrewNameAtrb()).text());
+			person.setJob(crewDoc.select(movieVO.getCrewNameAtrb()).isEmpty() ? "" : "배우");
 			
-			// XXX
 			// 인물 생년월일
-			String born = crewDoc.select("dl.info_spec dt em").first().text();
-			
-			if(born.contains("출생")) {
-				person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
-			} else {
-				person.setBirthday("");
+			String birthday = "";
+			if(!crewDoc.select("dl.info_spec dt em").isEmpty()) {
+				birthday = crewDoc.select("dl.info_spec dt em").first().text();
+				
+				if(birthday.contains("출생")) {
+					person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+				} else {
+					person.setBirthday("");
+				}
 			}
 			
 			// 인물 프로필
-			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
+			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).isEmpty() ? "" : crewDoc.select(movieVO.getCrewProfileAtrb()).text());
 			
 			// 필모그래피 주소
 			String filmoUrl = movieVO.getFilmoUrl() + pId;
@@ -302,19 +309,20 @@ public class MovieCrawler implements AppConstant {
 						getQueryMap(movieUrl).get(movieVO.getMovieKey()) : "");
 				
 				// 영화제목
-				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
+ 				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).isEmpty() ? "" : filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
 				
 				// 영화 개봉년도
-				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
+ 				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).isEmpty() ? "" : filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
 
 				Document directorDoc = jsoupConnect(movieVO.getPersonUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getMovieKey() + "="+ filmo.getMovieId()));
 				
 				// 감독
 				String director = "";
-				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
-					director += directors.text() + ",";
+				if(!directorDoc.select(movieVO.getDirectorAtrb()).isEmpty()) {
+					for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
+						director += directors.text() + ",";
+					}
 				}
-				
 				filmo.setMovieDirector(StringUtils.substring(director, 0, director.length() - 1));
 				
 				filmoList.add(filmo);
@@ -345,21 +353,23 @@ public class MovieCrawler implements AppConstant {
 			person.setPid(pId);
 			
 			// 인물 이름
-			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).text());
-			person.setJob("감독");
+			person.setName(crewDoc.select(movieVO.getCrewNameAtrb()).isEmpty() ? "" : crewDoc.select(movieVO.getCrewNameAtrb()).text());
+			person.setJob(crewDoc.select(movieVO.getCrewNameAtrb()).isEmpty() ? "" : "감독");
 			
-			// XXX
 			// 인물 생년월일
-			String born = crewDoc.select("dl.info_spec dt em").first().text();
-			
-			if(born.contains("출생")) {
-				person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
-			} else {
-				person.setBirthday("");
+			String birthday = "";
+			if(!crewDoc.select("dl.info_spec dt em").isEmpty()) {
+				birthday = crewDoc.select("dl.info_spec dt em").first().text();
+				
+				if(birthday.contains("출생")) {
+					person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
+				} else {
+					person.setBirthday("");
+				}
 			}
 			
 			// 인물 프로필
-			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).text());
+			person.setProfile(crewDoc.select(movieVO.getCrewProfileAtrb()).isEmpty() ? "" : crewDoc.select(movieVO.getCrewProfileAtrb()).text());
 			
 			// 필모그래피 주소
 			String filmoUrl = movieVO.getFilmoUrl() + pId;
@@ -379,19 +389,20 @@ public class MovieCrawler implements AppConstant {
 						getQueryMap(movieUrl).get(movieVO.getMovieKey()) : "");
 				
 				// 영화제목
-				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
+ 				filmo.setMovieTitle(filmoElement.select(movieVO.getFilmoTitleAtrb()).isEmpty() ? "" : filmoElement.select(movieVO.getFilmoTitleAtrb()).text());
 				
 				// 영화 개봉년도
-				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
+ 				filmo.setMovieYear(filmoElement.select(movieVO.getFilmoYearAtrb()).isEmpty() ? "" : filmoElement.select(movieVO.getFilmoYearAtrb()).first().text());
 
 				Document directorDoc = jsoupConnect(movieVO.getPersonUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getMovieKey() + "="+ filmo.getMovieId()));
 				
 				// 감독
 				String director = "";
-				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
-					director += directors.text() + ",";
+				if(!directorDoc.select(movieVO.getDirectorAtrb()).isEmpty()) {
+					for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
+						director += directors.text() + ",";
+					}
 				}
-				
 				filmo.setMovieDirector(StringUtils.substring(director, 0, director.length() - 1));
 				
 				filmoList.add(filmo);

@@ -1,6 +1,7 @@
 package kr.co.esjee.ranker.webapp.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -292,7 +293,7 @@ public class MovieCrawlerService {
 	
 	public void errorExecute(String url, String startDate, String endDate) {
 		
-		List<String> urlList = new ArrayList<String>();
+		List<Map<String, String>> urlList = new ArrayList<Map<String, String>>();
 		List<ErrorLog> errorLogList = new ArrayList<ErrorLog>();
 		
 		try {
@@ -302,20 +303,28 @@ public class MovieCrawlerService {
 			CollectionUtils.addAll(errorLogList, items.iterator());
 			
 			if(!errorLogList.isEmpty()) {
-				
-				MovieVO movieVO = new MovieVO();
-				
-				for(ErrorLog errorLog : errorLogList) {					
+				for(ErrorLog errorLog : errorLogList) {
+					
+					Map<String, String> urlInfo = new HashMap<String, String>();
+					
 					if(!startDate.equals("") && !endDate.equals("")) {
 						int gDate = Integer.parseInt(CalendarUtil.getString(CalendarUtil.getDate(errorLog.getTime(), "yyyy-MM-dd HH:mm:ss")));
 						int sDate = Integer.parseInt(startDate);
 						int eDate = Integer.parseInt(endDate);
 						
 						if(sDate <= gDate && gDate <= eDate) {
-							urlList.add(url + errorLog.getMovieId());
+							if(!errorLog.getMovieId().isEmpty()) {
+								urlInfo.put("movieId", errorLog.getMovieId());
+								urlInfo.put("url", url + errorLog.getMovieId());
+								urlList.add(urlInfo);
+							}
 						}
 					} else {
-						urlList.add(url + errorLog.getMovieId());
+						if(!errorLog.getMovieId().isEmpty()) {
+							urlInfo.put("movieId", errorLog.getMovieId());
+							urlInfo.put("url", url + errorLog.getMovieId());
+							urlList.add(urlInfo);
+						}
 					}
 				}
 					
@@ -325,11 +334,13 @@ public class MovieCrawlerService {
 					
 					int count = 1;
 					
-					for(String movieUrl : urlList) {
+					for(Map<String, String> _url : urlList) {
 						
-						movieVO.setMovieUrl(movieUrl);
+						MovieVO movieVO = new MovieVO();
 						
-						log.info("Movie Crawling Start = {}/{}", count, urlList.size());
+						movieVO.setMovieUrl(_url.get("url"));
+						
+						log.info("{} Movie Crawling Start = {}/{}", _url.get("movieId"), count, urlList.size());
 						
 						MovieInfo movieInfo = movieCrawler.execute(movieVO);
 						
@@ -342,12 +353,12 @@ public class MovieCrawlerService {
 									personService.merge(person);
 								}
 								
-								log.info("Movie Crawling Success = {}/{}", count, urlList.size());						
+								log.info("{} Movie Crawling Success = {}/{}", _url.get("movieId"), count, urlList.size());						
 							} catch (Exception e) {
-								log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
+								log.error("{} Movie Crawling Failed = {}/{}", _url.get("movieId"), count, urlList.size());
 							}
 						} else {
-							log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
+							log.error("{} Movie Crawling Failed = {}/{}", _url.get("movieId"), count, urlList.size());
 						}
 						
 						count++;					

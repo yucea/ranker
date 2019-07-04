@@ -1,9 +1,12 @@
 package kr.co.esjee.ranker.crawler;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
@@ -21,6 +24,7 @@ import kr.co.esjee.ranker.elasticsearch.ElasticQuery;
 import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
 import kr.co.esjee.ranker.util.CalendarUtil;
 import kr.co.esjee.ranker.webapp.AppConstant;
+import kr.co.esjee.ranker.webapp.model.Movie;
 import kr.co.esjee.ranker.webapp.model.MovieInfo;
 import kr.co.esjee.ranker.webapp.model.MovieVO;
 import kr.co.esjee.ranker.webapp.model.Person;
@@ -54,7 +58,9 @@ public class TestMovieCrawler implements AppConstant {
 	@Test
 	public void testCrawler(){
 		
-		MovieVO movieVO = new MovieVO(); 
+		MovieVO movieVO = new MovieVO();
+	
+		movieVO.setMovieUrl("https://movie.naver.com/movie/bi/mi/basic.nhn?code=69776");
 		
 		MovieInfo movieInfo = movieCrawler.execute(movieVO);
 		
@@ -66,6 +72,80 @@ public class TestMovieCrawler implements AppConstant {
 			for (Person person : movieInfo.getPersonInfo()) {
 				personService.merge(person);
 			}
+		}
+	}
+	
+	
+	@Test
+	public void test2Crawler(){
+		
+		List<Map<String, String>> urlList = new ArrayList<Map<String, String>>();
+		List<Movie> movieList = new ArrayList<Movie>();
+		
+		try {
+			
+			Iterable<Movie> items = movieService.findAll();
+			
+			CollectionUtils.addAll(movieList, items.iterator());
+			
+			if(!movieList.isEmpty()) {
+				for(Movie movieInfo : movieList) {
+					if(movieInfo.getOpenDay().length() > 8) {
+						Map<String, String> urlInfo = new HashMap<String, String>();
+						urlInfo.put("movieId", movieInfo.getMovieId());
+						urlInfo.put("url", "https://movie.naver.com/movie/bi/mi/basic.nhn?code=" + movieInfo.getMovieId());
+						urlList.add(urlInfo);
+					}
+				}
+			}
+			
+			if(!urlList.isEmpty()) {
+				
+				log.info("Movie TotalCount = {}", urlList.size());
+				
+				int count = 1;
+				
+				for(Map<String, String> _url : urlList) {
+					
+					MovieVO movieVO = new MovieVO();
+					
+					movieVO.setMovieUrl(_url.get("url"));
+					
+					log.info("{} Movie Crawling Start = {}/{}", _url.get("movieId"), count, urlList.size());
+					
+					MovieInfo movieInfo = movieCrawler.execute(movieVO);
+					
+					if(movieInfo.getMovieInfo() != null && movieInfo.getPersonInfo() != null) {
+						
+						try {
+							movieService.merge(movieInfo.getMovieInfo());
+							
+							for (Person person : movieInfo.getPersonInfo()) {
+								personService.merge(person);
+							}
+							
+							log.info("{} Movie Crawling Success = {}/{}", _url.get("movieId"), count, urlList.size());						
+						} catch (Exception e) {
+							log.error("{} Movie Crawling Failed = {}/{}", _url.get("movieId"), count, urlList.size());
+						}
+					} else {
+						log.error("{} Movie Crawling Failed = {}/{}", _url.get("movieId"), count, urlList.size());
+					}
+					
+					count++;					
+					
+					try {
+						Thread.sleep(DELAY_TIME);
+					} catch (InterruptedException e) {
+						log.error("Sleep Error = {}", e.getLocalizedMessage());
+					}
+				}
+			} else {
+				log.error("Movie List URL is Empty");
+			}
+			
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
 		}
 	}
 	
@@ -180,7 +260,7 @@ public class TestMovieCrawler implements AppConstant {
 								personService.merge(person);
 							}
 							
-							log.info("Movie Crawling Success = {}/{}", count, urlList.size());						
+							log.info("Movie Crawling Success = {}/{}", count, urlList.size());
 						} catch (Exception e) {
 							log.error("Movie Crawling Failed = {}/{}", count, urlList.size());
 						}
