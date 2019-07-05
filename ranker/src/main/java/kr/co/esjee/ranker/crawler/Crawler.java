@@ -178,9 +178,9 @@ public class Crawler {
 					
 					combinationList.add(idx, list);
 				}
-				
+
 				int[] indices = new int[combinationList.size()];
-				
+
 				int currentIndex = indices.length - 1;
 				
 				outerProcess: while (true) {
