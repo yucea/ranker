@@ -1,26 +1,19 @@
 package kr.co.esjee.ranker.crawler;
 
-import java.io.IOException;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
+import kr.co.esjee.ranker.webapp.model.Article;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.google.common.collect.Lists;
-
-import kr.co.esjee.ranker.webapp.model.Article;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 public class Crawler {
@@ -34,23 +27,23 @@ public class Crawler {
 
 	/**
 	 * Crawler Scheduler Execute
-	 * 
+	 *
 	 * @param schedule
 	 * @return
 	 * @throws IOException
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	/*
 	public List<Article> execute(Schedule schedule) throws IOException, ParseException {
 		return execute(
-				schedule.getUrl(), 
-				schedule.getUrlParams(), 
-				schedule.getIdColumn(), 
+				schedule.getUrl(),
+				schedule.getUrlParams(),
+				schedule.getIdColumn(),
 				schedule.getDateColumn(),
-				schedule.getCategoryColumn(), 
-				schedule.getListAtrb(), 
+				schedule.getCategoryColumn(),
+				schedule.getListAtrb(),
 				schedule.getListEachAtrb(),
-				schedule.getTitleAtrb(), 
+				schedule.getTitleAtrb(),
 				schedule.getContentAtrb()
 				);
 	}
@@ -139,10 +132,10 @@ public class Crawler {
 		return articleList;
 
 	}
-	
+
 	/**
 	 * Get URL List
-	 * 
+	 *
 	 * @param url
 	 * @param urlParams
 	 * @return List list
@@ -226,10 +219,10 @@ public class Crawler {
 		
 		return returnList;
 	}
-	
+
 	/**
 	 * 크롤링 날짜 범위 지정하여  Site URL List 리턴
-	 * 
+	 *
 	 * @param url
 	 * @param urlParams
 	 * @param dateColumn
@@ -350,7 +343,7 @@ public class Crawler {
 
 	/**
 	 * Get Query Map
-	 * 
+	 *
 	 * @param query
 	 * @return
 	 */

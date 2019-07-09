@@ -1,13 +1,9 @@
 package kr.co.esjee.ranker.crawler;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import kr.co.esjee.ranker.webapp.AppConstant;
+import kr.co.esjee.ranker.webapp.model.*;
+import kr.co.esjee.ranker.webapp.service.ErrorLogService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,15 +12,9 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.esjee.ranker.webapp.AppConstant;
-import kr.co.esjee.ranker.webapp.model.ErrorLog;
-import kr.co.esjee.ranker.webapp.model.Movie;
-import kr.co.esjee.ranker.webapp.model.MovieInfo;
-import kr.co.esjee.ranker.webapp.model.MovieVO;
-import kr.co.esjee.ranker.webapp.model.Person;
-import kr.co.esjee.ranker.webapp.model.PersonFilmo;
-import kr.co.esjee.ranker.webapp.service.ErrorLogService;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -72,7 +62,7 @@ public class MovieCrawler implements AppConstant {
 		return document;
 	}
 
-	public MovieInfo execute(MovieVO movieVO) { 
+	public MovieInfo execute(MovieVO movieVO) {
 		
 		MovieInfo movieInfo = new MovieInfo();
 		
