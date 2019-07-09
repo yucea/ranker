@@ -23,7 +23,7 @@ public class TestCrawler {
 	private ArticleService articleService;
 
 	@Test
-	public void testCrawler(){		
+	public void testCrawler(){
 		
 		String url = "https://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day";
 		String[] urlParams = {"sectionId=[100,101,102]", "date=[20190608,20190609,20190610]"};		
@@ -45,20 +45,18 @@ public class TestCrawler {
 				articleService.save(article);
 			}
 			
-			log.info("Save count = {}", articleList.size());			
+			log.info("Save count = {}", articleList.size());
 			
-		} catch (IOException e) {
-			log.error("Error = {}", e.getLocalizedMessage());
-		} catch (ParseException e) {
+		} catch (IOException | ParseException e) {
 			log.error("Error = {}", e.getLocalizedMessage());
 		}
 	}
-	
+
 	@Test
 	public void testGetUrl() {
 		String url = "https://news.naver.com/main/ranking/popularDay.nhn";
 		String[] urlParams = {"date=20190504~20190606", "temp=temp"};
-		
+
 		try {
 			Crawler crawler = new Crawler();
 			

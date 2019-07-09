@@ -164,7 +164,7 @@ public class MovieCrawler implements AppConstant {
 				}
 			}
 		}
-		movie.setRunTime(runTime.isEmpty() ? "" : runTime);
+		movie.setRunTime(!runTime.isEmpty() ? runTime : "");
 		
 		// Nation	
 		movie.setNation((movieVO.getNationAtrb().length > 1) ? 
@@ -186,33 +186,38 @@ public class MovieCrawler implements AppConstant {
 		// Director
 		String actor = "";
 		if(!crewInfoDoc.select(movieVO.getActorAtrb()).isEmpty()) {
+			StringBuilder actorBuilder = new StringBuilder();
 			for(Element actors : crewInfoDoc.select(movieVO.getActorAtrb())) {
-				actor += actors.text() + ",";
+				actorBuilder.append(actors.text()).append(",");
 			}
+			actor = actorBuilder.toString();
 		}
 		movie.setActor(StringUtils.substring(actor, 0, actor.length() - 1));
 		
 		// Roles
 		String role = "";
 		if(!crewInfoDoc.select(movieVO.getRoleAtrb()).isEmpty()) {
+			StringBuilder roleBuilder = new StringBuilder();
 			for(Element roles : crewInfoDoc.select(movieVO.getRoleAtrb())) {
-				role += roles.text() + ",";
+				roleBuilder.append(roles.text()).append(",");
 			}
+			role = roleBuilder.toString();
 		}
 		movie.setRole(StringUtils.substring(role, 0, role.length() - 1));
 		
 		// Director
 		String director = "";
 		if(!crewInfoDoc.select(movieVO.getDirectorAtrb()).isEmpty()) {
+			StringBuilder directorBuilder = new StringBuilder();
 			for(Element directors : crewInfoDoc.select(movieVO.getDirectorAtrb())) {
-				director += directors.text() + ",";
+				directorBuilder.append(directors.text()).append(",");
 			}
+			director = directorBuilder.toString();
 		}
 		movie.setDirector(StringUtils.substring(director, 0, director.length() - 1));		
 		
 		// Synopsis
 		String synopsis = basicInfoDoc.select(movieVO.getSynopsisAtrb()).isEmpty() ? "" : basicInfoDoc.select(movieVO.getSynopsisAtrb()).text();
-		synopsis = StringUtils.replace(StringUtils.replace(synopsis, "줄거리 ", ""), " 제작노트 보기", "");
 		movie.setSynopsis(synopsis);
 		
 		// MakingNote
@@ -262,10 +267,8 @@ public class MovieCrawler implements AppConstant {
 		person.setJob(crewDoc.select(movieVO.getCrewNameAtrb()).isEmpty() ? "" : "감독");
 
 		// 인물 생년월일
-		String birthday = "";
 		if(!crewDoc.select("dl.info_spec dt em").isEmpty()) {
-			birthday = crewDoc.select("dl.info_spec dt em").first().text();
-
+			String birthday = crewDoc.select("dl.info_spec dt em").first().text();
 			if(birthday.contains("출생")) {
 				person.setBirthday(crewDoc.select(movieVO.getCrewBirthdayAtrb()).first().text());
 			} else {
@@ -281,7 +284,7 @@ public class MovieCrawler implements AppConstant {
 
 		Document filmoDoc = jsoupConnect(filmoUrl);
 
-		List<PersonFilmo> filmoList = new ArrayList<PersonFilmo>();
+		List<PersonFilmo> filmoList = new ArrayList<>();
 
 		for(Element filmoElement : filmoDoc.select(movieVO.getFilmoListAtrb())) {
 
@@ -302,13 +305,15 @@ public class MovieCrawler implements AppConstant {
 			Document directorDoc = jsoupConnect(movieVO.getPersonUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getMovieKey() + "="+ filmo.getMovieId()));
 
 			// 감독
-			String director = "";
+			String filmoDirector = "";
 			if(!directorDoc.select(movieVO.getDirectorAtrb()).isEmpty()) {
+				StringBuilder filmoDirectorBder = new StringBuilder();
 				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
-					director += directors.text() + ",";
+					filmoDirectorBder.append(directors.text()).append(",");
 				}
+				filmoDirector = filmoDirectorBder.toString();
 			}
-			filmo.setMovieDirector(StringUtils.substring(director, 0, director.length() - 1));
+			filmo.setMovieDirector(StringUtils.substring(filmoDirector, 0, filmoDirector.length() - 1));
 
 			filmoList.add(filmo);
 		}
@@ -320,7 +325,7 @@ public class MovieCrawler implements AppConstant {
 
 	public List<Map<String, Object>> getMovieDirectList(String movieDirUrl, String movieDirAtrb, Integer startYear, Integer endYear) {
 		
-		List<Map<String, Object>> urlList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> urlList = new ArrayList<>();
 		
 		MovieCrawler movieCrawler = new MovieCrawler();
 		
@@ -332,11 +337,11 @@ public class MovieCrawler implements AppConstant {
 				
 				for(Element element : doc.select(movieDirAtrb)) {
 					
-					Map<String, Object> urlMap = new HashMap<String, Object>();
+					Map<String, Object> urlMap = new HashMap<>();
 					
 					if(startYear != null && endYear != null) {
 						String strYear = element.text();
-						Integer year = Integer.parseInt(strYear.replaceAll("[^0-9]", ""));
+						Integer year = Integer.parseInt(strYear.replaceAll( "[^0-9]", ""));
 						
 						if(year >= startYear && year <= endYear) {
 							urlMap.put("progress", year);
@@ -358,8 +363,8 @@ public class MovieCrawler implements AppConstant {
 
 	public List<String> getMovieUrlList(MovieVO movieVO) {
 		
-		List<String> urlList = new ArrayList<String>();
-		
+		List<String> urlList = new ArrayList<>();
+
 		if(movieVO.getMovieDirPage().isEmpty()) {
 			
 			Document doc = jsoupConnect(movieVO.getMovieListUrl());
@@ -432,7 +437,7 @@ public class MovieCrawler implements AppConstant {
 
 		String[] params = StringUtils.split(query, "&");
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 
 		for (String param : params) {				
 			String name = StringUtils.split(param, "=")[0];

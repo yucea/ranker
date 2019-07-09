@@ -58,10 +58,10 @@ public class Crawler {
 
 	/**
 	 * Crawler Execute
-	 * 
-	 * @param url
-	 * @param urlParams
-	 * @param idColumn
+	 *
+	 * @param url url
+	 * @param urlParams urlParams
+	 * @param idColumn idCpolo
 	 * @param dateColumn
 	 * @param categoryColumn
 	 * @param listAtrb
@@ -70,18 +70,18 @@ public class Crawler {
 	 * @param contentAtrb
 	 * @return
 	 * @throws IOException
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	public List<Article> execute(String url, String[] urlParams, String idColumn, String dateColumn,
 			String categoryColumn, String listAtrb, String listEachAtrb, String titleAtrb, String contentAtrb)
 			throws IOException, ParseException {
 
 		List<Article> articleList = new ArrayList<Article>();
-		
+
 		List<String> returnUrlList = getUrl(url, urlParams);
-		
+
 		log.info("Crawler site count = {}", returnUrlList.size());
-		
+
 		int siteCnt = 1;
 		
 		for(String returnUrl : returnUrlList) {
@@ -145,15 +145,15 @@ public class Crawler {
 	 * 
 	 * @param url
 	 * @param urlParams
-	 * @return
+	 * @return List list
 	 */
 	private List<String> getUrl(String url, String[] urlParams) {
 		
-		List<String> returnList = new ArrayList<String>();
+		List<String> returnList = new ArrayList<>();
 		
 		if(urlParams.length > 0) {
 			List<String> paramList = Lists.newArrayList(urlParams);
-			List<String> arrayList = new ArrayList<String>();
+			List<String> arrayList = new ArrayList<>();
 			
 			for(String param : paramList) {
 				if(param.contains(LEFT_ARRAY_SEPARATOR) && param.contains(RIGHT_ARRAY_SEPARATOR)) {
