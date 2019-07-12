@@ -123,7 +123,7 @@ public class ElasticOption implements AppConstant {
 			builder.setQuery(queryBuilder);
 		}
 
-		if (sortBuilders == null && sortBuilders.isEmpty()) {
+		if (sortBuilders == null || sortBuilders.isEmpty()) {
 			if (!skipSort)
 				builder.addSort(ID, SortOrder.DESC);
 		} else {
