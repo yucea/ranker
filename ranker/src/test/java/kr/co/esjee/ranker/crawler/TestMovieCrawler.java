@@ -1,24 +1,6 @@
 package kr.co.esjee.ranker.crawler;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHits;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.google.gson.Gson;
-
 import kr.co.esjee.ranker.elasticsearch.ElasticOption;
 import kr.co.esjee.ranker.elasticsearch.ElasticQuery;
 import kr.co.esjee.ranker.elasticsearch.ElasticSearcher;
@@ -32,9 +14,18 @@ import kr.co.esjee.ranker.webapp.service.MovieCrawlerService;
 import kr.co.esjee.ranker.webapp.service.MovieService;
 import kr.co.esjee.ranker.webapp.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHits;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+
+import java.util.*;
 	
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 @Slf4j
 public class TestMovieCrawler implements AppConstant {
 	
@@ -56,7 +47,7 @@ public class TestMovieCrawler implements AppConstant {
 	private MovieCrawlerService movieCrawlerService;
 
 	@Test
-	public void testCrawler(){
+	public void testCrawler() {
 		
 		MovieVO movieVO = new MovieVO();
 	
@@ -80,7 +71,7 @@ public class TestMovieCrawler implements AppConstant {
 	public void test2Crawler(){
 		
 		List<Map<String, String>> urlList = new ArrayList<Map<String, String>>();
-		List<Movie> movieList = new ArrayList<Movie>();
+		List<Movie> movieList = new ArrayList<>();
 		
 		try {
 			
@@ -342,12 +333,23 @@ public class TestMovieCrawler implements AppConstant {
 			});
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
-		}		
+		}
 	}
 	
 	private void callCrawler(MovieVO movieVO) {
 		log.info("call crawler : {}", movieVO);
 		movieCrawlerService.execute(movieVO);
+	}
+
+	@Test
+	public void test2() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 5; i++) {
+			if(sb.length() > 0) sb.append(",");
+			sb.append(i);
+		}
+		String a = sb.append(sb).toString();
+		System.out.println(a);
 	}
 	
 }

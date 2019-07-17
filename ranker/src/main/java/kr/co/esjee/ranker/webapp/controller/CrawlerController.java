@@ -1,11 +1,12 @@
 package kr.co.esjee.ranker.webapp.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import kr.co.esjee.ranker.webapp.AppConstant;
+import kr.co.esjee.ranker.webapp.model.Article;
+import kr.co.esjee.ranker.webapp.service.CrawlerService;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,13 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import kr.co.esjee.ranker.webapp.AppConstant;
-import kr.co.esjee.ranker.webapp.model.Article;
-import kr.co.esjee.ranker.webapp.service.CrawlerService;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
 
 @Controller
 @RestController
@@ -44,15 +42,15 @@ public class CrawlerController implements AppConstant {
 	 */
 	@ApiOperation(value = "Crawler")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "urlParams", value = "파라미터", required = false, dataType = "string", paramType = "query", allowMultiple = true),
-		@ApiImplicitParam(name = "idColumn", value = "아이디 컬럼", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "dateColumn", value = "날짜 컬럼", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "categoryColumn", value = "카테고리 컬럼", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "listAtrb", value = "목록 속성", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "listEachAtrb", value = "목록 각각의 속성", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "titleAtrb", value = "제목 속성", required = true, dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "contentAtrb", value = "내용 속성", required = true, dataType = "string", paramType = "query")
+		@ApiImplicitParam(name = "url", value = "주소", required = true, dataType = "string", paramType = "query", defaultValue = "https://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day"),
+		@ApiImplicitParam(name = "urlParams", value = "파라미터", required = false, dataType = "string", paramType = "query", allowMultiple = true) ,
+		@ApiImplicitParam(name = "idColumn", value = "아이디 컬럼", required = true, dataType = "string", paramType = "query", defaultValue = "aid"),
+		@ApiImplicitParam(name = "dateColumn", value = "날짜 컬럼", required = true, dataType = "string", paramType = "query", defaultValue = "date"),
+		@ApiImplicitParam(name = "categoryColumn", value = "카테고리 컬럼", required = true, dataType = "string", paramType = "query", defaultValue = "rankingSectionId"),
+		@ApiImplicitParam(name = "listAtrb", value = "목록 속성", required = true, dataType = "string", paramType = "query", defaultValue = "div.ranking"),
+		@ApiImplicitParam(name = "listEachAtrb", value = "목록 각각의 속성", required = true, dataType = "string", paramType = "query", defaultValue = "div.ranking_text"),
+		@ApiImplicitParam(name = "titleAtrb", value = "제목 속성", required = true, dataType = "string", paramType = "query", defaultValue = "h3#articleTitle"),
+		@ApiImplicitParam(name = "contentAtrb", value = "내용 속성", required = true, dataType = "string", paramType = "query", defaultValue = "div#articleBodyContents")
 		})
 	@RequestMapping(value = "/execute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String execute(HttpServletRequest request,
@@ -76,18 +74,12 @@ public class CrawlerController implements AppConstant {
 			returnObj.put(TOTAL_COUNT, articleList.size());
 			returnObj.put(RESULT, articleList);
 						
-		} catch (IOException e) {						
-			log.error("Error = {}", e.getLocalizedMessage());
-
+		} catch (IOException | ParseException e) {
 			returnObj.put(SUCCESS, false);
 			returnObj.put(ERROR, e.getLocalizedMessage());
-		} catch (ParseException e) {
 			log.error("Error = {}", e.getLocalizedMessage());
+		}
 
-			returnObj.put(SUCCESS, false);
-			returnObj.put(ERROR, e.getLocalizedMessage());
-		} 
-        
-        return returnObj.toString();		
+		return returnObj.toString();
 	}
 }

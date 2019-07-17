@@ -54,13 +54,13 @@ public class Crawler {
 	 *
 	 * @param url url
 	 * @param urlParams urlParams
-	 * @param idColumn idCpolo
-	 * @param dateColumn
-	 * @param categoryColumn
-	 * @param listAtrb
-	 * @param listEachAtrb
-	 * @param titleAtrb
-	 * @param contentAtrb
+	 * @param idColumn idColumn
+	 * @param dateColumn dateColumn
+	 * @param categoryColumn categoryColumn
+	 * @param listAtrb listAtrb
+	 * @param listEachAtrb listEachAtrb
+	 * @param titleAtrb titleAtrb
+	 * @param contentAtrb contentAtrb
 	 * @return
 	 * @throws IOException
 	 * @throws ParseException

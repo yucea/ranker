@@ -1,18 +1,17 @@
 package kr.co.esjee.ranker.crawler;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-
+import kr.co.esjee.ranker.webapp.model.Article;
+import kr.co.esjee.ranker.webapp.service.ArticleService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import kr.co.esjee.ranker.webapp.model.Article;
-import kr.co.esjee.ranker.webapp.service.ArticleService;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,7 +33,7 @@ public class TestCrawler {
 		String listEachAtrb = "div.ranking_text";
 		String titleAtrb = "h3#articleTitle";
 		String contentAtrb = "div#articleBodyContents";
-		
+
 		try {
 			Crawler crawler = new Crawler();
 			
@@ -62,12 +61,9 @@ public class TestCrawler {
 			
 			List<String> returnUrlList = crawler.getUrl(url, urlParams, "date");
 			
-			for(String returnUrl : returnUrlList) {
-				System.out.println(returnUrl);
-			}
+			for(String returnUrl : returnUrlList) System.out.println(returnUrl);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
 }

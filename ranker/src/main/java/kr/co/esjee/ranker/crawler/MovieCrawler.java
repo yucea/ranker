@@ -22,7 +22,7 @@ public class MovieCrawler implements AppConstant {
 	
 	private static final int DELAY_TIME = 5000;
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-	
+
 	@Autowired
 	private ErrorLogService errorLogService;
 
@@ -174,37 +174,34 @@ public class MovieCrawler implements AppConstant {
 		
 		// Actors
 		// Director
-		String actor = "";
+        StringBuilder actorBuilder = new StringBuilder();
 		if(!crewInfoDoc.select(movieVO.getActorAtrb()).isEmpty()) {
-			StringBuilder actorBuilder = new StringBuilder();
 			for(Element actors : crewInfoDoc.select(movieVO.getActorAtrb())) {
-				actorBuilder.append(actors.text()).append(",");
+				if(actorBuilder.length() > 0) actorBuilder.append(",");
+				actorBuilder.append(actors.text());
 			}
-			actor = actorBuilder.toString();
 		}
-		movie.setActor(StringUtils.substring(actor, 0, actor.length() - 1));
+        movie.setActor(actorBuilder.length() > 0 ? actorBuilder.toString() : "");
 		
 		// Roles
-		String role = "";
+        StringBuilder roleBuilder = new StringBuilder();
 		if(!crewInfoDoc.select(movieVO.getRoleAtrb()).isEmpty()) {
-			StringBuilder roleBuilder = new StringBuilder();
 			for(Element roles : crewInfoDoc.select(movieVO.getRoleAtrb())) {
-				roleBuilder.append(roles.text()).append(",");
+				if(roleBuilder.length() > 0) roleBuilder.append(",");
+				roleBuilder.append(roles.text());
 			}
-			role = roleBuilder.toString();
 		}
-		movie.setRole(StringUtils.substring(role, 0, role.length() - 1));
+        movie.setRole(roleBuilder.length() > 0 ? roleBuilder.toString() : "");
 		
 		// Director
-		String director = "";
+        StringBuilder directorBuilder = new StringBuilder();
 		if(!crewInfoDoc.select(movieVO.getDirectorAtrb()).isEmpty()) {
-			StringBuilder directorBuilder = new StringBuilder();
 			for(Element directors : crewInfoDoc.select(movieVO.getDirectorAtrb())) {
-				directorBuilder.append(directors.text()).append(",");
+			    if(directorBuilder.length() > 0) directorBuilder.append(",");
+				directorBuilder.append(directors.text());
 			}
-			director = directorBuilder.toString();
 		}
-		movie.setDirector(StringUtils.substring(director, 0, director.length() - 1));		
+		movie.setDirector(directorBuilder.length() > 0 ? directorBuilder.toString() : "");
 		
 		// Synopsis
 		String synopsis = basicInfoDoc.select(movieVO.getSynopsisAtrb()).isEmpty() ? "" : basicInfoDoc.select(movieVO.getSynopsisAtrb()).text();
@@ -295,16 +292,14 @@ public class MovieCrawler implements AppConstant {
 			Document directorDoc = jsoupConnect(movieVO.getPersonUrl() + (filmo.getMovieId().isEmpty() ? "" : "?" + movieVO.getMovieKey() + "="+ filmo.getMovieId()));
 
 			// 감독
-			String filmoDirector = "";
+            StringBuilder filmoDirectorBder = new StringBuilder();
 			if(!directorDoc.select(movieVO.getDirectorAtrb()).isEmpty()) {
-				StringBuilder filmoDirectorBder = new StringBuilder();
 				for(Element directors : directorDoc.select(movieVO.getDirectorAtrb())) {
-					filmoDirectorBder.append(directors.text()).append(",");
+				    if(filmoDirectorBder.length() > 0) filmoDirectorBder.append(",");
+					filmoDirectorBder.append(directors.text());
 				}
-				filmoDirector = filmoDirectorBder.toString();
 			}
-			filmo.setMovieDirector(StringUtils.substring(filmoDirector, 0, filmoDirector.length() - 1));
-
+			filmo.setMovieDirector(filmoDirectorBder.length() > 0 ? filmoDirectorBder.toString() : "");
 			filmoList.add(filmo);
 		}
 
